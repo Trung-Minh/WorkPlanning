@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work Planning</title>
+</head>
+
+<body>
+  <!-- Header của trang  -->
+  <header class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="text-2xl font-bold text-blue-600">WorkPlan</div>
+      <nav class="space-x-6 text-gray-700 font-medium">
+        <a href="/index.html" class="hover:text-blue-600">Trang chủ</a>
+        <a href="/keHoach.html" class="hover:text-blue-600">Kế hoạch</a>
+        <a href="/nhacNho.html" class="hover:text-blue-600">Nhắc nhở</a>
+        <a href="/taiKhoan.html" class="hover:text-blue-600">Tài khoản</a>
+      </nav>
+    </div>
+  </header>
+  <!-- End headder  -->
+
+  <main>
+    <h1>Tài khoản</h1>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 text-gray-600 text-sm mt-10">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4 text-center md:text-left">
+      <!-- Cột 1: Thông tin -->
+      <div>
+        <h2 class="font-semibold mb-2">WorkPlan 💼</h2>
+        <p>Quản lý kế hoạch thông minh, nhắc nhở đúng lúc.</p>
+        <p>Made with ❤️ by Anh</p>
+      </div>
+
+      <!-- Cột 2: Liên hệ -->
+      <div>
+        <h2 class="font-semibold mb-2">Liên hệ</h2>
+        <p>Email: <a href="mailto:anh@workplan.vn" class="hover:underline">anh@workplan.vn</a></p>
+        <p>Hotline: 0123 456 789</p>
+      </div>
+
+      <!-- Cột 3: Liên kết nhanh -->
+      <div>
+        <h2 class="font-semibold mb-2">Liên kết</h2>
+        <ul class="space-y-1">
+          <li><a href="/index.html" class="hover:underline">Trang chủ</a></li>
+          <li><a href="/keHoach.html" class="hover:underline">Kế hoạch</a></li>
+          <li><a href="/nhacNho.html" class="hover:underline">Nhắc nhở</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Dòng dưới cùng -->
+    <div class="bg-gray-200 py-2 text-center">
+      © 2025 WorkPlan. All rights reserved.
+    </div>
+
+    <!-- Nút cuộn lên đầu -->
+    <button id="scrollToTopBtn"
+      class="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700 transition-opacity opacity-0 pointer-events-none z-50">
+      ↑
+    </button>
+  </footer>
+
+  <script>
+    const btn = document.getElementById("scrollToTopBtn");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        btn.classList.remove("opacity-0", "pointer-events-none");
+      } else {
+        btn.classList.add("opacity-0", "pointer-events-none");
+      }
+    });
+
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+  <!-- End footer -->
+</body>
+
+</html>
