@@ -21,11 +21,182 @@
     </div>
   </header>
   <!-- End headder  -->
+<!-- --------------------------------------------------------------------------- -->
+<main>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work Planning Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow h-screen p-4 overflow-y-auto">
+      <input type="text" placeholder="Tìm mẫu" class="w-full p-2 mb-4 border rounded focus:outline-none" />
+      <ul class="space-y-2 text-gray-700">
+        <li class="font-semibold">⭐ Nổi bật</li>
+        <li class="hover:text-blue-600 cursor-pointer">Business</li>
+        <li class="hover:text-blue-600 cursor-pointer">Thiết kế</li>
+        <li class="hover:text-blue-600 cursor-pointer">Giáo dục</li>
+        <li class="bg-blue-100 text-blue-700 font-semibold rounded px-2 py-1">Kỹ thuật</li>
+        <li class="hover:text-blue-600 cursor-pointer">Marketing</li>
+        <li class="hover:text-blue-600 cursor-pointer">Nhân sự & Điều hành</li>
+        <li class="hover:text-blue-600 cursor-pointer">Cá nhân</li>
+        <li class="hover:text-blue-600 cursor-pointer">Hiệu suất</li>
+        <li class="hover:text-blue-600 cursor-pointer">Quản lý sản phẩm</li>
+        <li class="hover:text-blue-600 cursor-pointer">Quản lý dự án</li>
+        <li class="hover:text-blue-600 cursor-pointer">Làm việc từ xa</li>
+        <li class="hover:text-blue-600 cursor-pointer">Kinh doanh</li>
+        <li class="hover:text-blue-600 cursor-pointer">Hỗ trợ</li>
+        <li class="hover:text-blue-600 cursor-pointer">Quản lý nhóm</li>
+      </ul>
+    </aside>
 
-  <main>
-    <h1>Kế hoạch</h1>
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center text-blue-700">Work Planning Board</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="board">
+          <!-- Columns inserted here by JavaScript -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <template id="taskTemplate">
+    <div class="bg-white p-3 rounded shadow flex flex-col">
+      <div class="flex justify-between items-center">
+        <span class="task-text font-medium"></span>
+        <div class="space-x-2">
+          <button class="text-green-500 hover:text-green-700 done-btn">✔</button>
+          <button class="text-red-500 hover:text-red-700 delete-btn">✖</button>
+        </div>
+      </div>
+      <div class="text-sm text-gray-600 mt-1">
+        Deadline: <span class="task-deadline"></span> | Người phụ trách: <span class="task-owner font-semibold"></span>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const columns = [
+      { id: 'product', title: 'Product Design' },
+      { id: 'marketing', title: 'Marketing Website' },
+      { id: 'review', title: 'Client Reviews' }
+    ];
+
+    const board = document.getElementById('board');
+    const taskTemplate = document.getElementById('taskTemplate');
+
+    const loadTasks = () => {
+      return JSON.parse(localStorage.getItem('tasks')) || {
+        product: [],
+        marketing: [],
+        review: []
+      };
+    };
+
+    const saveTasks = (tasks) => {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    };
+
+    const renderBoard = () => {
+      board.innerHTML = '';
+      const tasks = loadTasks();
+
+      columns.forEach(col => {
+        const colDiv = document.createElement('div');
+        colDiv.className = 'bg-gray-200 rounded p-4';
+
+        const header = document.createElement('h2');
+        header.className = 'text-xl font-semibold mb-4';
+        header.textContent = col.title;
+
+        const taskList = document.createElement('div');
+        taskList.className = 'space-y-2';
+        taskList.id = `${col.id}-list`;
+
+        tasks[col.id].forEach((task, index) => {
+          const taskEl = createTaskElement(task, col.id, index);
+          taskList.appendChild(taskEl);
+        });
+
+        const inputTask = document.createElement('input');
+        inputTask.placeholder = 'Công việc...';
+        inputTask.className = 'mt-4 w-full p-2 rounded border';
+
+        const inputDeadline = document.createElement('input');
+        inputDeadline.type = 'date';
+        inputDeadline.className = 'mt-2 w-full p-2 rounded border';
+
+        const inputOwner = document.createElement('input');
+        inputOwner.placeholder = 'Người phụ trách...';
+        inputOwner.className = 'mt-2 w-full p-2 rounded border';
+
+        const addButton = document.createElement('button');
+        addButton.textContent = 'Thêm';
+        addButton.className = 'mt-2 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600';
+        addButton.addEventListener('click', () => {
+          const text = inputTask.value.trim();
+          const deadline = inputDeadline.value;
+          const owner = inputOwner.value.trim();
+          if (text) {
+            const color = getRandomColor();
+            tasks[col.id].push({ text, deadline, owner, color });
+            saveTasks(tasks);
+            renderBoard();
+          }
+        });
+
+        colDiv.append(header, taskList, inputTask, inputDeadline, inputOwner, addButton);
+        board.appendChild(colDiv);
+      });
+    };
+
+    const createTaskElement = (task, colId, index) => {
+      const clone = taskTemplate.content.cloneNode(true);
+      const wrapper = clone.querySelector('div');
+      const span = clone.querySelector('.task-text');
+      const deadlineEl = clone.querySelector('.task-deadline');
+      const ownerEl = clone.querySelector('.task-owner');
+      const doneBtn = clone.querySelector('.done-btn');
+      const deleteBtn = clone.querySelector('.delete-btn');
+
+      span.textContent = task.text;
+      deadlineEl.textContent = task.deadline || '---';
+      ownerEl.textContent = task.owner || '---';
+      ownerEl.style.color = task.color || 'black';
+
+      doneBtn.addEventListener('click', () => {
+        span.classList.toggle('line-through');
+      });
+
+      deleteBtn.addEventListener('click', () => {
+        const tasks = loadTasks();
+        tasks[colId].splice(index, 1);
+        saveTasks(tasks);
+        renderBoard();
+      });
+
+      return wrapper;
+    };
+
+    const getRandomColor = () => {
+      const colors = ['#e11d48', '#2563eb', '#10b981', '#f59e0b', '#8b5cf6'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    };
+
+    renderBoard();
+  </script>
+</body>
+</html>
+
   </main>
-
+<!-- ----------------------------------------------------------------------------- -->
   <!-- Footer -->
   <footer class="bg-gray-100 text-gray-600 text-sm mt-10">
     <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4 text-center md:text-left">
