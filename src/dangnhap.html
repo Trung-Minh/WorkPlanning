@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Work Planning</title>
+  <link href="output.css" rel="stylesheet" />
 </head>
 
-<body>
+<body class="min-h-screen flex flex-col">
   <!-- Header của trang  -->
   <header class="bg-white shadow-md">
     <div
@@ -49,72 +49,57 @@
   </header>
   <!-- End headder  -->
 
-  <main>
-    <div class="relative min-h-screen bg-cover bg-center" style="background-image: url('img/snowy-mountains.jpg');">
-    <div class="absolute inset-0 backdrop-blur-sm bg-black/20"></div>
+  <main class="w-full sm:w-3/4 md:w-2/3 lg:w-[30%] mx-auto mt-20 pt-6 pb-2 px-6 bg-white shadow-md rounded mb-auto">
+      <h1 class="text-center text-blue-600 text-2xl font-bold flex items-center justify-center gap-2 mb-4">
+       <img src="./img/work-icon.png" alt="icon" class="w-6 h-6"> 
+       WorkPlanning
+      </h1>
+    <h1 class="text-2xl font-semibold mb-4">Đăng nhập</h1>
+    <form id="loginForm" class="space-y-4">
+      <input type="text" placeholder="Username" name="name" id="username" required
+        class="w-full border px-3 py-2 rounded">
+      <input type="password" placeholder="Password" name="pass" id="password" required
+        class="w-full border px-3 py-2 rounded">
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        Đăng nhập
+      </button>
+    </form>
+    <p id="message" class="mt-4 text-center text-red-600 font-medium"></p>
 
-    <div class="relative z-10 text-white p-8">
-      <h1 class="text-3xl font-bold"><b><strong>Nhắc nhở</strong></b></h1>
+    <script>
+      const form = document.getElementById("loginForm");
+      const message = document.getElementById("message");
 
-    <span class="box-decoration-clone bg-gradient-to-r from-red-600 to-red-800 text-white px-100 rounded shadow">
-      <b class="text-white px-50 text-center font-semibold "><strong>Deadline</strong></b><br />
-    </span>
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-    <div class="bg-white/20 backdrop-blur-md border border-white/30 shadow-lg rounded-xl p-6 text-white max-w-7xl"
-      style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);">
-        - Deadline -<br>
-        8h30 : <b>Đi mua rau cho vợ!</b>
-    </div>
-    
-    <br>
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
 
-    <span class="box-decoration-clone bg-gradient-to-r from-indigo-600 to-red-600 px-75 text-white-1000 ...">
-      <b class="text-white px-50 text-center">Deadline</b><br />
-    </span>
-    <div class="bg-white/20 backdrop-blur-md border border-white/30 shadow-lg rounded-xl p-6 text-white max-w-7xl"
-      style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);">
-        - Deadline -<br>
-        10h30 : <b>Đi rước con!</b>
-    </div>
+        const userData = JSON.parse(localStorage.getItem("user"));
 
-    <br>
+        if (userData && username === userData.username && password === userData.password) {
+          message.textContent = "Đăng nhập thành công!";
+          message.style.color = "green";
 
-    <span class="box-decoration-clone bg-gradient-to-r from-indigo-600 to-red-800 px-50 text-white-1000 ...">
-      <b class="text-white px-50 text-center">Deadline</b><br />
-    </span>
-    <div class="bg-white/20 backdrop-blur-md border border-white/30 shadow-lg rounded-xl p-6 text-white max-w-7xl"
-      style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);">
-        - Deadline -<br>
-        11h30 : <b>Gọi họp khẩn</b>
-    </div>
-
-    <br>
-
-    <span class="box-decoration-clone bg-linear-to-r from-red-600 to-blow-600 px-25 text-white-1000 ...">
-      <b class="text-white px-50 text-center">Deadline</b><br />
-    </span>
-    <div class="bg-white/20 backdrop-blur-md border border-white/30 shadow-lg rounded-xl p-6 text-white max-w-7xl"
-      style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);">
-        - Deadline -<br>
-        13h00 : <b>Đưa con đi học chiều!</b>
-    </div>
-
-    <br>
-
-    <span class="box-decoration-clone bg-linear-to-r from-indigo-600 to-black-600 px-5 text-white-1000 ...">
-      <b class="text-white px-50 text-center">Deadline</b><br />
-    </span>
-    <div class="bg-white/20 backdrop-blur-md border border-white/30 shadow-lg rounded-xl p-6 text-white max-w-7xl"
-      style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);">
-        - Deadline -<br>
-        16h30 : <b>Đi rước con buổi chiều</b>
-    </div>
-    </div>
-  </main>
+          // Có thể chuyển trang hoặc lưu trạng thái đăng nhập nếu muốn
+          // window.location.href = "index.html";
+        } else {
+          message.textContent = "Sai tên đăng nhập hoặc mật khẩu!";
+          message.style.color = "red";
+        }
+          setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1000);
+      });
+    </script>
+  </main> 
 
   <!-- Footer -->
   <footer class="bg-gray-100 text-gray-600 text-sm mt-10">
-    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4 text-center md:text-left">
+    <div
+      class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4 text-center md:text-left"
+    >
       <!-- Cột 1: Thông tin -->
       <div>
         <h2 class="font-semibold mb-2">WorkPlan 💼</h2>
@@ -125,7 +110,12 @@
       <!-- Cột 2: Liên hệ -->
       <div>
         <h2 class="font-semibold mb-2">Liên hệ</h2>
-        <p>Email: <a href="mailto:anh@workplan.vn" class="hover:underline">anh@workplan.vn</a></p>
+        <p>
+          Email:
+          <a href="mailto:anh@workplan.vn" class="hover:underline"
+            >anh@workplan.vn</a
+          >
+        </p>
         <p>Hotline: 0123 456 789</p>
       </div>
 
@@ -146,8 +136,10 @@
     </div>
 
     <!-- Nút cuộn lên đầu -->
-    <button id="scrollToTopBtn"
-      class="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700 transition-opacity opacity-0 pointer-events-none z-50">
+    <button
+      id="scrollToTopBtn"
+      class="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700 transition-opacity opacity-0 pointer-events-none z-50"
+    >
       ↑
     </button>
   </footer>
@@ -177,5 +169,4 @@
   </script>
   <!-- End footer -->
 </body>
-
 </html>
