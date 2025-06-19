@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Work Planning</title>
   <link href="output.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -14,37 +15,78 @@
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <div class="text-2xl font-bold text-blue-600">WorkPlan</div>
       <nav class="space-x-6 text-gray-700 font-medium">
-        <a href="index.html" class="hover:text-blue-600">Trang chủ</a>
-        <a href="keHoach.html" class="hover:text-blue-600">Kế hoạch</a>
-        <a href="nhacNho.html" class="hover:text-blue-600">Nhắc nhở</a>
-        <a href="dangnhap.html" class="hover:text-blue-600">Đăng nhập</a>
-        <a href="dangky.html" class="hover:text-blue-600">Đăng ký</a>
+          <a href="index.html" class="hover:text-blue-600">Trang chủ</a>
+          <a href="keHoach.html" class="hover:text-blue-600">Kế hoạch</a>
+          <a href="nhacNho.html" class="hover:text-blue-600">Nhắc nhở</a>
+          <a href="dangnhap.html" class="hover:text-blue-600">Đăng nhập</a>
+          <a href="dangky.html" class="hover:text-blue-600">Đăng ký</a>
       </nav>
     </div>
   </header>
   <!-- End headder  -->
 
-  <main>
-    <h1>Trang chủ</h1>
-  </main>
+  <main class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded">
+  <h1 class="text-2xl font-semibold mb-4">Đăng nhập</h1>
+  <form id="loginForm" class="space-y-4">
+    <input type="text" placeholder="Username" name="name" id="username" required
+      class="w-full border px-3 py-2 rounded">
+    <input type="password" placeholder="Password" name="pass" id="password" required
+      class="w-full border px-3 py-2 rounded">
+    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+      Đăng nhập
+    </button>
+  </form>
+  <p id="message" class="mt-4 text-center text-red-600 font-medium"></p>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      const userData = JSON.parse(localStorage.getItem("user"));
+
+      if (userData && username === userData.username && password === userData.password) {
+        message.textContent = "Đăng nhập thành công!";
+        message.style.color = "green";
+
+        // Có thể chuyển trang hoặc lưu trạng thái đăng nhập nếu muốn
+        // window.location.href = "index.html";
+      } else {
+        message.textContent = "Sai tên đăng nhập hoặc mật khẩu!";
+        message.style.color = "red";
+      }
+        setTimeout(() => {
+    window.location.href = "index.html";
+  }, 1000);
+    });
+  </script>
+</main>
+
 
   <!-- Footer -->
   <footer class="bg-gray-100 text-gray-600 text-sm mt-10">
-    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-6">
-      <!-- Cột 1 -->
-      <div class="flex-1">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-4 text-center md:text-left">
+      <!-- Cột 1: Thông tin -->
+      <div>
         <h2 class="font-semibold mb-2">WorkPlan 💼</h2>
         <p>Quản lý kế hoạch thông minh, nhắc nhở đúng lúc.</p>
         <p>Made with ❤️ by Anh</p>
       </div>
-      <!-- Cột 2 -->
-      <div class="flex-1">
+
+      <!-- Cột 2: Liên hệ -->
+      <div>
         <h2 class="font-semibold mb-2">Liên hệ</h2>
         <p>Email: <a href="mailto:anh@workplan.vn" class="hover:underline">anh@workplan.vn</a></p>
         <p>Hotline: 0123 456 789</p>
       </div>
-      <!-- Cột 3 -->
-      <div class="flex-1">
+
+      <!-- Cột 3: Liên kết nhanh -->
+      <div>
         <h2 class="font-semibold mb-2">Liên kết</h2>
         <ul class="space-y-1">
           <li><a href="index.html" class="hover:underline">Trang chủ</a></li>
@@ -65,7 +107,6 @@
       ↑
     </button>
   </footer>
-
 
   <script>
     const btn = document.getElementById("scrollToTopBtn");
