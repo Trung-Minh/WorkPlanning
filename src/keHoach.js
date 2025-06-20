@@ -8,7 +8,30 @@ menuToggle.addEventListener("click", () => {
 
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
-  sidebar.classList.toggle("hidden");
+  const overlay = document.getElementById("sidebarOverlay");
+  const menuBtn = document.getElementById("menuButton"); // nếu có
+
+  const isVisible = !sidebar.classList.contains("hidden");
+
+  if (isVisible) {
+    sidebar.classList.add("hidden");
+    overlay.classList.add("hidden");
+    if (menuBtn) menuBtn.classList.remove("hidden");
+  } else {
+    sidebar.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+    if (menuBtn) menuBtn.classList.add("hidden");
+  }
+}
+
+function hideSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+  const menuBtn = document.getElementById("menuButton");
+
+  sidebar.classList.add("hidden");
+  overlay.classList.add("hidden");
+  if (menuBtn) menuBtn.classList.remove("hidden");
 }
 
 let sectionCount = 0;
