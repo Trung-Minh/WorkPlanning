@@ -24,3 +24,36 @@ npm run dev
 ```
 
 ---
+
+## Chuyển project sang framework Laravel
+
+### 1. Cài đặt composer
+
+> Link tải .exe [https://getcomposer.org/download/](https://getcomposer.org/download/)
+
+### 2. Chạy lệnh tạo project Laravel
+
+```bash
+composer create-project laravel/laravel workplanning
+cd workplanning
+```
+
+### 3. Cấu hình .env
+
+> Chỉnh sửa đoạn mã trong .env theo như bên dưới
+
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=workplanning
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 4. Tạo model và controller
+
+```bash
+php artisan make:model NguoiDungCaNhan
+php artisan make:controller AuthController
+```
