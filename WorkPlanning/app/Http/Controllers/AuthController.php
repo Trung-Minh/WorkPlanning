@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\NguoiDungCaNhan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
 
 class AuthController extends Controller
 {
@@ -31,6 +33,30 @@ class AuthController extends Controller
 
         NguoiDungCaNhan::create($data);
 
-        return back()->with('success', 'Đăng ký thành công!');
+        return redirect()->route('login')->with('success', 'Đăng ký thành công!');
     }
+
+    public function showLogin()
+    {
+        return view('login');
+    }
+    public function doLogin(Request $r)
+    {
+        $r->validate([
+            'email' => 'required|email',
+            'mat_khau' => 'required',
+        ]);
+
+        $user = NguoiDungCaNhan::where('email', $r->email)->first();
+
+        $isCorrectPassword = Hash::check($r->mat_khau, $user->mat_khau);
+
+        if (!$user || !$isCorrectPassword) {
+            return back()->withInput()->with('error', 'Sai email hoặc mật khẩu!');
+        }
+
+        session(['user' => $user]);
+        return redirect('/')->with('success', 'Đăng nhập thành công!');
+    }
+
 }

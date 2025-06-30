@@ -20,6 +20,8 @@
   @if(empty($noFooter))
     @include('partials.footer')
   @endif
+
+  @stack('scripts')
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-<footer class="bg-gray-100 text-gray-600 text-sm">
+<footer class="border-t border-gray-300 shadow-md bg-white text-center text-sm text-gray-600">
   <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-6">
     <div class="flex-1">
       <h2 class="font-semibold mb-2">WorkPlan 💼</h2>
@@ -14,8 +14,8 @@
       <h2 class="font-semibold mb-2">Liên kết</h2>
       <ul class="space-y-1">
         <li><a href="{{ url('/') }}" class="hover:underline">Trang chủ</a></li>
-        <li><a href="{{ url('/keHoach') }}" class="hover:underline">Kế hoạch</a></li>
-        <li><a href="{{ url('/nhacNho') }}" class="hover:underline">Nhắc nhở</a></li>
+        <li><a href="{{ url('/plans') }}" class="hover:underline">Kế hoạch</a></li>
+        <li><a href="{{ url('/reminders') }}" class="hover:underline">Nhắc nhở</a></li>
       </ul>
     </div>
   </div>

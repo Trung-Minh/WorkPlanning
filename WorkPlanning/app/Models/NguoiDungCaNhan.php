@@ -11,6 +11,10 @@ class NguoiDungCaNhan extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $table = 'nguoi_dung_ca_nhan';
+    protected $authPasswordName = 'mat_khau';
+    protected $hidden = ['mat_khau'];
+
+
     public $timestamps = false;
     protected $fillable = [
         'ho_ten',
@@ -20,11 +24,8 @@ class NguoiDungCaNhan extends Authenticatable
         'gioi_tinh'
     ];
 
-    protected function casts(): array
+    public function getMatKhauAttribute()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->attributes['MAT_KHAU'] ?? null;
     }
 }
