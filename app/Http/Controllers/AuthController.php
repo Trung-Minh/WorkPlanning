@@ -59,4 +59,26 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'Đăng nhập thành công!');
     }
 
+     public function showRepassword()
+    {
+        return view('repassword');
+    }
+    public function doRepassword(Request $r)
+    {
+        $r->validate([
+            'email' => 'required|email',
+            'mat_khau_moi' => 'required',
+            'cm_mat_khau_moi' => 'required',
+        ]);
+
+    $user = NguoiDungCaNhan::where('email', $r->email)->first();
+
+    
+    NguoiDungCaNhan::where('email', $r->email)
+    ->update(['MAT_KHAU' => Hash::make($r->mat_khau_moi)]);
+
+    session(['user' => $user]);
+    return redirect('/')->with('success', 'Đổi mật khẩu thành công');
+
+    }
 }
