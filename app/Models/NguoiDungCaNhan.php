@@ -28,4 +28,9 @@ class NguoiDungCaNhan extends Authenticatable
     {
         return $this->attributes['MAT_KHAU'] ?? null;
     }
+
+    public function keHoachs()
+    {
+        return $this->hasMany(KeHoach::class, 'NGUOI_TAO', 'ID_USER');
+    }
 }
