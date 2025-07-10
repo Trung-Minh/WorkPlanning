@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PlansController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,6 +18,9 @@ Route::get('/reminders', function () {
     return view('reminders');
 });
 
-Route::get('/plans', function () {
-    return view('plans');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/ke-hoach', [PlansController::class, 'index'])->name('kehoach.index');
+    Route::post('/ke-hoach', [PlansController::class, 'store']);
+    Route::post('/cong-viec', [PlansController::class, 'storeTask']);
+    Route::delete('/cong-viec/{id}', [PlansController::class, 'destroyTask']);
 });
