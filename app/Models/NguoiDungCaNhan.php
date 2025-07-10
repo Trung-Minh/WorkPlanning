@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +10,7 @@ class NguoiDungCaNhan extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $table = 'nguoi_dung_ca_nhan';
-
+    protected $primaryKey = 'ID_USER';
     protected $authPasswordName = 'mat_khau';
 
     protected $hidden = ['mat_khau'];
@@ -29,6 +28,11 @@ class NguoiDungCaNhan extends Authenticatable
     public function getMatKhauAttribute()
     {
         return $this->attributes['MAT_KHAU'] ?? null;
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->mat_khau;
     }
 
     public function keHoachs()

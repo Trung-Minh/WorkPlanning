@@ -7,7 +7,7 @@
   <main class="w-full sm:w-3/4 md:w-2/3 lg:w-3/5 mx-auto mt-5 pt-6 p-6 bg-white shadow-md rounded">
     <h1 class="text-center text-blue-600 text-2xl font-bold flex items-center justify-center gap-2 mb-4">Đăng nhập</h1>
 
-    <form method="POST" action="{{ url('/login') }}" class="space-y-4">
+    <form method="POST" action="{{ route('login') }}" class="space-y-4">
     @csrf
     {{-- Email --}}
     <div>
