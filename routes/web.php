@@ -14,6 +14,21 @@ Route::post('/register', [AuthController::class, 'doRegister']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin']);
 
+
+Route::get('/repassword', [AuthController::class, 'showRepassword'])->name('repassword');
+Route::post('/repassword', [AuthController::class, 'doRepassword']);
+
+Route::get('/reminders', function () {
+    return view('reminders');
+});
+
+Route::get('/account', function () {
+    return view('account');
+});
+
+Route::get('/plans', function () {
+    return view('plans');
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Reminders (ví dụ)
@@ -44,4 +59,25 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/api/muc-cong-viec/{id}/toggle-status', [PlansController::class, 'toggleStatus']);
     Route::put('/subtasks/{id}', [PlansController::class, 'updateSubtask'])->name('subtasks.update');
 
+
 });
+Route::get('/profile/upload-avatar', function () {
+    return 'Đây là trang upload-avatar, chỉ xử lý POST mới có tác dụng.';
+});
+
+Route::post('/profile/upload-avatar', [AuthController::class, 'uploadAvatar'])->name('profile.upload_avatar');
+Route::get('/profile/upload-anhbia', function () {
+    return 'Đây là trang upload-anhbia, chỉ xử lý POST mới có tác dụng.';
+});
+
+Route::post('/profile/upload-anhbia', [AuthController::class, 'uploadAnhBia'])->name('profile.upload_anhbia');
+
+Route::post('/profile/update', [AuthController::class, 'update'])->name('profile.update');
+
+
+Route::get('/logout', function () {
+    session()->forget('user');
+    return redirect('/')->with('success', 'Đã đăng xuất');
+});
+
+?>

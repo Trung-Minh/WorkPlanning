@@ -7,8 +7,21 @@
       <a href="{{ url('/') }}" class="py-2 block hover:text-blue-600">Trang chủ</a>
       <a href="{{ url('/ke-hoach') }}" class="py-2 block hover:text-blue-600">Kế hoạch</a>
       <a href="{{ url('/reminders') }}" class="py-2 block hover:text-blue-600">Nhắc nhở</a>
-      <a href="{{ url('/login') }}" class="py-2 block hover:text-blue-600">Đăng nhập</a>
-      <a href="{{ url('/register') }}" class="py-2 block hover:text-blue-600">Đăng ký</a>
+     
+@php $user = session('user'); @endphp
+
+@if ($user)
+    <li class="flex items-center gap-2">
+        <img src="{{ asset('uploads/' . ($user->AVATAR ?? 'avt.png')) }}" alt="AVT" class="w-6 h-6 rounded-full">
+        <a href="/account"> <span>
+            {{ $user->HO_TEN ?? 'Lỗi' }}
+        </span>
+      </a>
+    </li>
+  @else
+    {{-- Chưa đăng nhập --}}
+    <a href="{{ url('/login') }}" class="py-2 block hover:text-blue-600">Đăng nhập/Đăng ký</a>
+  @endif
     </nav>
   </div>
 </header>
