@@ -6,19 +6,19 @@ use App\Models\NguoiDungCaNhan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-
 class AuthController extends Controller
 {
     public function showRegister()
     {
         return view('register');
     }
+
     public function doRegister(Request $r)
     {
         $r->validate([
             'ho_ten' => 'required|string|max:100',
             'mat_khau' => 'required|min:8|confirmed',
-            'email' => 'required|email|unique:nguoi_dung_ca_nhan,email'
+            'email' => 'required|email|unique:nguoi_dung_ca_nhan,email',
         ]);
 
         $data = $r->only([
@@ -26,7 +26,7 @@ class AuthController extends Controller
             'email',
             'mat_khau',
             'ngay_sinh',
-            'gioi_tinh'
+            'gioi_tinh',
         ]);
 
         $data['mat_khau'] = bcrypt($data['mat_khau']);
@@ -40,6 +40,7 @@ class AuthController extends Controller
     {
         return view('login');
     }
+
     public function doLogin(Request $r)
     {
         $r->validate([
@@ -51,12 +52,12 @@ class AuthController extends Controller
 
         $isCorrectPassword = Hash::check($r->mat_khau, $user->mat_khau);
 
-        if (!$user || !$isCorrectPassword) {
+        if (! $user || ! $isCorrectPassword) {
             return back()->withInput()->with('error', 'Sai email hoặc mật khẩu!');
         }
 
         session(['user' => $user]);
+
         return redirect('/')->with('success', 'Đăng nhập thành công!');
     }
-
 }

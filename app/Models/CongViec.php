@@ -1,38 +1,38 @@
-<!-- app/Models/CongViec.php -->
-
 <?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class CongViec extends Model
 {
-  use HasFactory;
+    use HasFactory;
 
-  protected $table = 'cong_viec';
-  protected $primaryKey = 'ID_CV';
-  public $timestamps = false;
+    protected $table = 'cong_viec';
 
-  protected $fillable = [
-    'ID_KH',
-    'ID_CAUHINH',
-    'TRANG_THAI_CV',
-    'NOI_DUNG_CV',
-    'TIME_START',
-    'TIME_END',
-    'TIEN_DO',
-    'DO_UU_TIEN'
-  ];
+    protected $primaryKey = 'ID_CV';
 
-  public function keHoach()
-  {
-    return $this->belongsTo(KeHoach::class, 'ID_KH', 'ID_KH');
-  }
+    public $timestamps = false;
 
-  public function cauHinhThongBao()
-  {
-    return $this->belongsTo(CauHinhThongBao::class, 'ID_CAUHINH', 'ID_CAUHINH');
-  }
+    protected $fillable = [
+        'ID_KH',
+        'ID_CAUHINH',
+        'TRANG_THAI_CV',
+        'NOI_DUNG_CV',
+        'TIME_START',
+        'TIME_END',
+        'TIEN_DO',
+        'DO_UU_TIEN',
+    ];
+
+    public function keHoach()
+    {
+        return $this->belongsTo(KeHoach::class, 'ID_KH', 'ID_KH');
+    }
+
+    public function cauHinhThongBao()
+    {
+        return $this->belongsTo(CauHinhThongBao::class, 'ID_CAUHINH', 'ID_CAUHINH');
+    }
 }
-?>
