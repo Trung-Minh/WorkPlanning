@@ -4,23 +4,44 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlansController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Trang welcome
+Route::get('/', fn () => view('welcome'))->name('welcome');
 
+// Auth
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'doRegister']);
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin']);
 
-Route::get('/reminders', function () {
-    return view('reminders');
-});
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Reminders (ví dụ)
+Route::get('/reminders', fn () => view('reminders'))->name('reminders');
+
+// Kế hoạch – yêu cầu đăng nhập
 Route::middleware(['auth'])->group(function () {
-    Route::get('/ke-hoach', [PlansController::class, 'index'])->name('kehoach.index');
-    Route::post('/ke-hoach', [PlansController::class, 'store']);
-    Route::post('/cong-viec', [PlansController::class, 'storeTask']);
-    Route::delete('/cong-viec/{id}', [PlansController::class, 'destroyTask']);
+    // Kế hoạch
+    Route::get('/ke-hoach', [PlansController::class, 'index'])->name('plans.index');
+    Route::post('/ke-hoach', [PlansController::class, 'store'])->name('plans.store');
+    Route::delete('/ke-hoach/{id}', [PlansController::class, 'deletePlan'])->name('plans.delete');
+    Route::put('/ke-hoach/{id}', [PlansController::class, 'updatePlan'])->name('plans.update');
+
+    // Công việc
+    Route::post('/cong-viec', [PlansController::class, 'storeTask'])->name('tasks.store');
+    Route::delete('/cong-viec/{id}', [PlansController::class, 'destroyTask'])->name('tasks.delete');
+    Route::put('/cong-viec/{id}', [PlansController::class, 'updateTask'])->name('tasks.update');
+
+    // Mục công việc
+    Route::post('/muc-cong-viec', [PlansController::class, 'storeSubtask'])->name('subtasks.store');
+    Route::put('/muc-cong-viec/{id}', [PlansController::class, 'updateSubtask'])->name('subtasks.update');
+    Route::delete('/muc-cong-viec/{id}', [PlansController::class, 'deleteSubtask'])->name('subtasks.delete');
+
+    Route::put('/muc-cong-viec/{id}/sua', [PlansController::class, 'updateSubtask1'])->name('subtasks.update1');
+
+    // Load công việc HTML
+    Route::get('/ke-hoach/{id}/cong-viec', [PlansController::class, 'renderCongViecHtml'])->name('plans.tasks.html');
+    Route::post('/api/muc-cong-viec/{id}/toggle-status', [PlansController::class, 'toggleStatus']);
+    Route::put('/subtasks/{id}', [PlansController::class, 'updateSubtask'])->name('subtasks.update');
+
 });
