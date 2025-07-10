@@ -8,20 +8,19 @@
       <a href="{{ url('/plans') }}" class="py-2 block hover:text-blue-600">Kế hoạch</a>
       <a href="{{ url('/reminders') }}" class="py-2 block hover:text-blue-600">Nhắc nhở</a>
      
-  @if (session('user'))
-    {{-- Người dùng đã đăng nhập --}}
+@php $user = session('user'); @endphp
+
+@if ($user)
     <li class="flex items-center gap-2">
-      {{-- Hiện avatar mặc định --}}
-      <img src="/app/img/avt.jpg" class="w-6 h-6 rounded-full" />
-         
-      <span>{{ session('user')->ho_ten }}</span>
-      <a href="/logout" class="text-red-500 ml-3">Đăng xuất</a> 
+        <img src="{{ asset('uploads/' . ($user->AVATAR ?? 'avt.png')) }}" alt="AVT" class="w-6 h-6 rounded-full">
+        <a href="/account"> <span>
+            {{ $user->HO_TEN ?? 'Lỗi' }}
+        </span>
+      </a>
     </li>
   @else
     {{-- Chưa đăng nhập --}}
-    <a href="{{ url('/login') }}" class="py-2 block hover:text-blue-600">Đăng nhập</a>
-    <a href="{{ url('/register') }}" class="py-2 block hover:text-blue-600">Đăng ký</a>
-    <a href="{{ url('/repassword') }}" class="py-2 block hover:text-blue-600">đổi mật khẩu</a>
+    <a href="{{ url('/login') }}" class="py-2 block hover:text-blue-600">Đăng nhập/Đăng ký</a>
   @endif
     </nav>
   </div>

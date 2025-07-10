@@ -20,7 +20,9 @@ class NguoiDungCaNhan extends Authenticatable
         'email',
         'MAT_KHAU',
         'ngay_sinh',
-        'gioi_tinh'
+        'gioi_tinh',
+        'AVATAR',
+        'ANH_BIA',
     ];
 
     protected $hidden = ['MAT_KHAU'];

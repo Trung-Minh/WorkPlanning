@@ -20,9 +20,26 @@ Route::get('/reminders', function () {
     return view('reminders');
 });
 
+Route::get('/account', function () {
+    return view('account');
+});
+
 Route::get('/plans', function () {
     return view('plans');
 });
+Route::get('/profile/upload-avatar', function () {
+    return 'Đây là trang upload-avatar, chỉ xử lý POST mới có tác dụng.';
+});
+
+Route::post('/profile/upload-avatar', [AuthController::class, 'uploadAvatar'])->name('profile.upload_avatar');
+Route::get('/profile/upload-anhbia', function () {
+    return 'Đây là trang upload-anhbia, chỉ xử lý POST mới có tác dụng.';
+});
+
+Route::post('/profile/upload-anhbia', [AuthController::class, 'uploadAnhBia'])->name('profile.upload_anhbia');
+
+Route::post('/profile/update', [AuthController::class, 'update'])->name('profile.update');
+
 
 Route::get('/logout', function () {
     session()->forget('user');
