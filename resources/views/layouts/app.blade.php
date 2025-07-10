@@ -9,6 +9,7 @@
 
   <title>@yield('title', 'WorkPlan')</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
+  @vite(['resources/js/plans.js'])
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
@@ -24,7 +25,6 @@
   @endif
 
   @stack('scripts')
-  import './kehoach.js';
 
 </body>
 
