@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +11,12 @@ class NguoiDungCaNhan extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $table = 'nguoi_dung_ca_nhan';
-    protected $primaryKey = 'id_user'; // KHÓA CHÍNH PHẢI CÓ GIÁ TRỊ
+
+    protected $primaryKey = 'ID_USER';
+    protected $authPasswordName = 'mat_khau';
+
+    protected $hidden = ['mat_khau'];
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,6 +27,8 @@ class NguoiDungCaNhan extends Authenticatable
         'gioi_tinh',
         'AVATAR',
         'ANH_BIA',
+
+
     ];
 
     protected $hidden = ['MAT_KHAU'];
@@ -32,8 +38,19 @@ class NguoiDungCaNhan extends Authenticatable
         return $this->attributes['MAT_KHAU'] ?? null;
     }
 
+
     public function setMatKhauAttribute($value)
     {
         $this->attributes['MAT_KHAU'] = Hash::make($value);
+
+    public function getAuthPassword()
+    {
+        return $this->mat_khau;
+    }
+
+    public function keHoachs()
+    {
+        return $this->hasMany(KeHoach::class, 'NGUOI_TAO', 'ID_USER');
+
     }
 }

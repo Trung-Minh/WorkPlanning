@@ -5,6 +5,10 @@
 
 ---
 
+## Cài composer
+
+> Link tải .exe [https://getcomposer.org/download/](https://getcomposer.org/download/)
+
 # Hướng Dẫn Cài Đặt Môi Trường & Tạo Project Laravel
 
 Dưới đây là các bước chi tiết để cài đặt Node.js, PHP và thiết lập Laravel project trên Windows 🚀

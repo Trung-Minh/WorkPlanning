@@ -15,9 +15,11 @@
   <!-- Column 2 -->
   <div class=" px-4 py-6 rounded-lg mt-0 lg:mt-8">
 
+
     <h1 class="text-center text-blue-600 text-3xl font-bold flex items-center justify-center gap-2 mb-4">Đăng nhập</h1>
 
     <form method="POST" action="{{ url('/login') }}" class="space-y-4 w-full max-w-md md:max-w-lg">
+
     @csrf
     {{-- Email --}}
     <div class="items-center justify-center">
