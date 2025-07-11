@@ -13,9 +13,15 @@ class NguoiDungCaNhan extends Authenticatable
     protected $table = 'nguoi_dung_ca_nhan';
 
     protected $primaryKey = 'ID_USER';
-    protected $authPasswordName = 'mat_khau';
+    protected $authPasswordName = 'MAT_KHAU';
+    protected $hidden = ['MAT_KHAU'];
 
-    protected $hidden = ['mat_khau'];
+    // Thông báo khoá chính không auto-increment
+    public $incrementing = false;
+
+    // Khóa chính là chuỗi, không phải integer
+    protected $keyType = 'string';
+
 
     public $timestamps = false;
 
@@ -27,11 +33,7 @@ class NguoiDungCaNhan extends Authenticatable
         'gioi_tinh',
         'AVATAR',
         'ANH_BIA',
-
-
     ];
-
-    protected $hidden = ['MAT_KHAU'];
 
     public function getMatKhauAttribute()
     {
@@ -42,10 +44,11 @@ class NguoiDungCaNhan extends Authenticatable
     public function setMatKhauAttribute($value)
     {
         $this->attributes['MAT_KHAU'] = Hash::make($value);
+    }
 
     public function getAuthPassword()
     {
-        return $this->mat_khau;
+        return $this->MAT_KHAU;
     }
 
     public function keHoachs()
