@@ -14,7 +14,6 @@ Route::post('/register', [AuthController::class, 'doRegister']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin']);
 
-
 Route::get('/repassword', [AuthController::class, 'showRepassword'])->name('repassword');
 Route::post('/repassword', [AuthController::class, 'doRepassword']);
 
@@ -64,7 +63,6 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-
 Route::get('/profile/upload-avatar', function () {
     return 'Đây là trang upload-avatar, chỉ xử lý POST mới có tác dụng.';
 });
@@ -77,5 +75,6 @@ Route::get('/profile/upload-anhbia', function () {
 Route::post('/profile/upload-anhbia', [AuthController::class, 'uploadAnhBia'])->name('profile.upload_anhbia');
 
 Route::post('/profile/update', [AuthController::class, 'update'])->name('profile.update');
+
 
 ?>

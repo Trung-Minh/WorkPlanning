@@ -20,6 +20,7 @@ class AuthController extends Controller
             'ho_ten' => 'required|string|max:100',
             'mat_khau' => 'required|min:8|confirmed',
             'email' => 'required|email|unique:nguoi_dung_ca_nhan,email',
+            'ngay_sinh' => 'required|date|before:today',
         ]);
 
         $data = $r->only([
@@ -30,14 +31,11 @@ class AuthController extends Controller
             'gioi_tinh',
         ]);
 
-        $data['MAT_KHAU'] = bcrypt($data['mat_khau']);
-        unset($data['mat_khau']);
-
+        $data['mat_khau'] = bcrypt($data['mat_khau']);
         NguoiDungCaNhan::create($data);
 
         return redirect()->route('login')->with('success', 'Đăng ký thành công!');
     }
-
 
     public function showLogin()
     {
@@ -47,22 +45,22 @@ class AuthController extends Controller
     public function doLogin(Request $r)
     {
         $r->validate([
-            'email'     => 'required|email',
-            'mat_khau'  => 'required',
+            'email' => 'required|email',
+            'mat_khau' => 'required',
         ]);
 
-        if (Auth::attempt([
-                'email'    => $r->email,
-                'password' => $r->mat_khau,
-            ])) {
+        $user = NguoiDungCaNhan::where('email', $r->email)->first();
 
-            $r->session()->regenerate();
-            return redirect()->route('welcome')->with('success','Đăng nhập thành công!');
+        if (!$user || !Hash::check($r->mat_khau, $user->mat_khau)) {
+            return back()->withInput()->with('error', 'Sai email hoặc mật khẩu!');
         }
 
-        return back()->with('error','Sai email hoặc mật khẩu!');
-    }
+        Auth::login($user);
 
+        // Chuyển về trang ban đầu bị chặn (nếu có), hoặc trang kế hoạch
+        return redirect()->route('welcome')
+                            ->with('success', 'Đăng nhập thành công!');
+    }
 
     public function logout(Request $request)
     {
@@ -117,7 +115,6 @@ class AuthController extends Controller
         session(['user' => $user]);
 
         return back()->with('success', 'Đổi ảnh đại diện thành công!');
-
     }
     public function uploadAnhBia(Request $request)
     {
@@ -141,7 +138,6 @@ class AuthController extends Controller
         ->update(['ANH_BIA' => $fileName]);
 
         session(key: ['user' => $user]);
-
         return back()->with('success', 'Đổi ảnh bìa thành công!');
     }
     public function update(Request $request)
@@ -177,7 +173,6 @@ class AuthController extends Controller
         // Lấy lại user mới từ DB (theo email mới)
         $updatedUser = NguoiDungCaNhan::where('EMAIL', $validated['email'])->first();
         session(['user' => $updatedUser]);
-
 
         // Trả về trang profile với thông báo
         return redirect()->back()->with('success', 'Cập nhật thông tin thành công!');

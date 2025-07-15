@@ -2,8 +2,9 @@
 @extends('layouts.app')
 
 @section('title', 'Tài Khoản – WorkPlan')
-@php $user = Auth::user(); @endphp
-
+@php
+    $user = Auth::user();
+@endphp
 @section('content')
 <main class="w-full pt-2 mx-auto mt-1 sm:w-3/4 md:w-5/10 lg:w-4/5">
     <div class="relative w-full">
@@ -60,7 +61,7 @@
         </h2>
 
         @if (!empty($user->MO_TA))
-        <p class="text-xl text-gray-600">Mô tả: {{ $user->MO_TA }}</p>
+            <p class="text-xl text-gray-600">Mô tả: {{ $user->MO_TA }}</p>
         @endif
         <p class="text-xl text-gray-600">Email: {{ $user->EMAIL }}</p>
         <p class="text-xl text-gray-600">Ngày sinh: {{ $user->NGAY_SINH }}</p>

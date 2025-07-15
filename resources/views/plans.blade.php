@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Kế hoạch công việc')
+@php $user = Auth::user(); @endphp
 
 @section('content')
 <div class="container py-4 mx-auto animate-fade-in">
