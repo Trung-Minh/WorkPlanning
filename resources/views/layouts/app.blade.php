@@ -12,11 +12,11 @@
   @vite(['resources/js/plans.js'])
 </head>
 
-<body class="bg-gray-100 flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen bg-gray-100">
 
   @include('partials.header')
 
-  <main class="flex-1 w-full mx-auto px-4 py-6">
+  <main class="flex-1 w-full px-4 py-4 mx-auto">
     @yield('content')
   </main>
 

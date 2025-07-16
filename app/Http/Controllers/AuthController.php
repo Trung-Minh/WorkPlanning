@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\NguoiDungCaNhan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 class AuthController extends Controller
 {
@@ -12,35 +14,28 @@ class AuthController extends Controller
         return view('register');
     }
 
-    public function doRegister(Request $r)
-    {
-        $r->validate([
-            'ho_ten' => 'required|string|max:100',
-            'mat_khau' => 'required|min:8|confirmed',
-            'email' => 'required|email|unique:nguoi_dung_ca_nhan,email',
-        ]);
+   public function doRegister(Request $r)
+{
+    $r->validate([
+        'ho_ten' => 'required|string|max:100',
+        'mat_khau' => 'required|min:8|confirmed',
+        'email' => 'required|email|unique:nguoi_dung_ca_nhan,email',
+        'ngay_sinh' => 'required|date|before:today',
+    ]);
 
-        $data = $r->only([
-            'ho_ten',
-            'email',
-            'mat_khau',
-            'ngay_sinh',
-            'gioi_tinh',
-        ]);
+    $lastUser = NguoiDungCaNhan::orderBy('ID_USER', 'desc')->first();
+    $nextId = $lastUser ? intval(substr($lastUser->ID_USER, 3)) + 1 : 1;
+    $newId = 'USR' . str_pad($nextId, 3, '0', STR_PAD_LEFT); // VD: USR001, USR002...
 
-        $data['MAT_KHAU'] = bcrypt($data['mat_khau']); // ✅ mã hoá đúng tên cột
-        unset($data['mat_khau']); // ❌ xóa bản thô (nếu muốn sạch sẽ)
+    $data = $r->only(['ho_ten', 'email', 'ngay_sinh', 'gioi_tinh']);
+    $data['ID_USER'] = $newId; // ✅ gán thủ công
+    $data['mat_khau'] = bcrypt($r->mat_khau);
 
-        NguoiDungCaNhan::create($data);
+    NguoiDungCaNhan::create($data);
 
-        return redirect()->route('login')->with('success', 'Đăng ký thành công!');
-    }
+    return redirect()->route('login')->with('success', 'Đăng ký thành công!');
+}
 
-
-    public function showLogin()
-    {
-        return view('login');
-    }
 
     public function doLogin(Request $r)
     {
@@ -51,22 +46,30 @@ class AuthController extends Controller
 
         $user = NguoiDungCaNhan::where('email', $r->email)->first();
 
-        $isCorrectPassword = Hash::check($r->mat_khau, $user->mat_khau);
-
-        if (! $user || ! $isCorrectPassword) {
+        if (!$user || !Hash::check($r->mat_khau, $user->mat_khau)) {
             return back()->withInput()->with('error', 'Sai email hoặc mật khẩu!');
         }
 
-        session(['user' => $user]);
+        Auth::login($user);
 
-        return redirect('/')->with('success', 'Đăng nhập thành công!');
+        // Chuyển về trang ban đầu bị chặn (nếu có), hoặc trang kế hoạch
+        return redirect()->route('welcome')
+                            ->with('success', 'Đăng nhập thành công!');
     }
 
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login')->with('success','Đã đăng xuất');
+    }
 
-     public function showRepassword()
+    public function showRepassword()
     {
         return view('repassword');
     }
+
     public function doRepassword(Request $r)
     {
         $r->validate([
@@ -75,69 +78,63 @@ class AuthController extends Controller
             'cm_mat_khau_moi' => 'required',
         ]);
 
-    $user = NguoiDungCaNhan::where('email', $r->email)->first();
+        $user = NguoiDungCaNhan::where('email', $r->email)->first();
+        NguoiDungCaNhan::where('email', $r->email)
+        ->update(['MAT_KHAU' => Hash::make($r->mat_khau_moi)]);
 
-    
-    NguoiDungCaNhan::where('email', $r->email)
-    ->update(['MAT_KHAU' => Hash::make($r->mat_khau_moi)]);
-
-    session(['user' => $user]);
-    return redirect('/')->with('success', 'Đổi mật khẩu thành công');
-
+        session(['user' => $user]);
+        return redirect('/')->with('success', 'Đổi mật khẩu thành công');
     }
     public function uploadAvatar(Request $request)
-{
+    {
+            $request->validate([
+            'avatar' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
+        $userSession = session('user');
+        $user = NguoiDungCaNhan::find($userSession->ID_USER);
+        if (!$user) return redirect('/login');
+
+        $file = $request->file('avatar');
+        $fileName = 'avatar' . $user->ID_USER . '.' . $file->getClientOriginalExtension();
+
+        // Lưu file
+        $file->move(public_path('uploads'), $fileName);
+
+        // Cập nhật
+        $user->AVATAR = $fileName;
+        $user->save();
+        NguoiDungCaNhan::where('email', $user->EMAIL)
+        ->update(['AVATAR' => $fileName]);
+
+        // Cập nhật session
+        session(['user' => $user]);
+
+        return back()->with('success', 'Đổi ảnh đại diện thành công!');
+    }
+    public function uploadAnhBia(Request $request)
+    {
         $request->validate([
-        'avatar' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
-    ]);
-    $userSession = session('user');
-    $user = NguoiDungCaNhan::find($userSession->ID_USER);
-    if (!$user) return redirect('/login');
+            'anh_bia' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
 
-    $file = $request->file('avatar');
-    $fileName = 'avatar' . $user->ID_USER . '.' . $file->getClientOriginalExtension();
+        $userSession = session('user');
+        $user = NguoiDungCaNhan::find($userSession->ID_USER);
 
-    // Lưu file
-    $file->move(public_path('uploads'), $fileName);
+        if (!$user) return redirect('/login');
 
-    // Cập nhật
-    $user->AVATAR = $fileName;
-    $user->save();
-    NguoiDungCaNhan::where('email', $user->EMAIL)
-    ->update(['AVATAR' => $fileName]);
+        $file = $request->file('anh_bia');
+        $fileName = 'anhbia' . $user->ID_USER . '.' . $file->getClientOriginalExtension();
 
-    // Cập nhật session
-    session(['user' => $user]);
+        $file->move(public_path('uploads'), $fileName);
 
-    return back()->with('success', 'Đổi ảnh đại diện thành công!');
+        $user->ANH_BIA = $fileName;
+        $user->save();
+        NguoiDungCaNhan::where('email', $user->EMAIL)
+        ->update(['ANH_BIA' => $fileName]);
 
-
-}
- public function uploadAnhBia(Request $request)
-{
-    $request->validate([
-        'anh_bia' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
-    ]);
-
-    $userSession = session('user');
-    $user = \App\Models\NguoiDungCaNhan::find($userSession->ID_USER);
-
-    if (!$user) return redirect('/login');
-
-    $file = $request->file('anh_bia');
-    $fileName = 'anhbia' . $user->ID_USER . '.' . $file->getClientOriginalExtension();
-
-    $file->move(public_path('uploads'), $fileName);
-
-    $user->ANH_BIA = $fileName;
-    $user->save();
-     NguoiDungCaNhan::where('email', $user->EMAIL)
-    ->update(['ANH_BIA' => $fileName]);
-    
-    session(key: ['user' => $user]);
-
-    return back()->with('success', 'Đổi ảnh bìa thành công!');
-}
+        session(key: ['user' => $user]);
+        return back()->with('success', 'Đổi ảnh bìa thành công!');
+    }
     public function update(Request $request)
     {
         // Lấy user hiện tại từ session
@@ -158,7 +155,7 @@ class AuthController extends Controller
         ]);
 
         // Cập nhật vào CSDL
-         NguoiDungCaNhan::where('email', $user->EMAIL)
+        NguoiDungCaNhan::where('email', $user->EMAIL)
             ->update([
                 'HO_TEN' => $validated['ho_ten'],
                 'MO_TA' => $validated['mo_ta'],
@@ -168,10 +165,9 @@ class AuthController extends Controller
             ]);
 
         // Cập nhật session (nếu cần thiết)
-// Lấy lại user mới từ DB (theo email mới)
+        // Lấy lại user mới từ DB (theo email mới)
         $updatedUser = NguoiDungCaNhan::where('EMAIL', $validated['email'])->first();
         session(['user' => $updatedUser]);
-
 
         // Trả về trang profile với thông báo
         return redirect()->back()->with('success', 'Cập nhật thông tin thành công!');
