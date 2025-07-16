@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\MucCongViec;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PlansController extends Controller
 {
@@ -34,7 +34,7 @@ class PlansController extends Controller
             'TEN_KE_HOACH' => 'required|string|max:255',
         ]);
 
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login')->with('error', 'Bạn cần đăng nhập!');
         }
 

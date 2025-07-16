@@ -5,6 +5,9 @@ use App\Models\NguoiDungCaNhan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 
 
 class AuthController extends Controller
@@ -23,9 +26,16 @@ class AuthController extends Controller
             'ngay_sinh' => 'required|date|before:today',
         ]);
 
-        $data = $r->only(['ho_ten', 'email', 'ngay_sinh', 'gioi_tinh']);
+        $data = [
+            'HO_TEN' => $r->ho_ten,
+            'EMAIL' => $r->email,
+            'NGAY_SINH' => $r->ngay_sinh,
+            'GIOI_TINH' => $r->gioi_tinh,
+            'MAT_KHAU' => bcrypt($r->mat_khau),
+            'AVATAR' => 'avt.jpg',
+            'ANH_BIA' => 'anhbia.jpg',
+        ];
 
-        $data['mat_khau'] = bcrypt($r->mat_khau);
         NguoiDungCaNhan::create($data);
 
         return redirect()->route('login')->with('success', 'Đăng ký thành công!');
@@ -83,6 +93,7 @@ class AuthController extends Controller
         session(['user' => $user]);
         return redirect('/')->with('success', 'Đổi mật khẩu thành công');
     }
+
     public function uploadAvatar(Request $request)
     {
         $request->validate([
@@ -90,20 +101,22 @@ class AuthController extends Controller
         ]);
 
         /** @var \App\Models\NguoiDungCaNhan $user */
+
         $user = Auth::user();
         if (!$user) return redirect('/login');
 
         $file = $request->file('avatar');
-        $fileName = 'avatar' . $user->ID_USER . '.' . $file->getClientOriginalExtension();
+        $fileName = 'avatar' . $user->ID_USER . '.jpg'; // luôn lưu đuôi .jpg
 
-        // Lưu file
-        $file->move(public_path('uploads'), $fileName);
-        // Cập nhật
+        $imageManager = new ImageManager(new Driver());
+        $image = $imageManager->read($file)->toJpeg(85); // 85% chất lượng JPG
+
+        $image->save(public_path('uploads/' . $fileName));
+
         $user->AVATAR = $fileName;
         $user->save();
 
-        Auth::login($user);
-        return back()->with('success', 'Đổi ảnh đại diện thành công!');
+        return back()->with('success', 'Đổi avatar thành công!');
     }
 
     public function uploadAnhBia(Request $request)
@@ -117,13 +130,26 @@ class AuthController extends Controller
         if (!$user) return redirect('/login');
 
         $file = $request->file('anh_bia');
-        $fileName = 'anhbia' . $user->ID_USER . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads'), $fileName);
 
+        // Tạo tên file lưu với đuôi .jpg để ghi đè
+        $fileName = 'anhbia' . $user->ID_USER . '.jpg';
+        $filePath = public_path('uploads/' . $fileName);
+
+        // Resize và chuyển ảnh sang .jpg dùng Intervention
+        $imageManager = new ImageManager(new Driver());
+        $image = $imageManager
+            ->read($file)
+            ->resizeDown(1200, 400)
+            ->toJpeg(85);
+
+        // Lưu ảnh đã xử lý
+        $image->save($filePath);
+
+        // Cập nhật DB
         $user->ANH_BIA = $fileName;
         $user->save();
 
-        Auth::login($user);
+        Auth::login($user); // Làm mới Auth
 
         return back()->with('success', 'Đổi ảnh bìa thành công!');
     }

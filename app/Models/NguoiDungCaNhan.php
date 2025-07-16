@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,14 +10,16 @@ class NguoiDungCaNhan extends Authenticatable
     use Notifiable;
 
     protected $table = 'nguoi_dung_ca_nhan';
+
     protected $primaryKey = 'ID_USER';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'ID_USER',
         'HO_TEN',
         'EMAIL',
         'MAT_KHAU',
@@ -25,7 +28,6 @@ class NguoiDungCaNhan extends Authenticatable
         'AVATAR',
         'ANH_BIA',
     ];
-
 
     protected $hidden = ['mat_khau'];
 

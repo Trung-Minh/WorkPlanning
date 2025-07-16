@@ -14,7 +14,7 @@
 
             @auth
                 <a href="/account" class="flex items-center gap-2 py-2 hover:text-blue-600">
-                    <img src="{{ asset('uploads/' . (Auth::user()->AVATAR ?? 'avt.png')) }}" alt="AVT" class="w-6 h-6 rounded-full">
+                    <img src="{{ asset('uploads/' . (Auth::user()->AVATAR ?? 'avt.jpg')) }}" alt="AVT" class="w-6 h-6 rounded-full">
                     <span>{{ Auth::user()->HO_TEN ?? 'Không có tên' }}</span>
                 </a>
             @else
