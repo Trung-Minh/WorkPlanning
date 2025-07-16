@@ -11,13 +11,13 @@ class NguoiDungCaNhan extends Authenticatable
 
     protected $table = 'nguoi_dung_ca_nhan';
     protected $primaryKey = 'ID_USER';
-    public $incrementing = false;           // ✅ Vì bạn tự tạo ID
-    protected $keyType = 'string';          // ✅ Kiểu dữ liệu là chuỗi
-
+    public $incrementing = false;
+    protected $keyType = 'string';
+  
     public $timestamps = false;
 
     protected $fillable = [
-        'ID_USER', // ✅ PHẢI có nếu bạn tự set ID
+        'ID_USER',
         'ho_ten',
         'email',
         'mat_khau',
@@ -26,7 +26,7 @@ class NguoiDungCaNhan extends Authenticatable
         'AVATAR',
         'ANH_BIA',
     ];
-
+  
     protected $hidden = ['mat_khau'];
 
     public function getAuthIdentifierName()

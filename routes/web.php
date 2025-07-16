@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlansController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReminderController;
 
 // Trang welcome
 Route::get('/', fn () => view('welcome'))->name('welcome');
@@ -24,7 +25,6 @@ Route::get('/reminders', function () {
 Route::get('/account', function () {
     return view('account');
 });
-
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -76,5 +76,10 @@ Route::post('/profile/upload-anhbia', [AuthController::class, 'uploadAnhBia'])->
 
 Route::post('/profile/update', [AuthController::class, 'update'])->name('profile.update');
 
+//reminders (nhacnho - nguyenthaianh)
+Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
+});
 ?>
