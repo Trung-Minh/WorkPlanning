@@ -2,15 +2,18 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlansController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReminderController;
+use Illuminate\Support\Facades\Route;
 
 // Trang welcome
 Route::get('/', fn () => view('welcome'))->name('welcome');
 
 // Auth
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'doRegister']);
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'doRegister']);
+});
+
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin']);
@@ -30,7 +33,6 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Reminders (ví dụ)
 Route::get('/reminders', fn () => view('reminders'))->name('reminders');
-
 
 Route::get('/plans', function () {
     return view('plans');
@@ -76,10 +78,9 @@ Route::post('/profile/upload-anhbia', [AuthController::class, 'uploadAnhBia'])->
 
 Route::post('/profile/update', [AuthController::class, 'update'])->name('profile.update');
 
-//reminders (nhacnho - nguyenthaianh)
+// reminders (nhacnho - nguyenthaianh)
 Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
 
 Route::middleware('auth')->group(function () {
     Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
 });
-?>

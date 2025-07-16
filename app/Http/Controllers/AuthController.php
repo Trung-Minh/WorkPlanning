@@ -5,6 +5,9 @@ use App\Models\NguoiDungCaNhan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 
 
 class AuthController extends Controller
@@ -14,7 +17,7 @@ class AuthController extends Controller
         return view('register');
     }
 
-   public function doRegister(Request $r)
+    public function doRegister(Request $r)
     {
         $r->validate([
             'ho_ten' => 'required|string|max:100',
@@ -23,13 +26,15 @@ class AuthController extends Controller
             'ngay_sinh' => 'required|date|before:today',
         ]);
 
-        $lastUser = NguoiDungCaNhan::orderBy('ID_USER', 'desc')->first();
-        $nextId = $lastUser ? intval(substr($lastUser->ID_USER, 3)) + 1 : 1;
-        $newId = 'USR' . str_pad($nextId, 3, '0', STR_PAD_LEFT); // VD: USR001, USR002...
-
-        $data = $r->only(['ho_ten', 'email', 'ngay_sinh', 'gioi_tinh']);
-        $data['ID_USER'] = $newId; // ✅ gán thủ công
-        $data['mat_khau'] = bcrypt($r->mat_khau);
+        $data = [
+            'HO_TEN' => $r->ho_ten,
+            'EMAIL' => $r->email,
+            'NGAY_SINH' => $r->ngay_sinh,
+            'GIOI_TINH' => $r->gioi_tinh,
+            'MAT_KHAU' => bcrypt($r->mat_khau),
+            'AVATAR' => 'avt.jpg',
+            'ANH_BIA' => 'anhbia.jpg',
+        ];
 
         NguoiDungCaNhan::create($data);
 
@@ -88,61 +93,70 @@ class AuthController extends Controller
         session(['user' => $user]);
         return redirect('/')->with('success', 'Đổi mật khẩu thành công');
     }
+
     public function uploadAvatar(Request $request)
     {
-            $request->validate([
+        $request->validate([
             'avatar' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
-        $userSession = session('user');
-        $user = NguoiDungCaNhan::find($userSession->ID_USER);
+
+        /** @var \App\Models\NguoiDungCaNhan $user */
+
+        $user = Auth::user();
         if (!$user) return redirect('/login');
 
         $file = $request->file('avatar');
-        $fileName = 'avatar' . $user->ID_USER . '.' . $file->getClientOriginalExtension();
+        $fileName = 'avatar' . $user->ID_USER . '.jpg'; // luôn lưu đuôi .jpg
 
-        // Lưu file
-        $file->move(public_path('uploads'), $fileName);
+        $imageManager = new ImageManager(new Driver());
+        $image = $imageManager->read($file)->toJpeg(85); // 85% chất lượng JPG
 
-        // Cập nhật
+        $image->save(public_path('uploads/' . $fileName));
+
         $user->AVATAR = $fileName;
         $user->save();
-        NguoiDungCaNhan::where('email', $user->EMAIL)
-        ->update(['AVATAR' => $fileName]);
 
-        // Cập nhật session
-        session(['user' => $user]);
-
-        return back()->with('success', 'Đổi ảnh đại diện thành công!');
+        return back()->with('success', 'Đổi avatar thành công!');
     }
+
     public function uploadAnhBia(Request $request)
     {
         $request->validate([
             'anh_bia' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
-        $userSession = session('user');
-        $user = NguoiDungCaNhan::find($userSession->ID_USER);
-
+        /** @var \App\Models\NguoiDungCaNhan $user */
+        $user = Auth::user();
         if (!$user) return redirect('/login');
 
         $file = $request->file('anh_bia');
-        $fileName = 'anhbia' . $user->ID_USER . '.' . $file->getClientOriginalExtension();
 
-        $file->move(public_path('uploads'), $fileName);
+        // Tạo tên file lưu với đuôi .jpg để ghi đè
+        $fileName = 'anhbia' . $user->ID_USER . '.jpg';
+        $filePath = public_path('uploads/' . $fileName);
 
+        // Resize và chuyển ảnh sang .jpg dùng Intervention
+        $imageManager = new ImageManager(new Driver());
+        $image = $imageManager
+            ->read($file)
+            ->resizeDown(1200, 400)
+            ->toJpeg(85);
+
+        // Lưu ảnh đã xử lý
+        $image->save($filePath);
+
+        // Cập nhật DB
         $user->ANH_BIA = $fileName;
         $user->save();
-        NguoiDungCaNhan::where('email', $user->EMAIL)
-        ->update(['ANH_BIA' => $fileName]);
 
-        session(key: ['user' => $user]);
+        Auth::login($user); // Làm mới Auth
+
         return back()->with('success', 'Đổi ảnh bìa thành công!');
     }
+
     public function update(Request $request)
     {
-        // Lấy user hiện tại từ session
-        $user = session('user');
-
+        $user = Auth::user();
         // Kiểm tra nếu chưa đăng nhập
         if (!$user) {
             return redirect('/login')->with('error', 'Bạn cần đăng nhập.');
@@ -168,9 +182,8 @@ class AuthController extends Controller
             ]);
 
         // Cập nhật session (nếu cần thiết)
-        // Lấy lại user mới từ DB (theo email mới)
-        $updatedUser = NguoiDungCaNhan::where('EMAIL', $validated['email'])->first();
-        session(['user' => $updatedUser]);
+        $updatedUser = NguoiDungCaNhan::where('ID_USER', $user->ID_USER)->first();
+        Auth::login($updatedUser);
 
         // Trả về trang profile với thông báo
         return redirect()->back()->with('success', 'Cập nhật thông tin thành công!');
