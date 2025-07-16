@@ -13,7 +13,7 @@ class NguoiDungCaNhan extends Authenticatable
     protected $primaryKey = 'ID_USER';
     public $incrementing = false;
     protected $keyType = 'string';
-  
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -26,7 +26,7 @@ class NguoiDungCaNhan extends Authenticatable
         'AVATAR',
         'ANH_BIA',
     ];
-  
+
     protected $hidden = ['mat_khau'];
 
     public function getAuthIdentifierName()

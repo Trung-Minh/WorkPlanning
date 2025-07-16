@@ -15,27 +15,30 @@ class AuthController extends Controller
     }
 
    public function doRegister(Request $r)
-{
-    $r->validate([
-        'ho_ten' => 'required|string|max:100',
-        'mat_khau' => 'required|min:8|confirmed',
-        'email' => 'required|email|unique:nguoi_dung_ca_nhan,email',
-        'ngay_sinh' => 'required|date|before:today',
-    ]);
+    {
+        $r->validate([
+            'ho_ten' => 'required|string|max:100',
+            'mat_khau' => 'required|min:8|confirmed',
+            'email' => 'required|email|unique:nguoi_dung_ca_nhan,email',
+            'ngay_sinh' => 'required|date|before:today',
+        ]);
 
-    $lastUser = NguoiDungCaNhan::orderBy('ID_USER', 'desc')->first();
-    $nextId = $lastUser ? intval(substr($lastUser->ID_USER, 3)) + 1 : 1;
-    $newId = 'USR' . str_pad($nextId, 3, '0', STR_PAD_LEFT); // VD: USR001, USR002...
+        $lastUser = NguoiDungCaNhan::orderBy('ID_USER', 'desc')->first();
+        $nextId = $lastUser ? intval(substr($lastUser->ID_USER, 3)) + 1 : 1;
+        $newId = 'USR' . str_pad($nextId, 3, '0', STR_PAD_LEFT); // VD: USR001, USR002...
 
-    $data = $r->only(['ho_ten', 'email', 'ngay_sinh', 'gioi_tinh']);
-    $data['ID_USER'] = $newId; // ✅ gán thủ công
-    $data['mat_khau'] = bcrypt($r->mat_khau);
+        $data = $r->only(['ho_ten', 'email', 'ngay_sinh', 'gioi_tinh']);
+        $data['ID_USER'] = $newId; // ✅ gán thủ công
+        $data['mat_khau'] = bcrypt($r->mat_khau);
 
-    NguoiDungCaNhan::create($data);
+        NguoiDungCaNhan::create($data);
 
-    return redirect()->route('login')->with('success', 'Đăng ký thành công!');
-}
+        return redirect()->route('login')->with('success', 'Đăng ký thành công!');
+    }
 
+    public function showLogin(){
+        return view('login');
+    }
 
     public function doLogin(Request $r)
     {
@@ -46,7 +49,7 @@ class AuthController extends Controller
 
         $user = NguoiDungCaNhan::where('email', $r->email)->first();
 
-        if (!$user || !Hash::check($r->mat_khau, $user->mat_khau)) {
+        if (!$user || !Hash::check($r->mat_khau, hashedValue: $user->MAT_KHAU)) {
             return back()->withInput()->with('error', 'Sai email hoặc mật khẩu!');
         }
 
