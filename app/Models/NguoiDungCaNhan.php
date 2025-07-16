@@ -7,19 +7,17 @@ use Illuminate\Notifications\Notifiable;
 
 class NguoiDungCaNhan extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
     protected $table = 'nguoi_dung_ca_nhan';
     protected $primaryKey = 'ID_USER';
-    protected $authPasswordName = 'mat_khau';
-    protected $hidden = ['mat_khau'];
-
-    // Khicomment 2 dòng dưới thì lỗi session id_user = 0, còn không comment thì không thể đăng nhập
-    // public $incrementing = false;
-    // protected $keyType = 'string';
+    public $incrementing = false;           // ✅ Vì bạn tự tạo ID
+    protected $keyType = 'string';          // ✅ Kiểu dữ liệu là chuỗi
 
     public $timestamps = false;
+
     protected $fillable = [
+        'ID_USER', // ✅ PHẢI có nếu bạn tự set ID
         'ho_ten',
         'email',
         'mat_khau',
@@ -29,9 +27,11 @@ class NguoiDungCaNhan extends Authenticatable
         'ANH_BIA',
     ];
 
-    public function getMatKhauAttribute()
+    protected $hidden = ['mat_khau'];
+
+    public function getAuthIdentifierName()
     {
-        return $this->attributes['MAT_KHAU'] ?? null;
+        return 'ID_USER';
     }
 
     public function getAuthIdentifier()
@@ -39,20 +39,13 @@ class NguoiDungCaNhan extends Authenticatable
         return $this->ID_USER;
     }
 
-    public function getAuthIdentifierName()
-    {
-        return 'ID_USER';
-    }
-
-
     public function getAuthPassword()
     {
-        return $this->mat_khau;
+        return $this->attributes['MAT_KHAU'];
     }
 
     public function keHoachs()
     {
         return $this->hasMany(KeHoach::class, 'NGUOI_TAO', 'ID_USER');
-
     }
 }

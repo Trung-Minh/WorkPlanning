@@ -14,33 +14,28 @@ class AuthController extends Controller
         return view('register');
     }
 
-    public function doRegister(Request $r)
-    {
-        $r->validate([
-            'ho_ten' => 'required|string|max:100',
-            'mat_khau' => 'required|min:8|confirmed',
-            'email' => 'required|email|unique:nguoi_dung_ca_nhan,email',
-            'ngay_sinh' => 'required|date|before:today',
-        ]);
+   public function doRegister(Request $r)
+{
+    $r->validate([
+        'ho_ten' => 'required|string|max:100',
+        'mat_khau' => 'required|min:8|confirmed',
+        'email' => 'required|email|unique:nguoi_dung_ca_nhan,email',
+        'ngay_sinh' => 'required|date|before:today',
+    ]);
 
-        $data = $r->only([
-            'ho_ten',
-            'email',
-            'mat_khau',
-            'ngay_sinh',
-            'gioi_tinh',
-        ]);
+    $lastUser = NguoiDungCaNhan::orderBy('ID_USER', 'desc')->first();
+    $nextId = $lastUser ? intval(substr($lastUser->ID_USER, 3)) + 1 : 1;
+    $newId = 'USR' . str_pad($nextId, 3, '0', STR_PAD_LEFT); // VD: USR001, USR002...
 
-        $data['mat_khau'] = bcrypt($data['mat_khau']);
-        NguoiDungCaNhan::create($data);
+    $data = $r->only(['ho_ten', 'email', 'ngay_sinh', 'gioi_tinh']);
+    $data['ID_USER'] = $newId; // ✅ gán thủ công
+    $data['mat_khau'] = bcrypt($r->mat_khau);
 
-        return redirect()->route('login')->with('success', 'Đăng ký thành công!');
-    }
+    NguoiDungCaNhan::create($data);
 
-    public function showLogin()
-    {
-        return view('login');
-    }
+    return redirect()->route('login')->with('success', 'Đăng ký thành công!');
+}
+
 
     public function doLogin(Request $r)
     {
