@@ -28,4 +28,7 @@
   </tbody>
 </table>
 @endif
+
+@include('tasks.index')
+
 @endsection

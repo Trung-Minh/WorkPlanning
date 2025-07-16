@@ -35,4 +35,17 @@ class CongViec extends Model
     {
         return $this->belongsTo(CauHinhThongBao::class, 'ID_CAUHINH', 'ID_CAUHINH');
     }
+
+    //nguyenthaianh
+     // Mối quan hệ với bảng MUC_CONG_VIEC
+    public function subTasks()
+    {
+        return $this->hasMany(MucCongViec::class, 'ID_CV', 'ID_CV');
+    }
+
+    // Mối quan hệ với bảng KE_HOACH
+    public function plan()
+    {
+        return $this->belongsTo(KeHoach::class, 'ID_KH', 'ID_KH');
+    }
 }

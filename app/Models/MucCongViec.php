@@ -29,4 +29,11 @@ class MucCongViec extends Model
     {
         return $this->belongsTo(CongViec::class, 'ID_CV', 'ID_CV');
     }
+
+    //nguyenthaianh
+    // Mối quan hệ với bảng CONG_VIEC
+    public function task()
+    {
+        return $this->belongsTo(CongViec::class, 'ID_CV', 'ID_CV');
+    }
 }

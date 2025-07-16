@@ -82,4 +82,6 @@ Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders'
 Route::middleware('auth')->group(function () {
     Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
 });
+
+Route::get('/tasks.index', [ReminderController::class, 'reminders_nguoidungcanhan'])->middleware('auth');
 ?>
