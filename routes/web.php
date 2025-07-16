@@ -55,6 +55,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/muc-cong-viec/{id}', [PlansController::class, 'deleteSubtask'])->name('subtasks.delete');
 
     Route::put('/muc-cong-viec/{id}/sua', [PlansController::class, 'updateSubtask1'])->name('subtasks.update1');
+    Route::post('/tasks/update-priority/{id}', [PlansController::class, 'updateTaskPriority']);
+
+
 
     // Load công việc HTML
     Route::get('/ke-hoach/{id}/cong-viec', [PlansController::class, 'renderCongViecHtml'])->name('plans.tasks.html');

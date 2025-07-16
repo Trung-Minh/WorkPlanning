@@ -65,7 +65,7 @@
         <input type="datetime-local" name="THOI_HAN_HOAN_THANH"
                class="w-full p-2 border border-pink-300 rounded mb-3 focus:ring-2 focus:ring-pink-400" required>
 
-        <input type="number" name="DO_UU_TIEN_MUC" placeholder="Độ ưu tiên" min="1" max="10"
+        <input type="number" name="DO_UU_TIEN_MUC" placeholder="Độ ưu tiên" min="1" 
                class="w-full p-2 border border-yellow-300 rounded mb-4 focus:ring-2 focus:ring-yellow-400" required>
 
         <div class="flex justify-end gap-2">

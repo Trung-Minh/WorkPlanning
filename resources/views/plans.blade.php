@@ -61,16 +61,17 @@
                             $colors = [
                                 'from-pink-100 to-pink-200',
                                 'from-purple-100 to-purple-200',
+                                'from-orange-100 to-orange-200', 
+                                'from-emerald-100 to-emerald-200', 
+                                'from-teal-100 to-teal-200',
+                                'from-fuchsia-100 to-fuchsia-200',
                                 'from-indigo-100 to-indigo-200',
                                 'from-blue-100 to-blue-200',
                                 'from-green-100 to-green-200',
                                 'from-yellow-100 to-yellow-200',
-                                'from-rose-100 to-rose-200',
-                                'from-teal-100 to-teal-200',
-                                'from-orange-100 to-orange-200',    
+                                'from-rose-100 to-rose-200',` 
                                 'from-red-100 to-red-200',           
-                                'from-sky-100 to-sky-200',          
-                                'from-emerald-100 to-emerald-200',   
+                                'from-sky-100 to-sky-200',            
                                 'from-lime-100 to-lime-200',         
                                 'from-fuchsia-100 to-fuchsia-200',  
                             ];
@@ -118,10 +119,10 @@
                     $deadline = \Carbon\Carbon::parse($muc->THOI_HAN_HOAN_THANH);
                     $now = \Carbon\Carbon::now();
                     $isDone = $muc->TRANG_THAI;
-                    $bgColor = $isDone ? 'bg-green-300' : ($deadline->lt($now) ? 'bg-red-300' : 'bg-blue-300');
+                    $bgColor = $isDone ? 'bg-green-300' : ($deadline->lt($now) ? 'bg-red-300' : 'bg-blue-100');
                 @endphp
 
-                <li class="p-3 rounded shadow-sm transition {{ $bgColor }} hover:brightness-105 hover:scale-105 duration-200 text-left" data-id="{{ $muc->ID_MUC }}">
+                <li class="relative p-3 rounded shadow-sm transition {{ $bgColor }} hover:brightness-105 hover:scale-105 duration-200 text-left" data-id="{{ $muc->ID_MUC }}">
                     {{-- Tên mục --}}
                     <div class="w-full mb-1">
                         <span class="font-medium text-gray-800 cursor-pointer editable subtask-title hover:text-indigo-700 hover:underline"
@@ -152,6 +153,11 @@
                             🗑 Xóa
                         </button>
                     </div>
+                                        {{-- Hiển thị độ ưu tiên --}}
+                    <div class="absolute bottom-2 right-3 text-xs text-black-700 font-semibold bg-white/60 px-2 py-1 rounded shadow">
+                        🎯{{ $muc->DO_UU_TIEN_MUC }}
+                    </div>
+
                 </li>
             @endforeach
         </ul>
@@ -167,9 +173,14 @@
         </div>
 
         {{-- Hiển thị độ ưu tiên --}}
-        <div class="absolute bottom-2 right-3 text-xs text-black-700 font-semibold bg-white/60 px-2 py-1 rounded shadow">
-            ⭐{{ $cv->DO_UU_TIEN }}
-        </div>
+    <div class="absolute bottom-2 right-3">
+        <span class="priority-display cursor-pointer text-sm font-semibold bg-white/70 px-2 py-1 rounded shadow hover:ring hover:ring-indigo-300"
+            ondblclick="editCvPriority(this, '{{ $cv->ID_CV }}')">
+            ⭐ <span class="priority-value">{{ $cv->DO_UU_TIEN }}</span>
+        </span>
+    </div>
+
+
     </div>
 @endforeach
 
@@ -196,6 +207,8 @@
         setupInlineEditing('{{ csrf_token() }}');
     });
 </script>
+
+
 @endsection
 
 @php($noFooter = true)
