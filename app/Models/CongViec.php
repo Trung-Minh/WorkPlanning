@@ -35,4 +35,19 @@ class CongViec extends Model
     {
         return $this->belongsTo(CauHinhThongBao::class, 'ID_CAUHINH', 'ID_CAUHINH');
     }
+    public function mucCongViecs()
+    {
+        return $this->hasMany(MucCongViec::class, 'ID_CV', 'ID_CV');
+    }
+    
+
+    public function capNhatTienDo()
+    {
+        $tong = $this->mucCongViecs()->count();
+        $hoanThanh = $this->mucCongViecs()->where('TRANG_THAI', 1)->count();
+
+        $this->TIEN_DO = $tong > 0 ? round($hoanThanh / $tong * 100) : 0;
+        $this->save();
+    }
+
 }

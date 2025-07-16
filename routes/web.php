@@ -60,8 +60,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ke-hoach/{id}/cong-viec', [PlansController::class, 'renderCongViecHtml'])->name('plans.tasks.html');
     Route::post('/api/muc-cong-viec/{id}/toggle-status', [PlansController::class, 'toggleStatus']);
     Route::put('/subtasks/{id}', [PlansController::class, 'updateSubtask'])->name('subtasks.update');
+    Route::put('/subtasks/{id}', [PlansController::class, 'updateSubtask1'])->name('subtasks.update');
+    Route::delete('/tasks/{id}', [PlansController::class, 'destroyTask'])->name('tasks.delete');
+
+
 
 });
+
+
 
 Route::get('/profile/upload-avatar', function () {
     return 'Đây là trang upload-avatar, chỉ xử lý POST mới có tác dụng.';

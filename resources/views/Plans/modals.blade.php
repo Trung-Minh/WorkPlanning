@@ -29,8 +29,14 @@
         <input type="hidden" name="ID_KH" id="task_kehoach_id">
         <h2 class="text-xl font-bold text-green-700 mb-4">Thêm Công việc</h2>
         <input type="text" name="TEN_CV" placeholder="Tên công việc" class="w-full p-2 border rounded mb-3" required>
-        <input type="number" name="TIEN_DO" placeholder="Tiến độ (%)" class="w-full p-2 border rounded mb-3" required>
-        <input type="number" name="DO_UU_TIEN" placeholder="Độ ưu tiên" class="w-full p-2 border rounded mb-4">
+
+
+        <input type="number" name="DO_UU_TIEN" min="1"
+            class="w-full p-2 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            placeholder="Độ ưu tiên (ví dụ: 1, 2, 3...)">
+        <p class="text-xs text-gray-500 italic -mt-3 mb-3">
+        </p>
+
         <div class="flex justify-end gap-2">
             <button type="submit"
                 class="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded hover:scale-105 transition">Thêm</button>

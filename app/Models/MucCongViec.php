@@ -29,4 +29,5 @@ class MucCongViec extends Model
     {
         return $this->belongsTo(CongViec::class, 'ID_CV', 'ID_CV');
     }
+    
 }

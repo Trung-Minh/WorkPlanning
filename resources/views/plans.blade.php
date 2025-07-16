@@ -42,14 +42,14 @@
 
             {{-- Nút thêm công việc --}}
             <button onclick="showAddTaskModal('{{ $keHoach->ID_KH }}')"
-    class="cursor-pointer bg-gradient-to-r 
-    from-green-500 via-blue-400 via-purple-400 to-pink-500
-    hover:from-green-600 hover:via-blue-500 hover:to-pink-600 
-    px-5 py-2.5 rounded-lg shadow-xl
-    transition-transform transform hover:scale-110 
-    text-sm text-white mb-4 animate-fade-in">
-    + Thêm Công việc
-</button>
+                class="cursor-pointer bg-gradient-to-r 
+                from-green-500 via-blue-400 via-purple-400 to-pink-500
+                hover:from-green-600 hover:via-blue-500 hover:to-pink-600 
+                px-5 py-2.5 rounded-lg shadow-xl
+                transition-transform transform hover:scale-110 
+                text-sm text-white mb-4 animate-fade-in">
+                + Thêm Công việc
+            </button>
 
 
             @if($keHoach->cong_viec->isEmpty())
@@ -77,94 +77,105 @@
                         @endphp
 
 
-                        @foreach($keHoach->cong_viec as $i => $cv)
-                            @php $gradient = $colors[$i % count($colors)]; @endphp
+                       @foreach($keHoach->cong_viec as $i => $cv)
+    @php $gradient = $colors[$i % count($colors)]; @endphp
 
-                            <div class="min-w-[320px] w-[400px] border-l-4 border-indigo-500
-                                        bg-gradient-to-br {{ $gradient }} p-4
-                                        rounded-lg shadow-md hover:shadow-xl
-                                        transition duration-300 animate-fade-in">
-                                {{-- Công việc --}}
-                                <h3 class="text-lg font-semibold text-gray-800">
-                                    <span class="text-indigo-800 cursor-pointer editable task-title hover:underline"
-                                            data-id="{{ $cv->ID_CV }}">
-                                        {{ $cv->TEN_CV }}
-                                    </span>
-                                </h3>
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="font-semibold text-green-700 cursor-pointer editable task-progress animate-pulse"
-                                                data-id="{{ $cv->ID_CV }}">({{ $cv->TIEN_DO }}%)</span>
-                                    <button onclick="confirmDelete(
-                                                        '{{ route('tasks.delete', $cv->ID_CV) }}',
-                                                        'Xoá Công Việc',
-                                                        'Bạn có chắc chắn muốn xoá?')"
-                                            class="text-sm text-red-500 transition cursor-pointer hover:text-red-700">
-                                        🗑 Xóa Công Việc
-                                    </button>
-                                </div>
+    <div class="relative min-w-[320px] w-[400px] border-l-4 border-indigo-500
+                bg-gradient-to-br {{ $gradient }} p-4
+                rounded-lg shadow-md hover:shadow-xl
+                transition duration-300 animate-fade-in">
+        {{-- Công việc --}}
+        <h3 class="text-lg font-semibold text-gray-800">
+            <span class="text-indigo-800 cursor-pointer editable task-title hover:underline"
+                  data-id="{{ $cv->ID_CV }}">
+                {{ $cv->TEN_CV }}
+            </span>
+        </h3>
 
-                                {{-- Thư mục --}}
-                                <ul class="mt-2 ml-5 space-y-2 text-sm list-none">
-                                    @foreach($cv->muc_cong_viec as $muc)
-                                        @php
-                                            $deadline = \Carbon\Carbon::parse($muc->THOI_HAN_HOAN_THANH);
-                                            $now = \Carbon\Carbon::now();
-                                            $isDone = $muc->TRANG_THAI;
-                                            if ($isDone) {
-                                                $bgColor = 'bg-green-300';
-                                            } elseif ($deadline->lt($now)) {
-                                                $bgColor = 'bg-red-300';
-                                            } else {
-                                                $bgColor = 'bg-blue-300';
-                                            }
-                                        @endphp
-                                        <li class="p-3 rounded shadow-sm transition {{ $bgColor }} hover:brightness-105 hover:scale-105 duration-200 text-left" data-id="{{ $muc->ID_MUC }}">
+        <div class="flex items-center justify-between mb-2">
+            @php
+                $tienDo = $cv->TIEN_DO ?? 0;
+                $color = $tienDo == 100 ? 'text-green-600' : ($tienDo >= 50 ? 'text-yellow-600' : 'text-red-600');
+            @endphp
 
-                                            {{-- Tên mục --}}
-                                            <div class="w-full mb-1">
-                                                <span class="font-medium text-gray-800 cursor-pointer editable subtask-title hover:text-indigo-700 hover:underline"
-                                                    data-id="{{ $muc->ID_MUC }}">
-                                                {{ $muc->TEN_MUC }}
-                                                </span>
-                                            </div>
+            <p class="font-semibold {{ $color }}">
+                Tiến độ: {{ $tienDo }}%
+            </p>
 
-                                            {{-- Thời hạn --}}
-                                            <div class="w-full mb-2 text-center text-gray-600">
-                                                <span class="cursor-pointer editable subtask-deadline" data-id="{{ $muc->ID_MUC }}">
-                                                {{ $muc->THOI_HAN_HOAN_THANH }}
-                                                </span>
-                                            </div>
+            <button onclick="confirmDelete(
+                                '{{ route('tasks.delete', $cv->ID_CV) }}',
+                                'Xoá Công Việc',
+                                'Bạn có chắc chắn muốn xoá?')"
+                    class="text-sm text-red-500 transition cursor-pointer hover:text-red-700">
+                🗑 Xóa Công Việc
+            </button>
+        </div>
 
-                                            {{-- Nút hành động --}}
-                                            <div class="flex justify-center w-full space-x-4 text-xs">
-                                                <button onclick="showViewSubtaskModal('{{ $muc->ID_MUC }}')"
-                                                        class="text-blue-600 underline cursor-pointer hover:text-blue-800">
-                                                👁 Xem
-                                                </button>
-                                                <button onclick="showEditSubtaskModal1('{{ $muc->ID_MUC }}')"
-                                                        class="text-yellow-600 underline cursor-pointer hover:text-yellow-800">
-                                                ✏️ Chỉnh Sửa
-                                                </button>
-                                                <button onclick="confirmDelete('{{ route('subtasks.delete', $muc->ID_MUC) }}', 'Xoá Thư Mục', 'Bạn có chắc chắn?')"
-                                                        class="text-red-600 underline cursor-pointer hover:text-red-800">
-                                                🗑 Xóa
-                                                </button>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
+        {{-- Thư mục --}}
+        <ul class="mt-2 ml-5 space-y-2 text-sm list-none">
+            @foreach($cv->muc_cong_viec as $muc)
+                @php
+                    $deadline = \Carbon\Carbon::parse($muc->THOI_HAN_HOAN_THANH);
+                    $now = \Carbon\Carbon::now();
+                    $isDone = $muc->TRANG_THAI;
+                    $bgColor = $isDone ? 'bg-green-300' : ($deadline->lt($now) ? 'bg-red-300' : 'bg-blue-300');
+                @endphp
 
-                                {{-- Thêm thư mục --}}
-                                <div class="flex justify-center mt-4">
-                                    <button onclick="showAddSubTaskModal('{{ $cv->ID_CV }}')"
-                                            class="cursor-pointer w-[60%] bg-gradient-to-r from-green-400 via-green-500 to-emerald-500
-                                                text-white py-2 rounded-lg shadow hover:from-green-500 hover:to-emerald-600 hover:scale-105
-                                                transition-transform duration-300 text-sm">
-                                        ➕ Thêm Thư Mục
-                                    </button>
-                                </div>
-                            </div>
-                        @endforeach
+                <li class="p-3 rounded shadow-sm transition {{ $bgColor }} hover:brightness-105 hover:scale-105 duration-200 text-left" data-id="{{ $muc->ID_MUC }}">
+                    {{-- Tên mục --}}
+                    <div class="w-full mb-1">
+                        <span class="font-medium text-gray-800 cursor-pointer editable subtask-title hover:text-indigo-700 hover:underline"
+                              data-id="{{ $muc->ID_MUC }}">
+                            {{ $muc->TEN_MUC }}
+                        </span>
+                    </div>
+
+                    {{-- Thời hạn --}}
+                    <div class="w-full mb-2 text-center text-gray-600">
+                        <span class="cursor-pointer editable subtask-deadline" data-id="{{ $muc->ID_MUC }}">
+                            {{ $muc->THOI_HAN_HOAN_THANH }}
+                        </span>
+                    </div>
+
+                    {{-- Nút hành động --}}
+                    <div class="flex justify-center w-full space-x-4 text-xs">
+                        <button onclick="showViewSubtaskModal('{{ $muc->ID_MUC }}')"
+                                class="text-blue-600 underline cursor-pointer hover:text-blue-800">
+                            👁 Xem
+                        </button>
+                        <button onclick="showEditSubtaskModal1('{{ $muc->ID_MUC }}')"
+                                class="text-yellow-600 underline cursor-pointer hover:text-yellow-800">
+                            ✏️ Chỉnh Sửa
+                        </button>
+                        <button onclick="confirmDelete('{{ route('subtasks.delete', $muc->ID_MUC) }}', 'Xoá Thư Mục', 'Bạn có chắc chắn?')"
+                                class="text-red-600 underline cursor-pointer hover:text-red-800">
+                            🗑 Xóa
+                        </button>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+
+        {{-- Thêm thư mục --}}
+        <div class="flex justify-center mt-4">
+            <button onclick="showAddSubTaskModal('{{ $cv->ID_CV }}')"
+                    class="cursor-pointer w-[60%] bg-gradient-to-r from-green-400 via-green-500 to-emerald-500
+                           text-white py-2 rounded-lg shadow hover:from-green-500 hover:to-emerald-600 hover:scale-105
+                           transition-transform duration-300 text-sm">
+                ➕ Thêm Thư Mục
+            </button>
+        </div>
+
+        {{-- Hiển thị độ ưu tiên --}}
+        <div class="absolute bottom-2 right-3 text-xs text-black-700 font-semibold bg-white/60 px-2 py-1 rounded shadow">
+            ⭐{{ $cv->DO_UU_TIEN }}
+        </div>
+    </div>
+@endforeach
+
+
+
+                        
                     </div>
                 </div>
             @endif
