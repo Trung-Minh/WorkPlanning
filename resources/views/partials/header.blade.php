@@ -1,6 +1,10 @@
 <header class="py-6 text-sm text-center text-gray-600 bg-white border-t shadow-md">
     <div class="flex items-center justify-between px-4 py-4 mx-auto max-w-7xl">
-        <div class="text-2xl font-bold text-blue-600">WorkPlan</div>
+        <div class="text-2xl font-bold text-blue-600">
+            <a href="{{route('welcome')  }}">
+                WorkPlanning
+            </a>
+        </div>
         <button id="menuToggle" class="text-2xl text-gray-700 md:hidden focus:outline-none">☰</button>
 
         <nav id="navMenu" class="absolute left-0 z-50 flex-col hidden w-full px-4 font-medium text-gray-700 bg-white md:flex md:flex-row md:items-center md:space-x-6 md:static md:bg-transparent top-16 md:w-auto md:px-0">
