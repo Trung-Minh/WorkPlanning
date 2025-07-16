@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\MucCongViec;
+use Illuminate\Support\Facades\Auth;
 
 class PlansController extends Controller
 {
@@ -28,9 +30,17 @@ class PlansController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'TEN_KE_HOACH' => 'required|string|max:255',
+        ]);
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập!');
+        }
+
         DB::table('KE_HOACH')->insert([
             'TEN_KE_HOACH' => $request->TEN_KE_HOACH,
-            'NGUOI_TAO' => 'NDCN0001', // TODO: Replace with Auth::id()
+            'NGUOI_TAO' => Auth::user()->ID_USER,
         ]);
 
         return redirect()->route('plans.index');
@@ -168,7 +178,7 @@ class PlansController extends Controller
                 'NOI_DUNG_CHI_TIET' => $request->NOI_DUNG_CHI_TIET,
                 'THOI_HAN_HOAN_THANH' => $request->THOI_HAN_HOAN_THANH,
                 'DO_UU_TIEN_MUC' => $request->DO_UU_TIEN_MUC,
-                'TRANG_THAI' => $request->has('TRANG_THAI') ? 1 : 0, // ✅ thêm dòng này
+                'TRANG_THAI' => $request->has('TRANG_THAI') ? 1 : 0,
             ]);
 
         return redirect()->route('plans.index');
