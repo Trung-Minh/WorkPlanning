@@ -14,13 +14,15 @@
         Danh sách Kế hoạch
     </h1>
 
-    <button onclick="showModal('modalAddPlan')"
-            class="cursor-pointer bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
-                    hover:from-indigo-600 hover:to-pink-600 text-white
-                    px-5 py-2.5 rounded-lg shadow-xl
-                    transition-transform transform hover:scale-110">
-        ➕ Thêm Kế hoạch
-    </button>
+   <button onclick="showModal('modalAddPlan')"
+    class="cursor-pointer bg-gradient-to-r 
+           from-red-500 to-purple-500 
+           hover:from-red-600 hover:to-purple-600
+           text-white px-5 py-2.5 rounded-lg shadow-xl
+           transition-transform transform hover:scale-110">
+    ➕ Thêm Kế hoạch
+</button>
+
 
     @foreach($keHoachs as $keHoach)
         <div class="p-4 mt-6 bg-white border border-blue-200 rounded-lg shadow-lg animate-fade-in">
@@ -40,18 +42,22 @@
 
             {{-- Nút thêm công việc --}}
             <button onclick="showAddTaskModal('{{ $keHoach->ID_KH }}')"
-                    class="cursor-pointer bg-gradient-to-r from-indigo-500 via-white-300 to-yellow-500
-                    hover:from-indigo-300 hover:to-pink-500 px-5 py-2.5 rounded-lg shadow-xl
-                    transition-transform transform hover:scale-110 text-sm text-blue-600 mb-4 animate-fade-in">
-                + Thêm Công việc
-            </button>
+    class="cursor-pointer bg-gradient-to-r 
+    from-green-500 via-blue-400 via-purple-400 to-pink-500
+    hover:from-green-600 hover:via-blue-500 hover:to-pink-600 
+    px-5 py-2.5 rounded-lg shadow-xl
+    transition-transform transform hover:scale-110 
+    text-sm text-white mb-4 animate-fade-in">
+    + Thêm Công việc
+</button>
+
 
             @if($keHoach->cong_viec->isEmpty())
                 <p class="italic text-gray-500">Chưa có công việc nào cho kế hoạch này.</p>
             @else
                 <div class="overflow-x-auto">
                     <div class="flex gap-4 flex-nowrap">
-                        @php
+                       @php
                             $colors = [
                                 'from-pink-100 to-pink-200',
                                 'from-purple-100 to-purple-200',
@@ -61,8 +67,15 @@
                                 'from-yellow-100 to-yellow-200',
                                 'from-rose-100 to-rose-200',
                                 'from-teal-100 to-teal-200',
+                                'from-orange-100 to-orange-200',    
+                                'from-red-100 to-red-200',           
+                                'from-sky-100 to-sky-200',          
+                                'from-emerald-100 to-emerald-200',   
+                                'from-lime-100 to-lime-200',         
+                                'from-fuchsia-100 to-fuchsia-200',  
                             ];
                         @endphp
+
 
                         @foreach($keHoach->cong_viec as $i => $cv)
                             @php $gradient = $colors[$i % count($colors)]; @endphp
@@ -98,11 +111,11 @@
                                             $now = \Carbon\Carbon::now();
                                             $isDone = $muc->TRANG_THAI;
                                             if ($isDone) {
-                                                $bgColor = 'bg-green-100';
+                                                $bgColor = 'bg-green-300';
                                             } elseif ($deadline->lt($now)) {
-                                                $bgColor = 'bg-red-100';
+                                                $bgColor = 'bg-red-300';
                                             } else {
-                                                $bgColor = 'bg-blue-100';
+                                                $bgColor = 'bg-blue-300';
                                             }
                                         @endphp
                                         <li class="p-3 rounded shadow-sm transition {{ $bgColor }} hover:brightness-105 hover:scale-105 duration-200 text-left" data-id="{{ $muc->ID_MUC }}">
