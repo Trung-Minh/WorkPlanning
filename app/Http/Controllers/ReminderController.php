@@ -23,7 +23,18 @@ class ReminderController extends Controller
             ->orderBy('THOI_DIEM_THONG_BAO', 'asc')
             ->get();
 
-        return view('reminders', compact('reminders', 'thongBaos'));
+        $reminderData = $thongBaos->map(function ($tb) {
+            return [
+                'id' => $tb->ID_CAUHINH,
+                'noi_dung' => $tb->mucCongViec->TEN_MUC ?? 'Không xác định',
+                'thoidiem_thongbao' => $tb->THOI_DIEM_THONG_BAO,
+                'thoihan_hoanthanh' => optional($tb->mucCongViec->THOI_HAN_HOAN_THANH)?->toDateTimeString(),
+            ];
+        });
+
+        return view('reminders', compact('reminders', 'thongBaos', 'reminderData'));
+
+        
     }
 
     public function set(Request $request)

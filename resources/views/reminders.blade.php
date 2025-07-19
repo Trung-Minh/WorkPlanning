@@ -52,7 +52,7 @@
       class="appearance-none w-full bg-white border border-gray-300 text-gray-800 text-sm rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 px-4 py-2 pr-10">
       <option value="">-- --</option>
       @foreach ($reminders as $reminder)
-        <option value="kh-{{ $reminder->ID_KH }}">{{ $reminder->TEN_KE_HOACH }}</option>
+      <option value="kh-{{ $reminder->ID_KH }}">{{ $reminder->TEN_KE_HOACH }}</option>
       @endforeach
     </select>
     <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none">
@@ -66,55 +66,55 @@
 {{-- Danh sách kế hoạch --}}
 @foreach ($reminders as $reminder)
 <div id="kh-{{ $reminder->ID_KH }}" class="kehoach-block space-y-4 mb-10 hidden">
-<div class="w-full max-w-7xl mx-auto rounded-lg shadow border border-gray-200 overflow-hidden bg-white">
-  {{-- Tên kế hoạch --}}
-  <div class="bg-indigo-600 text-white px-6 py-3 rounded-t-lg shadow text-xl font-bold tracking-wide">
-    <h3 class="text-xl font-bold tracking-wide">
-     {{ $reminder->TEN_KE_HOACH }}
-    </h3>
-  </div>
+  <div class="w-full max-w-7xl mx-auto rounded-lg shadow border border-gray-200 overflow-hidden bg-white">
+    {{-- Tên kế hoạch --}}
+    <div class="bg-indigo-600 text-white px-6 py-3 rounded-t-lg shadow text-xl font-bold tracking-wide">
+      <h3 class="text-xl font-bold tracking-wide">
+        {{ $reminder->TEN_KE_HOACH }}
+      </h3>
+    </div>
 
-  {{-- Nội dung kế hoạch --}}
-  <div class="bg-white border border-gray-200 rounded-b-xl p-6 shadow space-y-6">
+    {{-- Nội dung kế hoạch --}}
+    <div class="bg-white border border-gray-200 rounded-b-xl p-6 shadow space-y-6">
 
-    @foreach ($reminder->congviecs as $congviec)
-    <div class="border border-blue-100 rounded-lg bg-blue-50 p-4 shadow-inner space-y-2">
-      <h4 class="text-lg font-semibold text-blue-800"> {{ $congviec->TEN_CV }}</h4>
+      @foreach ($reminder->congviecs as $congviec)
+      <div class="border border-blue-100 rounded-lg bg-blue-50 p-4 shadow-inner space-y-2">
+        <h4 class="text-lg font-semibold text-blue-800"> {{ $congviec->TEN_CV }}</h4>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="text-gray-700">
-           <strong>Tiến độ:</strong> {{ $congviec['TIEN_DO'] }} %
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="text-gray-700">
+            <strong>Tiến độ:</strong> {{ $congviec['TIEN_DO'] }} %
+          </div>
+          <div class="text-gray-700">
+            <strong>Ưu tiên:</strong> {{ $congviec['DO_UU_TIEN'] }}
+          </div>
         </div>
-        <div class="text-gray-700">
-           <strong>Ưu tiên:</strong> {{ $congviec['DO_UU_TIEN'] }}
-        </div>
-      </div>
 
-      {{-- Các mục công việc --}}
-      @foreach ($congviec->mucCongViecs as $muc)
-      <div class="bg-white border border-gray-200 rounded p-4 shadow-sm mt-3 flex justify-between items-start">
-        <div>
-          <p class="font-semibold text-gray-800">{{ $muc->TEN_MUC }}</p>
-          <p class="text-sm text-gray-600">{{ $muc->NOI_DUNG_CHI_TIET }}</p>
-          <p class="text-xs text-gray-500 mt-1">
-            📅 <strong>Hạn:</strong>
-            @if ($muc->THOI_HAN_HOAN_THANH)
+        {{-- Các mục công việc --}}
+        @foreach ($congviec->mucCongViecs as $muc)
+        <div class="bg-white border border-gray-200 rounded p-4 shadow-sm mt-3 flex justify-between items-start">
+          <div>
+            <p class="font-semibold text-gray-800">{{ $muc->TEN_MUC }}</p>
+            <p class="text-sm text-gray-600">{{ $muc->NOI_DUNG_CHI_TIET }}</p>
+            <p class="text-xs text-gray-500 mt-1">
+              📅 <strong>Hạn:</strong>
+              @if ($muc->THOI_HAN_HOAN_THANH)
               {{ $muc->THOI_HAN_HOAN_THANH->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
-            @else
+              @else
               <em>Chưa cập nhật</em>
-            @endif
-          </p>
+              @endif
+            </p>
+          </div>
+          <button
+            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs shadow transition"
+            onclick="openReminderForm('{{ $muc->ID_MUC }}')">
+            ⏰ Nhắc nhở
+          </button>
         </div>
-        <button
-          class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs shadow transition"
-          onclick="openReminderForm('{{ $muc->ID_MUC }}')">
-          ⏰ Nhắc nhở
-        </button>
+        @endforeach
+
       </div>
       @endforeach
-
-    </div>
-    @endforeach
     </div>
   </div>
 </div>
@@ -289,6 +289,88 @@
     modal.classList.add('hidden');
     modal.classList.remove('flex');
   }
+</script>
+
+<!-- Âm thanh nhắc nhở -->
+<audio id="reminder-sound" src="/sounds/notificationx3_reminders.mp3" preload="auto"></audio>
+
+<!-- Container để hiện popup -->
+<div id="toast-container" class="fixed top-5 right-5 space-y-4 z-50"></div>
+
+<script>
+  const reminders = @json($reminderData);
+</script>
+
+<style>
+  .toast {
+    animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-in 4.5s forwards;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+  }
+</style>
+
+<script>
+  const sound = document.getElementById('reminder-sound');
+  const toastContainer = document.getElementById('toast-container');
+  const notified = new Set();
+
+  function showReminderToast(reminder) {
+    const toast = document.createElement('div');
+    toast.className = "toast bg-blue-600 text-white px-4 py-3 rounded shadow w-80";
+    toast.innerHTML = `
+      <p class="font-semibold">🔔 Nhắc nhở</p>
+      <p>${reminder.noi_dung}</p>
+      <p class="text-sm opacity-80 mt-1">${new Date(reminder.thoidiem_thongbao).toLocaleString()}</p>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    // Tự ẩn sau 16s
+    setTimeout(() => {
+      toast.remove();
+    }, 16000);
+  }
+
+  function checkReminders() {
+    const now = new Date();
+
+    reminders.forEach(reminder => {
+      const notifyTime = new Date(reminder.thoidiem_thongbao);
+      const deadline = reminder.thoihan_hoanthanh ? new Date(reminder.thoihan_hoanthanh) : null;
+
+      if (notified.has(reminder.id)) return;
+
+      const diff = Math.abs(now - notifyTime); // chênh lệch mili giây
+      // Chỉ thông báo khi đúng thời điểm (trong khoảng 30s), và chưa quá hạn nếu có deadline
+      if (diff <= 30000 && (!deadline || now < deadline)) {
+        // Báo
+        showReminderToast(reminder);
+        sound.play();
+        notified.add(reminder.id);
+      }
+    });
+  }
+
+  // Kiểm tra mỗi 30 giây
+  setInterval(checkReminders, 30000);
+  window.addEventListener('load', checkReminders);
 </script>
 
 @endsection
