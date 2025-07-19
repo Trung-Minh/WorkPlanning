@@ -44,4 +44,24 @@ class ReminderController extends Controller
         return redirect()->back()->with('success', $hienthi_ttnhacnho);
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'thoi_gian' => 'required|date',
+        ]);
+
+        $thongBao = CauHinhThongBao::findOrFail($id);
+        $thongBao->THOI_DIEM_THONG_BAO = $request->thoi_gian;
+        $thongBao->save();
+
+        return redirect()->back()->with('success_update', 'Cập nhật nhắc nhở thành công.');
+    }
+
+    public function delete($id)
+    {
+        $thongBao = CauHinhThongBao::findOrFail($id);
+        $thongBao->delete();
+
+        return redirect()->back()->with('success_delete', 'Đã xoá nhắc nhở.');
+    }
 }

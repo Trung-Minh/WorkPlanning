@@ -11,6 +11,10 @@ class CauHinhThongBao extends Model
 
     protected $table = 'cau_hinh_thong_bao';
 
+    protected $keyType = 'string'; //đinh dạng chuỗi cho laravel hiểu ID_cauhinh
+
+    public $incrementing = false;
+
     protected $primaryKey = 'ID_CAUHINH';
 
     public $timestamps = false;
