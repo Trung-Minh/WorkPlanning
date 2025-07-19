@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\KeHoach;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request; //dùng để nhận dữ liệu từ form
+use Illuminate\Support\Facades\DB;
+use App\Models\CauHinhThongBao;
 
 class ReminderController extends Controller
 {
@@ -12,20 +15,33 @@ class ReminderController extends Controller
         $userId = Auth::user()->ID_USER;
 
         $reminders = KeHoach::with('congViecs.mucCongViecs')
-        ->where('NGUOI_TAO', $userId)
-        ->get();
+            ->where('NGUOI_TAO', $userId)
+            ->get();
 
-        //dd($reminders->first()->ID_KH);
-        
-        //$id_kh_user = $reminders->ID_KH;
-        //$query = CongViec::where('ID_KH', $id_kh_user)
-           //->get();
-        //$row = $query -> first();
-        //echo $row;
+        $thongBaos = CauHinhThongBao::with('mucCongViec')
+            ->where('ID_USER', $userId)
+            ->orderBy('THOI_DIEM_THONG_BAO', 'asc')
+            ->get();
 
-        //return view('reminders', compact('reminders', 'query'));
-        return view('reminders', compact('reminders'));
+        return view('reminders', compact('reminders', 'thongBaos'));
     }
-    //nguyenthaianh
-   
+
+    public function set(Request $request)
+    {
+        $request->validate([
+            'id_muc' => 'required|exists:muc_cong_viec,ID_MUC',
+            'thoi_gian' => 'required|date',
+        ]);
+
+        // Lưu vào bảng cấu hình hoặc bảng riêng
+        $hienthi_ttnhacnho = CauHinhThongBao::with('mucCongViec')->create([
+            'ID_USER' => Auth::user()->ID_USER,
+            'ID_MUC' => $request->id_muc,
+            'THOI_DIEM_THONG_BAO' => $request->thoi_gian,
+            'created_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', $hienthi_ttnhacnho);
+    }
+
 }

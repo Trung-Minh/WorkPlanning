@@ -85,8 +85,9 @@ Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders'
 
 Route::middleware('auth')->group(function () {
     Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
-    
 });
 
-Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
+Route::post('/reminders/set', [ReminderController::class, 'set'])->name('reminders.set');
+
+
 ?>
