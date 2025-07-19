@@ -11,6 +11,10 @@ class KeHoach extends Model
 
     protected $table = 'ke_hoach';
 
+    protected $keyType = 'string'; //đinh dạng chuỗi cho laravel hiểu ID_KH
+
+    public $incrementing = false;
+
     protected $primaryKey = 'ID_KH';
 
     public $timestamps = false;
@@ -19,6 +23,11 @@ class KeHoach extends Model
         'TEN_KE_HOACH',
         'NGUOI_TAO',
     ];
+
+     public function user()
+    {
+        return $this->belongsTo(User::class, 'NGUOI_TAO', 'ID_USER');
+    }
 
     public function congViecs()
     {
@@ -29,4 +38,5 @@ class KeHoach extends Model
     {
         return $this->belongsTo(NguoiDungCaNhan::class, 'NGUOI_TAO', 'ID_USER');
     }
+
 }

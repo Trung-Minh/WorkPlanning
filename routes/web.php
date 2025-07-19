@@ -4,13 +4,17 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlansController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReminderController;
+use App\Models\KeHoach;
 
 // Trang welcome
 Route::get('/', fn () => view('welcome'))->name('welcome');
 
 // Auth
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'doRegister']);
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'doRegister']);
+});
+
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin']);
@@ -76,12 +80,13 @@ Route::post('/profile/upload-anhbia', [AuthController::class, 'uploadAnhBia'])->
 
 Route::post('/profile/update', [AuthController::class, 'update'])->name('profile.update');
 
-//reminders (nhacnho - nguyenthaianh)
+// reminders (nhacnho - nguyenthaianh)
 Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
 
 Route::middleware('auth')->group(function () {
     Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
+    
 });
 
-Route::get('/tasks.index', [ReminderController::class, 'reminders_nguoidungcanhan'])->middleware('auth');
+Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
 ?>

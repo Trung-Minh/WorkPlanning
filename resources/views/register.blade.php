@@ -68,13 +68,13 @@
                     </div>
 
                     {{-- Nút Đăng ký --}}
-                    <div class="pt-4">
+                    <div>
                         <button type="submit" class="w-full py-2 text-lg text-white transition bg-blue-600 rounded hover:bg-blue-700">
                             Đăng ký
                         </button>
                     </div>
                 </form>
-                <p class="flex items-center justify-center gap-2 mb-1 text-center text-gray-600">
+                <p class="flex items-center justify-center gap-2 mt-2 mb-1 text-center text-gray-600">
                     <a href="/login" class="hover:text-blue-800">Login</a> |
                     <a href="/repassword" class="hover:text-blue-800">Forgot Password</a>
                 </p>

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,19 +12,21 @@ class NguoiDungCaNhan extends Authenticatable
     use Notifiable;
 
     protected $table = 'nguoi_dung_ca_nhan';
+
     protected $primaryKey = 'ID_USER';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'ID_USER',
-        'ho_ten',
-        'email',
-        'mat_khau',
-        'ngay_sinh',
-        'gioi_tinh',
+        'HO_TEN',
+        'EMAIL',
+        'MAT_KHAU',
+        'NGAY_SINH',
+        'GIOI_TINH',
         'AVATAR',
         'ANH_BIA',
     ];
