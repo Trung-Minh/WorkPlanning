@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlansController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReminderController;
 use App\Models\KeHoach;
+use Illuminate\Support\Facades\Route;
 
 // Trang welcome
 Route::get('/', fn () => view('welcome'))->name('welcome');
@@ -34,7 +34,6 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Reminders (ví dụ)
 Route::get('/reminders', fn () => view('reminders'))->name('reminders');
-
 
 Route::get('/plans', function () {
     return view('plans');

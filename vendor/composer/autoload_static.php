@@ -133,6 +133,8 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
         array (
             'Intervention\\Image\\' => 19,
             'Intervention\\Gif\\' => 17,
+            'Intervention\\Image\\' => 19,
+            'Intervention\\Gif\\' => 17,
             'Illuminate\\Support\\' => 19,
             'Illuminate\\' => 11,
         ),
@@ -535,6 +537,7 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
         'App\\Factories\\ConfigurationResolverFactory' => __DIR__ . '/..' . '/laravel/pint/app/Factories/ConfigurationResolverFactory.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\HeaderController' => __DIR__ . '/../..' . '/app/Http/Controllers/HeaderController.php',
         'App\\Http\\Controllers\\PlansController' => __DIR__ . '/../..' . '/app/Http/Controllers/PlansController.php',
         'App\\Http\\Controllers\\ReminderController' => __DIR__ . '/../..' . '/app/Http/Controllers/ReminderController.php',
         'App\\Kernel' => __DIR__ . '/..' . '/laravel/pint/app/Kernel.php',
