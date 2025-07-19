@@ -117,6 +117,12 @@ git checkout main
 php artisan migrate
 ```
 
+4. Chạy lệnh cập nhật kiểu dữ liệu bảng session
+
+```bash
+ALTER TABLE sessions MODIFY COLUMN user_id CHAR(8) NULL;
+```
+
 > **Lưu ý:** Phải hoàn tất bước tạo database & chạy migrations trước khi khởi động frontend để tránh lỗi kết nối hoặc thiếu bảng.
 
 ---
