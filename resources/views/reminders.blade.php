@@ -99,7 +99,7 @@
             <p class="text-xs text-gray-500 mt-1">
               📅 <strong>Hạn:</strong>
               @if ($muc->THOI_HAN_HOAN_THANH)
-              {{ $muc->THOI_HAN_HOAN_THANH->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
+              {{ $muc->THOI_HAN_HOAN_THANH->format('d/m/Y H:i') }}
               @else
               <em>Chưa cập nhật</em>
               @endif
