@@ -107,7 +107,7 @@ git checkout main
 
 ---
 
-## 6. Tạo Database & Chạy Migration
+## 6. Tạo Database & Chạy Migration & tải vite
 
 1. Mở file **`database/sql/create_database_and_tables.sql`**, copy toàn bộ nội dung.
 2. Đăng nhập vào **phpMyAdmin** (hoặc kết nối MySQL client), dán và chạy SQL để **tạo database và các bảng**.
@@ -123,6 +123,11 @@ php artisan migrate
 ALTER TABLE sessions MODIFY COLUMN user_id CHAR(8) NULL;
 ```
 
+5. tải vite
+
+```bash   
+npm install vite --save-dev
+```
 > **Lưu ý:** Phải hoàn tất bước tạo database & chạy migrations trước khi khởi động frontend để tránh lỗi kết nối hoặc thiếu bảng.
 
 ---
