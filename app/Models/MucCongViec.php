@@ -5,15 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class MucCongViec extends Model
 {
     use HasFactory;
 
     protected $table = 'MUC_CONG_VIEC';
 
-    protected $primaryKey = 'ID_MUC';
+    protected $keyType = 'string'; //đinh dạng chuỗi cho laravel hiểu ID_CV
 
     public $incrementing = false;
+
+    protected $primaryKey = 'ID_MUC';
 
     public $timestamps = false;
 
@@ -25,6 +28,10 @@ class MucCongViec extends Model
         'THOI_HAN_HOAN_THANH',
         'TRANG_THAI',
         'DO_UU_TIEN_MUC',
+    ];
+
+    protected $casts = [
+        'THOI_HAN_HOAN_THANH' => 'datetime',
     ];
 
     // 1 mục công việc thuộc về 1 công việc

@@ -11,6 +11,10 @@ class CongViec extends Model
 
     protected $table = 'cong_viec';
 
+    protected $keyType = 'string'; //đinh dạng chuỗi cho laravel hiểu ID_CV
+
+    public $incrementing = false;
+
     protected $primaryKey = 'ID_CV';
 
     public $timestamps = false;
@@ -31,8 +35,14 @@ class CongViec extends Model
         return $this->belongsTo(KeHoach::class, 'ID_KH', 'ID_KH');
     }
 
+    public function mucCongViecs()
+    {
+        return $this->hasMany(MucCongViec::class, 'ID_CV', 'ID_CV');
+    }
+
     public function cauHinhThongBao()
     {
         return $this->belongsTo(CauHinhThongBao::class, 'ID_CAUHINH', 'ID_CAUHINH');
     }
+
 }

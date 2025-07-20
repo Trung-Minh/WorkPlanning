@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\ReminderController;
+use App\Models\KeHoach;
 use Illuminate\Support\Facades\Route;
 
 // Trang welcome
@@ -84,3 +85,9 @@ Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders'
 Route::middleware('auth')->group(function () {
     Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
 });
+
+Route::post('/reminders/set', [ReminderController::class, 'set'])->name('reminders.set');
+
+Route::patch('/reminders/update/{id}', [ReminderController::class, 'update'])->name('reminders.update');
+Route::delete('/reminders/delete/{id}', [ReminderController::class, 'delete'])->name('reminders.delete');
+?>

@@ -133,6 +133,8 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
         array (
             'Intervention\\Image\\' => 19,
             'Intervention\\Gif\\' => 17,
+            'Intervention\\Image\\' => 19,
+            'Intervention\\Gif\\' => 17,
             'Illuminate\\Support\\' => 19,
             'Illuminate\\' => 11,
         ),
