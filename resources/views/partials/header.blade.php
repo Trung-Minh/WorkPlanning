@@ -8,7 +8,14 @@
         <button id="menuToggle" class="text-2xl text-gray-700 md:hidden focus:outline-none">☰</button>
 
         <nav id="navMenu" class="absolute left-0 z-50 flex-col hidden w-full px-4 font-medium text-gray-700 bg-white md:flex md:flex-row md:items-center md:space-x-6 md:static md:bg-transparent top-16 md:w-auto md:px-0">
-            <a href="" class="block py-2">Tạo nhóm</a>
+            @auth
+            <a href="#" onclick="event.preventDefault(); document.getElementById('post-form').submit();">Tạo Nhóm</a>
+
+            <form id="post-form" method="POST" action="{{ route('addgroup') }}" style="display:none;">
+            @csrf
+            <input type="hidden" name="id_user" value="{{ Auth::user()->ID_USER }}">
+            </form>
+            @endauth
             <a href="{{ url('/') }}" class="block py-2 hover:text-blue-600">Trang chủ</a>
             <a href="{{ route('plans.index') }}" class="block py-2 hover:text-blue-600">Kế hoạch</a>
             <a href="{{ route('reminders') }}" class="block py-2 hover:text-blue-600">Nhắc nhở</a>
@@ -42,7 +49,7 @@
                                     <div class="font-bold text-blue-700">📂 {{ $tenCV }}</div>
                                     <ul class="pl-4 mt-1 space-y-1">
                                         @foreach($mucs as $muc)
-                                            <li onclick="window.location.href='{{ route('plans.index') }}'"
+                                            <li onclick="window.location.href='{{ route('plans.index') }}'">
                                                 class="px-2 py-1 transition rounded cursor-pointer bg-gray-50 hover:bg-gray-100">
                                                 📌 <strong>{{ $muc->TEN_MUC }}</strong><br>
                                                 <span class="block text-xs text-gray-500">
