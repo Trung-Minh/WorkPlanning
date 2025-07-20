@@ -4,16 +4,16 @@
 
 @section('content')
 <!--Danh sách nhắc nhở đã thiết lập-->
-<h2 class="text-2xl font-bold text-blue-700 mb-4">🔔 Danh sách nhắc nhở đã thiết lập</h2>
+<h2 class="mb-4 text-2xl font-bold text-blue-700">🔔 Danh sách nhắc nhở đã thiết lập</h2>
 
 @if($thongBaos->isEmpty())
-<div class="bg-yellow-100 text-yellow-800 p-4 rounded shadow-md">
+<div class="p-4 text-yellow-800 bg-yellow-100 rounded shadow-md">
   <p>Chưa có nhắc nhở nào được thiết lập.</p>
 </div>
 @else
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
   @foreach($thongBaos as $tb)
-  <div class="bg-white border-l-4 border-blue-500 shadow p-4 rounded-lg">
+  <div class="p-4 bg-white border-l-4 border-blue-500 rounded-lg shadow">
     <div class="mb-2">
       <p class="text-base font-semibold text-gray-800">
         ⏰ {{ $tb->mucCongViec->TEN_MUC ?? 'Không xác định' }}
@@ -26,13 +26,13 @@
     <div class="flex justify-end space-x-3">
       <!-- Button Sửa -->
       <button onclick="openEditForm('{{ $tb->ID_CAUHINH }}', '{{ $tb->THOI_DIEM_THONG_BAO }}')"
-        class="text-blue-600 hover:text-blue-800 text-sm font-medium">🛠 Sửa</button>
+        class="text-sm font-medium text-blue-600 hover:text-blue-800">🛠 Sửa</button>
 
       <!-- Form Xóa -->
       <form action="{{ route('reminders.delete', $tb->ID_CAUHINH) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xoá nhắc nhở này?')">
         @csrf
         @method('DELETE')
-        <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">🗑 Xoá</button>
+        <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-800">🗑 Xoá</button>
       </form>
     </div>
   </div>
@@ -42,20 +42,20 @@
 
 <!--<P>Danh sách kế hoạch - công việc</P>-->
 {{-- Header --}}
-<h2 class="text-2xl font-bold text-blue-700 mb-6">📋 Danh sách kế hoạch - công việc</h2>
+<h2 class="mb-6 text-2xl font-bold text-blue-700">📋 Danh sách kế hoạch - công việc</h2>
 
 {{-- Dropdown chọn kế hoạch --}}
-<div class="mb-8 flex items-center space-x-4">
+<div class="flex items-center mb-8 space-x-4">
   <label for="select-ke-hoach" class="text-sm font-semibold text-gray-700 whitespace-nowrap"> Chọn kế hoạch:</label>
   <div class="relative w-full max-w-xs">
     <select id="select-ke-hoach" onchange="filterKeHoach()"
-      class="appearance-none w-full bg-white border border-gray-300 text-gray-800 text-sm rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 px-4 py-2 pr-10">
+      class="w-full px-4 py-2 pr-10 text-sm text-gray-800 bg-white border border-gray-300 rounded-lg shadow-sm appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500">
       <option value="">-- --</option>
       @foreach ($reminders as $reminder)
       <option value="kh-{{ $reminder->ID_KH }}">{{ $reminder->TEN_KE_HOACH }}</option>
       @endforeach
     </select>
-    <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+    <div class="absolute inset-y-0 flex items-center pointer-events-none right-2">
       <svg class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
@@ -65,23 +65,23 @@
 
 {{-- Danh sách kế hoạch --}}
 @foreach ($reminders as $reminder)
-<div id="kh-{{ $reminder->ID_KH }}" class="kehoach-block space-y-4 mb-10 hidden">
-  <div class="w-full max-w-7xl mx-auto rounded-lg shadow border border-gray-200 overflow-hidden bg-white">
+<div id="kh-{{ $reminder->ID_KH }}" class="hidden mb-10 space-y-4 kehoach-block">
+  <div class="w-full mx-auto overflow-hidden bg-white border border-gray-200 rounded-lg shadow max-w-7xl">
     {{-- Tên kế hoạch --}}
-    <div class="bg-indigo-600 text-white px-6 py-3 rounded-t-lg shadow text-xl font-bold tracking-wide">
+    <div class="px-6 py-3 text-xl font-bold tracking-wide text-white bg-indigo-600 rounded-t-lg shadow">
       <h3 class="text-xl font-bold tracking-wide">
         {{ $reminder->TEN_KE_HOACH }}
       </h3>
     </div>
 
     {{-- Nội dung kế hoạch --}}
-    <div class="bg-white border border-gray-200 rounded-b-xl p-6 shadow space-y-6">
+    <div class="p-6 space-y-6 bg-white border border-gray-200 shadow rounded-b-xl">
 
       @foreach ($reminder->congviecs as $congviec)
-      <div class="border border-blue-100 rounded-lg bg-blue-50 p-4 shadow-inner space-y-2">
+      <div class="p-4 space-y-2 border border-blue-100 rounded-lg shadow-inner bg-blue-50">
         <h4 class="text-lg font-semibold text-blue-800"> {{ $congviec->TEN_CV }}</h4>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div class="text-gray-700">
             <strong>Tiến độ:</strong> {{ $congviec['TIEN_DO'] }} %
           </div>
@@ -92,11 +92,11 @@
 
         {{-- Các mục công việc --}}
         @foreach ($congviec->mucCongViecs as $muc)
-        <div class="bg-white border border-gray-200 rounded p-4 shadow-sm mt-3 flex justify-between items-start">
+        <div class="flex items-start justify-between p-4 mt-3 bg-white border border-gray-200 rounded shadow-sm">
           <div>
             <p class="font-semibold text-gray-800">{{ $muc->TEN_MUC }}</p>
             <p class="text-sm text-gray-600">{{ $muc->NOI_DUNG_CHI_TIET }}</p>
-            <p class="text-xs text-gray-500 mt-1">
+            <p class="mt-1 text-xs text-gray-500">
               📅 <strong>Hạn:</strong>
               @if ($muc->THOI_HAN_HOAN_THANH)
               {{ $muc->THOI_HAN_HOAN_THANH->format('d/m/Y H:i') }}
@@ -106,7 +106,7 @@
             </p>
           </div>
           <button
-            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-xs shadow transition"
+            class="px-3 py-2 text-xs text-white transition bg-blue-600 rounded shadow cursor-pointer hover:bg-blue-700"
             onclick="openReminderForm('{{ $muc->ID_MUC }}')">
             ⏰ Nhắc nhở
           </button>
@@ -121,17 +121,17 @@
 @endforeach
 
 {{-- Modal tạo nhắc nhở --}}
-<div id="reminder-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
-  <div class="bg-white p-8 rounded-xl shadow-lg w-11/12 max-w-5xl transition-all duration-300">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">📅 Thiết lập thông báo</h2>
+<div id="reminder-modal" class="fixed inset-0 z-50 items-center justify-center hidden bg-black bg-opacity-50">
+  <div class="w-11/12 max-w-5xl p-8 transition-all duration-300 bg-white shadow-lg rounded-xl">
+    <h2 class="pb-2 mb-6 text-2xl font-semibold text-gray-800 border-b">📅 Thiết lập thông báo</h2>
     <form method="POST" action="{{ route('reminders.set') }}">
       @csrf
       <input type="hidden" name="id_muc" id="modal-id-muc">
       <label class="block mb-2 text-sm">Thời gian thông báo</label>
-      <input type="datetime-local" name="thoi_gian" required class="border rounded w-full px-3 py-2 mb-4">
+      <input type="datetime-local" name="thoi_gian" required class="w-full px-3 py-2 mb-4 border rounded">
       <div class="text-right">
-        <button type="button" onclick="closeReminderForm()" class="mr-2 px-4 py-2 bg-gray-300 rounded">Hủy</button>
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Lưu</button>
+        <button type="button" onclick="closeReminderForm()" class="px-4 py-2 mr-2 bg-gray-300 rounded">Hủy</button>
+        <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded">Lưu</button>
       </div>
     </form>
   </div>
@@ -140,11 +140,11 @@
 {{-- Thông báo khi tạo nhắc nhở--}}
 @if (session('success'))
 @php $reminder = session('success'); @endphp
-<div id="reminder-notice" class="fixed bottom-6 left-6 bg-gray-800 text-white border-l-4 border-blue-500 shadow-xl p-4 w-full max-w-sm rounded z-50">
-  <div class="flex justify-between items-start">
+<div id="reminder-notice" class="fixed z-50 w-full max-w-sm p-4 text-white bg-gray-800 border-l-4 border-blue-500 rounded shadow-xl bottom-6 left-6">
+  <div class="flex items-start justify-between">
     <div>
-      <h3 class="text-white text-lg font-semibold mb-1">🔔 Tạo nhắc nhở thành công</h3>
-      <p class="text-sm mb-1">
+      <h3 class="mb-1 text-lg font-semibold text-white">🔔 Tạo nhắc nhở thành công</h3>
+      <p class="mb-1 text-sm">
         <strong>Tên mục công việc:</strong> {{ $reminder->mucCongViec->TEN_MUC ?? 'Chưa có tên mục' }}
       </p>
       <p class="text-sm">
@@ -152,31 +152,31 @@
         {{ \Carbon\Carbon::parse($reminder['THOI_DIEM_THONG_BAO'])->format('d/m/Y H:i') }}
       </p>
     </div>
-    <button onclick="closeReminderNotice()" class="ml-4 text-gray-300 hover:text-white text-xl leading-none">&times;</button>
+    <button onclick="closeReminderNotice()" class="ml-4 text-xl leading-none text-gray-300 hover:text-white">&times;</button>
   </div>
 </div>
 @endif
 {{-- Thông báo khi xóa nhắc nhở--}}
 @if (session('success_delete'))
 @php $reminder_tb = session('success_delete'); @endphp
-<div id="reminder-notice" class="fixed bottom-6 left-6 bg-gray-800 text-white border-l-4 border-blue-500 shadow-xl p-4 w-full max-w-sm rounded z-50">
-  <div class="flex justify-between items-start">
+<div id="reminder-notice" class="fixed z-50 w-full max-w-sm p-4 text-white bg-gray-800 border-l-4 border-blue-500 rounded shadow-xl bottom-6 left-6">
+  <div class="flex items-start justify-between">
     <div>
-      <h3 class="text-white text-lg font-semibold mb-1">🔔 Đã xóa nhắc nhở </h3>
+      <h3 class="mb-1 text-lg font-semibold text-white">🔔 Đã xóa nhắc nhở </h3>
     </div>
-    <button onclick="closeReminderNotice()" class="ml-4 text-gray-300 hover:text-white text-xl leading-none">&times;</button>
+    <button onclick="closeReminderNotice()" class="ml-4 text-xl leading-none text-gray-300 hover:text-white">&times;</button>
   </div>
 </div>
 @endif
 {{-- Thông báo khi sửa nhắc nhở--}}
 @if (session('success_update'))
 @php $reminder_tb = session('success_update'); @endphp
-<div id="reminder-notice" class="fixed bottom-6 left-6 bg-gray-800 text-white border-l-4 border-blue-500 shadow-xl p-4 w-full max-w-sm rounded z-50">
-  <div class="flex justify-between items-start">
+<div id="reminder-notice" class="fixed z-50 w-full max-w-sm p-4 text-white bg-gray-800 border-l-4 border-blue-500 rounded shadow-xl bottom-6 left-6">
+  <div class="flex items-start justify-between">
     <div>
-      <h3 class="text-white text-lg font-semibold mb-1">🔔 Sửa nhắc nhở thành công</h3>
+      <h3 class="mb-1 text-lg font-semibold text-white">🔔 Sửa nhắc nhở thành công</h3>
     </div>
-    <button onclick="closeReminderNotice()" class="ml-4 text-gray-300 hover:text-white text-xl leading-none">&times;</button>
+    <button onclick="closeReminderNotice()" class="ml-4 text-xl leading-none text-gray-300 hover:text-white">&times;</button>
   </div>
 </div>
 @endif
@@ -250,19 +250,19 @@
 </script>
 
 <!-- Form chỉnh sửa -->
-<div id="edit-form-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
-  <div class="bg-white p-8 rounded shadow-md w-full max-w-3xl">
-    <h2 class="text-lg font-bold mb-4">Chỉnh sửa nhắc nhở</h2>
+<div id="edit-form-modal" class="fixed inset-0 z-50 items-center justify-center hidden bg-black bg-opacity-50">
+  <div class="w-full max-w-3xl p-8 bg-white rounded shadow-md">
+    <h2 class="mb-4 text-lg font-bold">Chỉnh sửa nhắc nhở</h2>
     <form id="edit-form" method="POST">
       @csrf
       @method('PATCH') <!-- hoặc PATCH nếu bạn dùng -->
 
       <label class="block mb-2 text-sm">Thời gian thông báo mới</label>
-      <input type="datetime-local" name="thoi_gian" id="edit-thoi-gian" required class="border rounded w-full px-3 py-2 mb-4">
+      <input type="datetime-local" name="thoi_gian" id="edit-thoi-gian" required class="w-full px-3 py-2 mb-4 border rounded">
 
       <div class="text-right">
-        <button type="button" onclick="closeEditForm()" class="mr-2 px-4 py-2 bg-gray-300 rounded">Hủy</button>
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Lưu</button>
+        <button type="button" onclick="closeEditForm()" class="px-4 py-2 mr-2 bg-gray-300 rounded">Hủy</button>
+        <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded">Lưu</button>
       </div>
     </form>
   </div>
@@ -295,7 +295,7 @@
 <audio id="reminder-sound" src="/sounds/notificationx3_reminders.mp3" preload="auto"></audio>
 
 <!-- Container để hiện popup -->
-<div id="toast-container" class="fixed top-5 right-5 space-y-4 z-50"></div>
+<div id="toast-container" class="fixed z-50 space-y-4 top-5 right-5"></div>
 
 <script>
   const reminders = @json($reminderData);
@@ -337,7 +337,7 @@
     toast.innerHTML = `
       <p class="font-semibold">🔔 Nhắc nhở</p>
       <p>${reminder.noi_dung}</p>
-      <p class="text-sm opacity-80 mt-1">${new Date(reminder.thoidiem_thongbao).toLocaleString()}</p>
+      <p class="mt-1 text-sm opacity-80">${new Date(reminder.thoidiem_thongbao).toLocaleString()}</p>
     `;
 
     toastContainer.appendChild(toast);
