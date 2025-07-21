@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\CauHinhThongBao;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,6 +45,20 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $view->with('notifications', $notifications);
+
+            $js_reminders = CauHinhThongBao::with('mucCongViec')
+                ->whereDate('THOI_DIEM_THONG_BAO', today()) // Có thể điều chỉnh điều kiện này
+                ->get()
+                ->map(function ($r) {
+                    return [
+                        'id' => $r->ID_CAUHINH,
+                        'noi_dung' => $r->mucCongViec->TEN_MUC ?? 'Không xác định',
+                        'thoidiem_thongbao' => $r->THOI_DIEM_THONG_BAO,
+                        'thoihan_hoanthanh' => optional($r->mucCongViec)->THOI_HAN_HOAN_THANH,
+                    ];
+                });
+
+            $view->with('js_reminders', $js_reminders);
         });
     }
 }

@@ -90,4 +90,5 @@ Route::post('/reminders/set', [ReminderController::class, 'set'])->name('reminde
 
 Route::patch('/reminders/update/{id}', [ReminderController::class, 'update'])->name('reminders.update');
 Route::delete('/reminders/delete/{id}', [ReminderController::class, 'delete'])->name('reminders.delete');
+Route::get('/reminders/deadline/{id}', [ReminderController::class, 'getDeadlineByCauHinh']);
 ?>

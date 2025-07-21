@@ -33,8 +33,6 @@ class ReminderController extends Controller
         });
 
         return view('reminders', compact('reminders', 'thongBaos', 'reminderData'));
-
-        
     }
 
     public function set(Request $request)
@@ -74,5 +72,15 @@ class ReminderController extends Controller
         $thongBao->delete();
 
         return redirect()->back()->with('success_delete', 'Đã xoá nhắc nhở.');
+    }
+
+    public function getDeadlineByCauHinh($id)
+    {
+        $cauhinh = CauHinhThongBao::with('mucCongViec')->findOrFail($id);
+        $deadline = optional($cauhinh->mucCongViec)->THOI_HAN_HOAN_THANH;
+
+        return response()->json([
+            'deadline' => $deadline ? $deadline->format('Y-m-d\TH:i') : null
+        ]);
     }
 }
