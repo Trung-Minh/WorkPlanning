@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlansController;
+use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\ReminderController;
 use App\Models\KeHoach;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,16 @@ Route::post('/login', [AuthController::class, 'doLogin']);
 
 Route::get('/repassword', [AuthController::class, 'showRepassword'])->name('repassword');
 Route::post('/repassword', [AuthController::class, 'doRepassword']);
+
+Route::get('/leader', [LeaderController::class, 'showLeader'])->name('showLeader');
+Route::post('/search_members', [LeaderController::class, 'search_members'])->name('search_members');
+Route::post('/addgroup', [LeaderController::class, 'addgroup'])->name('addgroup');
+Route::post('/invite', [LeaderController::class, 'invite'])->name('invite');
+
+Route::get('/group', [LeaderController::class, 'showGroup'])->name('showGroup');
+Route::post('/group', [LeaderController::class, 'doGroup'])->name('doGroup');
+Route::post('/groups', [LeaderController::class, 'doGroups'])->name('doGroups');
+
 
 Route::get('/reminders', function () {
     return view('reminders');
