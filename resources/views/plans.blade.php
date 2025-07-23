@@ -69,7 +69,7 @@
                                 'from-blue-100 to-blue-200',
                                 'from-green-100 to-green-200',
                                 'from-yellow-100 to-yellow-200',
-                                'from-rose-100 to-rose-200',` 
+                                'from-rose-100 to-rose-200',
                                 'from-red-100 to-red-200',           
                                 'from-sky-100 to-sky-200',            
                                 'from-lime-100 to-lime-200',         
