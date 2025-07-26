@@ -14,7 +14,13 @@ class PlansController extends Controller
 {
     public function index()
     {
-        $keHoachs = DB::table('KE_HOACH')->get();
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập!');
+        }
+
+        $keHoachs = DB::table('KE_HOACH')
+            ->where('NGUOI_TAO', Auth::user()->ID_USER)
+            ->get();
 
         foreach ($keHoachs as $keHoach) {
             $keHoach->cong_viec = DB::table('CONG_VIEC')

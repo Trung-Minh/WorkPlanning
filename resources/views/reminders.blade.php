@@ -14,7 +14,7 @@
 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
   @foreach($thongBaos as $tb)
   <div
-    class="reminder-item p-4 rounded-lg shadow border-l-4"
+    class="p-4 border-l-4 rounded-lg shadow reminder-item"
     data-thoidiem="{{ $tb->THOI_DIEM_THONG_BAO }}">
     <div class="mb-2">
       <p class="text-base font-semibold text-gray-800">
@@ -124,21 +124,17 @@
 </div>
 @endforeach
 
-<script>
-  const THOI_GIAN_HET_HAN = new Date("{{ $thoi_gian_het_han->format('Y-m-d\TH:i') }}");
-</script>
-
 
 {{-- Modal tạo nhắc nhở --}}
-<div id="reminder-modal" class="fixed inset-0 z-50 items-center justify-center hidden bg-black bg-opacity-50">
+<div id="reminder-modal" class="fixed inset-0 z-50 items-center justify-center hidden">
   <div class="w-11/12 max-w-5xl p-8 transition-all duration-300 bg-white shadow-lg rounded-xl">
     <h2 class="pb-2 mb-6 text-2xl font-semibold text-gray-800 border-b">📅 Thiết lập thông báo</h2>
     <form id="reminder-tltb" method="POST" action="{{ route('reminders.set') }}">
       @csrf
       <input type="hidden" name="id_muc" id="modal-id-muc">
       <label class="block mb-2 text-sm">Thời gian thông báo</label>
-      <input type="datetime-local" name="thoi_gian" required class="cursor-pointer w-full px-3 py-2 mb-4 border rounded">
-      <p id="thoi-gian-error" class="text-sm text-red-600 mb-3 hidden"></p>
+      <input type="datetime-local" name="thoi_gian" required class="w-full px-3 py-2 mb-4 border rounded cursor-pointer">
+      <p id="thoi-gian-error" class="hidden mb-3 text-sm text-red-600"></p>
       <div class="text-right">
         <button type="button" onclick="closeReminderForm()" class="px-4 py-2 mr-2 bg-gray-300 rounded" style="cursor: pointer;">Hủy</button>
         <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded" style="cursor: pointer;">Lưu</button>
@@ -289,7 +285,7 @@
       @method('PATCH') <!-- hoặc PATCH nếu bạn dùng -->
 
       <label class="block mb-2 text-sm">Thời gian thông báo mới</label>
-      <input type="datetime-local" name="thoi_gian" id="edit-thoi-gian" required class="cursor-pointer w-full px-3 py-2 mb-4 border rounded">
+      <input type="datetime-local" name="thoi_gian" id="edit-thoi-gian" required class="w-full px-3 py-2 mb-4 border rounded cursor-pointer">
 
       <div class="text-right">
         <button type="button" onclick="closeEditForm()" class="px-4 py-2 mr-2 bg-gray-300 rounded" style="cursor: pointer;">Hủy</button>
