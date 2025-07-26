@@ -11,6 +11,10 @@ class CauHinhThongBao extends Model
 
     protected $table = 'cau_hinh_thong_bao';
 
+    protected $keyType = 'string'; //đinh dạng chuỗi cho laravel hiểu ID_cauhinh
+
+    public $incrementing = false;
+
     protected $primaryKey = 'ID_CAUHINH';
 
     public $timestamps = false;
@@ -18,10 +22,13 @@ class CauHinhThongBao extends Model
     protected $fillable = [
         'THOI_GIAN_TRUOC_HAN',
         'NOI_DUNG_TB',
+        'ID_USER',
+        'ID_MUC',
+        'THOI_DIEM_THONG_BAO',
     ];
 
-    public function congViecs()
+    public function mucCongViec()
     {
-        return $this->hasMany(CongViec::class, 'ID_CAUHINH', 'ID_CAUHINH');
+        return $this->belongsTo(MucCongViec::class, 'ID_MUC', 'ID_MUC');
     }
 }

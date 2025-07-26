@@ -1,9 +1,12 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
-        'pretty_version' => 'v12.0.11',
-        'version' => '12.0.11.0',
-        'reference' => null,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'bf2184f064ae34171e551a4ebca61cfe67299537',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'ea6b5b8f075ac545dd0001ef94ee955da34dba59',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -370,6 +373,24 @@
                 0 => 'v12.19.3',
             ),
         ),
+        'intervention/gif' => array(
+            'pretty_version' => '4.2.2',
+            'version' => '4.2.2.0',
+            'reference' => '5999eac6a39aa760fb803bc809e8909ee67b451a',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../intervention/gif',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'intervention/image' => array(
+            'pretty_version' => '3.11.3',
+            'version' => '3.11.3.0',
+            'reference' => 'd0f097b8a3fa8fb758efc9440b513aa3833cda17',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../intervention/image',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'kodova/hamcrest-php' => array(
             'dev_requirement' => true,
             'replaced' => array(
@@ -386,9 +407,9 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'v12.0.11',
-            'version' => '12.0.11.0',
-            'reference' => null,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'bf2184f064ae34171e551a4ebca61cfe67299537',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

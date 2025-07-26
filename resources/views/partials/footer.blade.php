@@ -30,6 +30,9 @@
       if (window.scrollY > 300) btnTop.classList.remove('opacity-0', 'pointer-events-none');
       else btnTop.classList.add('opacity-0', 'pointer-events-none');
     });
-    btnTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    btnTop.addEventListener('click', () => window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    }));
   </script>
 </footer>

@@ -2,21 +2,36 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlansController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\ReminderController;
+use App\Models\KeHoach;
+use Illuminate\Support\Facades\Route;
 
 // Trang welcome
 Route::get('/', fn () => view('welcome'))->name('welcome');
 
 // Auth
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'doRegister']);
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'doRegister']);
+});
+
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin']);
 
 Route::get('/repassword', [AuthController::class, 'showRepassword'])->name('repassword');
 Route::post('/repassword', [AuthController::class, 'doRepassword']);
+
+Route::get('/leader', [LeaderController::class, 'showLeader'])->name('showLeader');
+Route::post('/search_members', [LeaderController::class, 'search_members'])->name('search_members');
+Route::post('/addgroup', [LeaderController::class, 'addgroup'])->name('addgroup');
+Route::post('/invite', [LeaderController::class, 'invite'])->name('invite');
+
+Route::get('/group', [LeaderController::class, 'showGroup'])->name('showGroup');
+Route::post('/group', [LeaderController::class, 'doGroup'])->name('doGroup');
+Route::post('/groups', [LeaderController::class, 'doGroups'])->name('doGroups');
+
 
 Route::get('/reminders', function () {
     return view('reminders');
@@ -30,7 +45,6 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Reminders (ví dụ)
 Route::get('/reminders', fn () => view('reminders'))->name('reminders');
-
 
 Route::get('/plans', function () {
     return view('plans');
@@ -85,10 +99,16 @@ Route::post('/profile/upload-anhbia', [AuthController::class, 'uploadAnhBia'])->
 
 Route::post('/profile/update', [AuthController::class, 'update'])->name('profile.update');
 
-//reminders (nhacnho - nguyenthaianh)
+// reminders (nhacnho - nguyenthaianh)
 Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
 
 Route::middleware('auth')->group(function () {
     Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders');
 });
+
+Route::post('/reminders/set', [ReminderController::class, 'set'])->name('reminders.set');
+
+Route::patch('/reminders/update/{id}', [ReminderController::class, 'update'])->name('reminders.update');
+Route::delete('/reminders/delete/{id}', [ReminderController::class, 'delete'])->name('reminders.delete');
+Route::get('/reminders/deadline/{id}', [ReminderController::class, 'getDeadlineByCauHinh']);
 ?>
