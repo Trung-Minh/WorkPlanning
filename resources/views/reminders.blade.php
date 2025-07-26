@@ -277,7 +277,7 @@
 </script>
 
 <!-- Form chỉnh sửa -->
-<div id="edit-form-modal" class="fixed inset-0 z-50 items-center justify-center hidden bg-black bg-opacity-50">
+<div id="edit-form-modal" class="fixed inset-0 z-50 items-center justify-center hidden">
   <div class="w-full max-w-3xl p-8 bg-white rounded shadow-md">
     <h2 class="mb-4 text-lg font-bold">Chỉnh sửa nhắc nhở</h2>
     <form id="edit-form" method="POST">

@@ -19,7 +19,7 @@ class PlansController extends Controller
         }
 
         $keHoachs = DB::table('KE_HOACH')
-            ->where('NGUOI_TAO', Auth::user()->ID_USER)
+            ->where('NGUOI_TAO', operator: Auth::user()->ID_USER)
             ->get();
 
         foreach ($keHoachs as $keHoach) {
@@ -38,7 +38,7 @@ class PlansController extends Controller
                 $hoanThanh = $cv->muc_cong_viec->where('TRANG_THAI', 1)->count();
                 $tienDo = $tong > 0 ? round($hoanThanh / $tong * 100) : 0;
 
-    
+
                 $cv->TIEN_DO = $tienDo;
 
                 DB::table('CONG_VIEC')
@@ -65,7 +65,7 @@ class PlansController extends Controller
             'TEN_KE_HOACH' => $request->TEN_KE_HOACH,
             'NGUOI_TAO' => Auth::user()->ID_USER,
         ]);
-        
+
 
         return redirect()->route('plans.index');
     }
@@ -73,7 +73,7 @@ class PlansController extends Controller
 
 
 
-    
+
     public function storeTask(Request $request)
     {
         // ✅ Validate dữ liệu
@@ -173,7 +173,7 @@ class PlansController extends Controller
 
 
 
-        
+
     public function destroyTask($id)
     {
         // Lấy thông tin công việc cần xoá
@@ -404,5 +404,5 @@ public function updateTaskPriority(Request $request, $id)
 }
 
 
-   
+
 }

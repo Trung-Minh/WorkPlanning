@@ -71,17 +71,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/muc-cong-viec/{id}/sua', [PlansController::class, 'updateSubtask1'])->name('subtasks.update1');
     Route::post('/tasks/update-priority/{id}', [PlansController::class, 'updateTaskPriority']);
 
-
-
     // Load công việc HTML
     Route::get('/ke-hoach/{id}/cong-viec', [PlansController::class, 'renderCongViecHtml'])->name('plans.tasks.html');
     Route::post('/api/muc-cong-viec/{id}/toggle-status', [PlansController::class, 'toggleStatus']);
     Route::put('/subtasks/{id}', [PlansController::class, 'updateSubtask'])->name('subtasks.update');
     Route::put('/subtasks/{id}', [PlansController::class, 'updateSubtask1'])->name('subtasks.update');
     Route::delete('/tasks/{id}', [PlansController::class, 'destroyTask'])->name('tasks.delete');
-
-
-
 });
 
 
