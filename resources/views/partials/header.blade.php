@@ -24,28 +24,28 @@
                 <!-- Thêm Alpine.js (nếu chưa có) -->
                 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
-              <!-- Bọc toàn bộ popup và trigger trong 1 x-data -->
+                <!-- Bọc toàn bộ popup và trigger trong 1 x-data -->
                 <div x-data="{ show: false }">
 
                     <!-- Nút mở popup -->
-                    <a href="#" @click.prevent="show = true" class="text-blue-600 underline">Nhóm của bạn</a>
+                    <a href="#" @click.prevent="show = true" class="hover:text-blue-600 hover:underline">Nhóm của bạn</a>
 
                     <!-- Overlay popup với nền trong suốt và mờ -->
                     <div x-show="show"
                         x-transition
-                        class="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/20 z-50">
+                        class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/20">
 
                         <!-- Nội dung popup -->
                         <div @click.away="show = false"
-                            class="relative bg-white p-6 rounded-lg shadow-lg w-96">
+                            class="relative p-6 bg-white rounded-lg shadow-lg w-96">
 
                             <!-- Nút đóng dấu X -->
                             <button @click="show = false"
-                                      class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xl font-bold focus:outline-none">
+                                        class="absolute text-xl font-bold text-red-500 top-2 right-2 hover:text-red-700 focus:outline-none">
                                 &times;
                             </button>
 
-                            <h2 class="text-lg font-semibold mb-4">Nhóm của bạn</h2>
+                            <h2 class="mb-4 text-lg font-semibold">Nhóm của bạn</h2>
 
                             @php
                                 $userId = Auth::user()->ID_USER;
@@ -54,19 +54,19 @@
                                             ->get();
                             @endphp
 
-                            <h2 class="text-lg font-semibold mb-4">Các nhóm bạn quản lý:</h2>
+                            <h2 class="mb-4 text-lg font-semibold">Các nhóm bạn quản lý:</h2>
 
                             @if($dsNhom->count())
-                                <ul class="space-y-2 max-h-64 overflow-y-auto pr-2">
+                                <ul class="pr-2 space-y-2 overflow-y-auto max-h-64">
                                     @foreach($dsNhom as $nhom)
                                         <li>
                                             <form method="POST" action="{{ url('/group') }}">
                                                 @csrf
                                                 <input type="hidden" name="id_nhom" value="{{ $nhom->ID_NHOM }}">
 
-                                                <button type="submit" class="w-full text-left p-2 border rounded bg-white flex items-center gap-3 hover:bg-gray-100 transition">
-                                                    <img src="{{ asset('uploads/' . (Auth::user()->AVATAR ?? 'avt.jpg')) }}" class="w-9 h-9 rounded-full flex-shrink-0" />
-                                                    <span class="font-medium text-sm">{{ $nhom->TEN_NHOM }}</span>
+                                                <button type="submit" class="flex items-center w-full gap-3 p-2 text-left transition bg-white border rounded hover:bg-gray-100">
+                                                    <img src="{{ asset('uploads/' . (Auth::user()->AVATAR ?? 'avt.jpg')) }}" class="flex-shrink-0 rounded-full w-9 h-9" />
+                                                    <span class="text-sm font-medium">{{ $nhom->TEN_NHOM }}</span>
                                                 </button>
                                             </form>
                                         </li>
