@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 use function Laravel\Prompts\alert;
 
-class LeaderController extends Controller   
+class LeaderController extends Controller
 {
     public function showLeader(){
         return view('leader');
@@ -26,9 +26,8 @@ class LeaderController extends Controller
         $user = NguoiDungCaNhan::where('HO_TEN','like',"%{$r->input('search_members')}%")
                                 ->where('EMAIL', '!=', Auth::user()->email )
                                 ->get();
-           
 
-        return redirect()->back()       
+        return redirect()->back()
         ->withInput()          // <-- flash tất cả inputs
         ->with('invite', value: $user);
 
@@ -45,8 +44,7 @@ class LeaderController extends Controller
             'NGAY_TAO' => $ngayHomNay,
             'TEN_NHOM' => 'CHƯA CÓ TÊN',
         ];
-    
-     
+
         Nhom::create($data);
         $nhom = Nhom::where('ID_NHOM_TRUONG', $r->input('id_user'))
                                 ->where('NGAY_TAO', $ngayHomNay)
@@ -58,7 +56,7 @@ class LeaderController extends Controller
     }
 
     public function invite (Request $request){
-        
+
         $request->validate([
             'id_user' => 'required|exists:nguoi_dung_ca_nhan,ID_USER',
             'id_nhom' => 'required|exists:nhom_lam_viec,ID_NHOM'
@@ -69,7 +67,7 @@ class LeaderController extends Controller
             'ID_NHOM' =>  $request->input('id_nhom'),
         ]);
 
-        return redirect()->back()   ;    
+        return redirect()->back()   ;
     }
     public function showGroup(){
         return view('group');
@@ -80,14 +78,14 @@ class LeaderController extends Controller
         $request->validate([
             'id_nhom' => 'required|exists:nhom_lam_viec,ID_NHOM'
         ]);
-       
+
         $nhom = Nhom::where('ID_NHOM', $request->input('id_nhom'))->first();
         session(['group' => $nhom]);
 
         return redirect()->route('showGroup') ;
     }
 
-     public function doGroups(Request $request){
+    public function doGroups(Request $request){
 
         $request->validate([
             'ten_nhom' => 'required',
@@ -99,6 +97,26 @@ class LeaderController extends Controller
 
         session(['group' => $nhom]);
         return redirect()->route('showGroup') ;
+    }
+
+    public function chapNhan($id)
+    {
+        DB::table('loi_moi')
+            ->where('ID_NHOM', $id)
+            ->where('ID_USER', Auth::id())
+            ->update(['TRANG_THAI_LOI_MOI' => true]);
+
+        return back()->with('success', 'Đã chấp nhận lời mời vào nhóm!');
+    }
+
+    public function tuChoi($id)
+    {
+        DB::table('loi_moi')
+            ->where('ID_NHOM', $id)
+            ->where('ID_USER', Auth::id())
+            ->update(['TRANG_THAI_LOI_MOI' => false]);
+
+        return back()->with('info', 'Bạn đã từ chối lời mời.');
     }
 
 }

@@ -9,13 +9,18 @@
 
         <nav id="navMenu" class="absolute left-0 z-50 flex-col hidden w-full px-4 font-medium text-gray-700 bg-white md:flex md:flex-row md:items-center md:space-x-6 md:static md:bg-transparent top-16 md:w-auto md:px-0">
             @auth
-            <a href="#" onclick="event.preventDefault(); document.getElementById('post-form').submit();">Tạo Nhóm</a>
-
-            <form id="post-form" method="POST" action="{{ route('addgroup') }}" style="display:none;">
-            @csrf
-            <input type="hidden" name="id_user" value="{{ Auth::user()->ID_USER }}">
-            </form>
+                <a href="#" class="cursor-pointer hover:text-blue-600" @click="showModal = true">Tạo Nhóm</a>
             @endauth
+
+            @auth
+                <a href="#" class="cursor-pointer hover:text-blue-600" onclick="event.preventDefault(); document.getElementById('post-form').submit();">Tạo Nhóm</a>
+
+                <form id="post-form" method="POST" action="{{ route('addgroup') }}" style="display:none;">
+                    @csrf
+                    <input type="hidden" name="id_user" value="{{ Auth::user()->ID_USER }}">
+                </form>
+            @endauth
+
             <a href="{{ url('/') }}" class="block py-2 hover:text-blue-600">Trang chủ</a>
             <a href="{{ route('plans.index') }}" class="block py-2 hover:text-blue-600">Kế hoạch</a>
             <a href="{{ route('reminders') }}" class="block py-2 hover:text-blue-600">Nhắc nhở</a>
@@ -82,16 +87,6 @@
                 </div>
 
 
-
-
-
-
-
-
-
-
-
-
                 <a href="/account" class="flex items-center gap-2 py-2 hover:text-blue-600">
                     <img src="{{ asset('uploads/' . (Auth::user()->AVATAR ?? 'avt.jpg')) }}" alt="AVT" class="w-6 h-6 rounded-full">
                     <span>{{ Auth::user()->HO_TEN ?? 'Không có tên' }}</span>
@@ -106,13 +101,50 @@
                                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
 
-                        @if(isset($notifications) && count($notifications))
+                        @if(isset($notifications) && count($invitations))
                             <span class="absolute top-0 right-0 w-2 h-2 bg-red-600 rounded-full"></span>
                         @endif
                     </button>
 
                     {{-- Popover --}}
                     <div class="absolute right-0 z-10 hidden p-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-md shadow-md w-80 group-hover:block top-10">
+                        {{-- 🔔 Lời mời vào nhóm --}}
+                        <h4 class="mb-1 font-semibold text-blue-600">📨 Lời mời vào nhóm</h4>
+                        <ul class="space-y-1">
+                            @forelse($invitations ?? [] as $invitation)
+                                @if(is_object($invitation))
+                                    <li class="px-2 py-2 text-sm rounded bg-blue-50 hover:bg-blue-100">
+                                        👥 Nhóm: <strong>{{ $invitation->TEN_NHOM }}</strong>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs text-gray-500">
+                                                Người mời: {{ $invitation->NGUOI_MOI }}
+                                            </span>
+
+                                            <div class="flex gap-2">
+                                                {{-- ✅ Chấp nhận --}}
+                                                <form action="{{ route('leader.chapnhan', ['id' => $invitation->ID_NHOM]) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" title="Chấp nhận" class="text-xl text-green-600 cursor-pointer hover:scale-120">✔️</button>
+                                                </form>
+
+                                                {{-- ❌ Từ chối --}}
+                                                <form action="{{ route('leader.tuchoi', ['id' => $invitation->ID_NHOM]) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" title="Từ chối" class="text-xl text-red-600 cursor-pointer hover:scale-120">❌</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endif
+                            @empty
+                                <li class="text-gray-500">Không có lời mời nào</li>
+                            @endforelse
+                        </ul>
+
+
+                        <hr class="my-2 border-gray-200">
+
+                        {{-- 🔔 Thông báo sắp hết hạn --}}
                         <h4 class="mb-2 font-semibold text-blue-600">Thông báo sắp đến hạn</h4>
                         <ul class="space-y-2 overflow-auto max-h-64">
                             @forelse($notifications ?? [] as $tenCV => $mucs)

@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('*', function ($view) {
             $notifications = [];
+            $invitations = [];
 
             if (Auth::check()) {
                 $rawNotifications = DB::table('muc_cong_viec')
@@ -42,6 +43,21 @@ class AppServiceProvider extends ServiceProvider
 
                 // Nhóm theo TEN_CV
                 $notifications = $rawNotifications->groupBy('TEN_CV');
+
+                // Thông báo lời mời nhóm
+                $userId = Auth::user()->ID_USER;
+
+                $invitations = DB::table('loi_moi')
+                    ->join('nhom_lam_viec', 'loi_moi.ID_NHOM', '=', 'nhom_lam_viec.ID_NHOM')
+                    ->join('nguoi_dung_ca_nhan', 'nhom_lam_viec.ID_NHOM_TRUONG', '=', 'nguoi_dung_ca_nhan.ID_USER')
+                    ->where('loi_moi.ID_USER', $userId)
+                    ->whereNull('loi_moi.TRANG_THAI_LOI_MOI')
+                    ->select('nhom_lam_viec.TEN_NHOM', 'loi_moi.ID_NHOM', 'nguoi_dung_ca_nhan.HO_TEN as NGUOI_MOI')
+                    ->get();
+
+                $invitations = $invitations ?? collect();
+
+                $view->with('invitations', $invitations);
             }
 
             $view->with('notifications', $notifications);
