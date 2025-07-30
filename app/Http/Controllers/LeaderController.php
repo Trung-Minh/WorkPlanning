@@ -20,13 +20,21 @@ class LeaderController extends Controller
     public function search_members(Request $r)
     {
         $r->validate([
-            'search_members' => 'required',
+            'search_members' => '',
+            'ten_nhom' => 'required',
+            'id_nhom' => 'required|exists:nhom_lam_viec,ID_NHOM',
+            'id_nhom_truong' => 'required|exists:nhom_lam_viec,ID_NHOM_TRUONG',
+
         ]);
 
         $user = NguoiDungCaNhan::where('HO_TEN','like',"%{$r->input('search_members')}%")
-                                ->where('EMAIL', '!=', Auth::user()->email )
+                                ->where('ID_USER', '!=', $r->input('id_nhom_truong') )
                                 ->get();
 
+        Nhom::where('ID_NHOM', $r->input('id_nhom'))->update(['TEN_NHOM' => $r->ten_nhom]);
+        $nhom = Nhom::where('ID_NHOM', $r->input('id_nhom'))->first();
+
+        session(['nhom' => $nhom]);
         return redirect()->back()
         ->withInput()          // <-- flash tất cả inputs
         ->with('invite', value: $user);
@@ -95,8 +103,31 @@ class LeaderController extends Controller
         Nhom::where('ID_NHOM', $request->input('id_nhom'))->update(['TEN_NHOM' => $request->ten_nhom]);
         $nhom = Nhom::where('ID_NHOM', $request->input('id_nhom'))->first();
 
+        DB::table('ke_hoach')->insert([
+            'NGUOI_TAO' => $nhom -> ID_NHOM_TRUONG,
+            'ID_NHOM' =>  $request->input('id_nhom'),
+        ]); 
+
         session(['group' => $nhom]);
         return redirect()->route('showGroup') ;
+    }
+
+    public function delete_group(Request $request){
+
+        $request->validate([
+            'id_nhom' => 'required|exists:nhom_lam_viec,ID_NHOM',
+            'redirect_to' => 'required'
+        ]);
+
+         DB::table('loi_moi')
+             ->where('ID_NHOM', $request->input('id_nhom'))
+             ->delete();
+
+         Nhom::where('ID_NHOM', $request->input('id_nhom'))->delete();
+
+
+        return redirect()->to($request->input('redirect_to'));
+
     }
 
     public function chapNhan($id)
@@ -118,6 +149,8 @@ class LeaderController extends Controller
 
         return back()->with('info', 'Bạn đã từ chối lời mời.');
     }
+
+
 
 }
 
