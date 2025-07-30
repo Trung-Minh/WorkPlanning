@@ -61,12 +61,12 @@
 
         <textarea name="NOI_DUNG_CHI_TIET" placeholder="Nội dung chi tiết" rows="3"
                   class="w-full p-2 border border-indigo-200 rounded mb-3 focus:ring-2 focus:ring-indigo-300"></textarea>
-
-        <input type="datetime-local" name="THOI_HAN_HOAN_THANH"
-               class="w-full p-2 border border-pink-300 rounded mb-3 focus:ring-2 focus:ring-pink-400" required>
-
+      <input type="datetime-local" name="THOI_HAN_HOAN_THANH"
+       id="deadlineInput"
+       class="w-full p-2 border border-pink-300 rounded mb-3 focus:ring-2 focus:ring-pink-400"
+       required>
         <input type="number" name="DO_UU_TIEN_MUC" placeholder="Độ ưu tiên" min="1" 
-               class="w-full p-2 border border-yellow-300 rounded mb-4 focus:ring-2 focus:ring-yellow-400" required>
+               class="w-full p-2 border border-yellow-300 rounded mb-4 focus:ring-2 focus:ring-yellow-400" >
 
         <div class="flex justify-end gap-2">
             <button type="button" onclick="hideModal('modalAddSubTask')"
@@ -79,7 +79,7 @@
 
 
 
-{{-- Modal Sửa mục công việc --}}
+<!-- Modal Sửa mục công việc --->
 <div id="modalEditSubTask" class="hidden fixed inset-0 bg-transparent z-50 flex justify-center items-center">
     <form id="formEditSubTask" method="POST"
         class="bg-gradient-to-br from-white via-yellow-50 to-orange-100 border border-yellow-300 p-6 rounded-xl w-[90%] max-w-xl shadow-2xl animate-fade-in">
@@ -94,7 +94,6 @@
             class="w-full border rounded p-2 mb-3" required>
         <input type="number" name="DO_UU_TIEN_MUC" id="editUuTien"
             class="w-full border rounded p-2 mb-3" min="1" max="10" required>
-
         <label class="flex items-center space-x-2 mb-3">
             <input type="checkbox" name="TRANG_THAI" id="editTrangThai" class="accent-green-600">
             <span>Đánh dấu là hoàn thành</span>

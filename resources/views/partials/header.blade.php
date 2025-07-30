@@ -19,6 +19,7 @@
             <a href="{{ url('/') }}" class="block py-2 hover:text-blue-600">Trang chủ</a>
             <a href="{{ route('plans.index') }}" class="block py-2 hover:text-blue-600">Kế hoạch</a>
             <a href="{{ route('reminders') }}" class="block py-2 hover:text-blue-600">Nhắc nhở</a>
+       
 
             @auth
                 <!-- Thêm Alpine.js (nếu chưa có) -->
@@ -120,7 +121,7 @@
                                     <div class="font-bold text-blue-700">📂 {{ $tenCV }}</div>
                                     <ul class="pl-4 mt-1 space-y-1">
                                         @foreach($mucs as $muc)
-                                            <li onclick="window.location.href='{{ route('plans.index') }}'">
+                                            <li onclick="window.location.href='{{ route('plans.index') }}'"
                                                 class="px-2 py-1 transition rounded cursor-pointer bg-gray-50 hover:bg-gray-100">
                                                 📌 <strong>{{ $muc->TEN_MUC }}</strong><br>
                                                 <span class="block text-xs text-gray-500">
@@ -137,7 +138,16 @@
                     </div>
                 </div>
 
-                {{-- 🌙 Nút Dark Mode --}}
+
+
+
+            @else
+                <a href="{{ route('login') }}" class="block py-2 hover:text-blue-600">Đăng nhập</a>
+                <a href="{{ route('register') }}" class="block py-2 hover:text-blue-600">Đăng ký</a>
+            
+                </button>
+            @endauth
+                                     {{-- 🌙 Nút Dark Mode --}}
                 <button id="darkModeToggle"
                     class="p-2 ml-2 transition rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
                     <svg id="darkModeIcon" class="w-6 h-6 text-gray-700 dark:text-yellow-300" fill="none"
@@ -145,34 +155,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 3v1m0 16v1m8.66-8.66h-1M4.34 12h-1m15.36-4.95l-.7.7M6.34 17.66l-.7.7m0-13.72l.7.7M17.66 17.66l.7.7M12 5a7 7 0 000 14a7 7 0 000-14z" />
                     </svg>
-                </button>
-
-
-            @else
-                <a href="{{ route('login') }}" class="block py-2 hover:text-blue-600">Đăng nhập</a>
-                <a href="{{ route('register') }}" class="block py-2 hover:text-blue-600">Đăng ký</a>
-            @endauth
         </nav>
     </div>
 </header>
 
 {{-- Script mobile menu toggle --}}
 <script>
-    const toggle = document.getElementById('darkModeToggle');
-    const icon = document.getElementById('darkModeIcon');
-    const html = document.documentElement;
-
-    // Load dark mode từ localStorage
-    if (localStorage.getItem('theme') === 'dark') {
-        html.classList.add('dark');
-    }
-
-    toggle.addEventListener('click', () => {
-        html.classList.toggle('dark');
-        const isDark = html.classList.contains('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    });
-
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
     menuToggle?.addEventListener('click', () => navMenu?.classList.toggle('hidden'));

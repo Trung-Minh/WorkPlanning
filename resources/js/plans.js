@@ -238,4 +238,20 @@ document.querySelectorAll('.editable-priority').forEach(el => {
     };
 });
 
+// PT thời gian buộc ở tương lai
+    const input = document.getElementById('deadlineInput');
+    const deadlineInput = document.getElementById('editDeadline');
+
+    function getMinTimeOneHourLater() {
+        const now = new Date();
+        now.setHours(now.getHours() + 1); // cộng 1 giờ
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // điều chỉnh múi giờ địa phương
+        return now.toISOString().slice(0, 16); // định dạng "yyyy-MM-ddTHH:mm"
+    }
+
+    input.min = getMinTimeOneHourLater();
+    deadlineInput.min = getMinTimeOneHourLater();
+    
+
+
 
