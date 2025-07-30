@@ -3,7 +3,7 @@
 @section('title', 'Nhắc nhở – WorkPlan')
 
 @section('content')
-<!--Danh sách nhắc nhở đã thiết lập-->
+Danh sách nhắc nhở đã thiết lập
 <h2 class="mb-4 text-2xl font-bold text-blue-700">🔔 Danh sách nhắc nhở đã thiết lập</h2>
 
 @if($thongBaos->isEmpty())

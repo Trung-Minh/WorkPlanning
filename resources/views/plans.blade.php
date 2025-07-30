@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app1')
 
 @section('title', 'Kế hoạch công việc')
 @php $user = Auth::user(); @endphp
@@ -204,9 +204,18 @@
     document.addEventListener('DOMContentLoaded', function () {
         setupInlineEditing('{{ csrf_token() }}');
     });
+
+    
 </script>
+
+
+
 
 
 @endsection
 
 @php($noFooter = true)
+
+
+
+

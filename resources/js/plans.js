@@ -239,7 +239,7 @@ document.querySelectorAll('.editable-priority').forEach(el => {
 });
 
 // PT thời gian buộc ở tương lai
-    const input = document.getElementById('deadlineInput');
+    // const a = document.getElementById('deadlineInput1');
     const deadlineInput = document.getElementById('editDeadline');
 
     function getMinTimeOneHourLater() {
@@ -247,9 +247,12 @@ document.querySelectorAll('.editable-priority').forEach(el => {
         now.setHours(now.getHours() + 1); // cộng 1 giờ
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // điều chỉnh múi giờ địa phương
         return now.toISOString().slice(0, 16); // định dạng "yyyy-MM-ddTHH:mm"
+        
     }
 
-    input.min = getMinTimeOneHourLater();
+    
+
+    a.min = getMinTimeOneHourLater();
     deadlineInput.min = getMinTimeOneHourLater();
     
 
