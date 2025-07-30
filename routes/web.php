@@ -26,6 +26,7 @@ Route::post('/search_members', [LeaderController::class, 'search_members'])->nam
 Route::post('/addgroup', [LeaderController::class, 'addgroup'])->name('addgroup');
 Route::post('/invite', [LeaderController::class, 'invite'])->name('invite');
 Route::post('/groups', [LeaderController::class, 'doGroups'])->name('doGroups');
+Route::post('/delete_group', [LeaderController::class, 'delete_group'])->name('delete_group');
 
 Route::get('/reminders', function () {
     return view('reminders');

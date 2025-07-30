@@ -10,6 +10,7 @@
         <nav id="navMenu"
             class="absolute left-0 z-50 flex-col hidden w-full px-4 font-medium text-gray-700 bg-white md:flex md:flex-row md:items-center md:space-x-6 md:static md:bg-transparent top-16 md:w-auto md:px-0">
 
+
             @auth
                 <a href="#" class="cursor-pointer hover:text-blue-600" onclick="event.preventDefault(); document.getElementById('post-form').submit();">Tạo Nhóm</a>
 
