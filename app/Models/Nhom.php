@@ -18,5 +18,6 @@ class Nhom extends Model
         'NGAY_TAO',
         'MO_TA_NHOM',
         'TEN_NHOM',
+        'AVATAR_NHOM',
     ];
 }

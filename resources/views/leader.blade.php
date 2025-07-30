@@ -6,16 +6,18 @@
     $user = Auth::user();
 @endphp
 @section('content')
-    <head><meta name="csrf-token" content="{{ csrf_token() }}">
+    <head>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
-       <!-- Thêm Alpine.js nếu chưa có -->
-        <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Thêm Alpine.js nếu chưa có -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     @php
         $nhom = session('nhom')
     @endphp
-    <main class=" w-full pt-2 mx-auto mt-5 sm:w-3/4 md:w-5/10 lg:w-5/10 ">
-   
-       <div class="relative max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-md">
+
+    <main class="w-full pt-2 mx-auto mt-5 sm:w-3/4 md:w-5/10 lg:w-5/10">
+        <div class="relative max-w-3xl p-6 mx-auto bg-white shadow-md rounded-2xl">
 
             <!-- Editable heading -->
             <div x-data="{
@@ -34,7 +36,7 @@
                 <h1 x-show="!editing"
                     @dblclick="editing = true; updateWidth()"
                     x-text="tenNhom"
-                    class="text-xl font-semibold mb-4 cursor-pointer">
+                    class="mb-4 text-xl font-semibold cursor-pointer">
                 </h1>
 
                 <!-- Ô input auto-resize -->
@@ -43,7 +45,7 @@
                     @input="updateWidth()"
                     @keydown.enter="tenNhom = tenMoi; editing = false"
                     @blur="tenNhom = tenMoi; editing = false"
-                    class="border rounded px-2 py-1 text-lg text-center transition-all"
+                    class="px-2 py-1 text-lg text-center transition-all border rounded"
                     :style="'width: ' + width + 'px'"
                     type="text"
                     autofocus />
@@ -53,88 +55,79 @@
                         <input type="hidden" name="id_nhom" value="{{ $nhom->ID_NHOM }}">
                         <input type="hidden" name="ten_nhom" x-model="tenNhom">
                         <button type="submit"
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-5 rounded-full shadow-lg text-sm">
+                            class="px-5 py-3 text-sm font-bold text-white bg-blue-600 rounded-full shadow-lg hover:bg-blue-700">
                             + Tạo nhóm
                         </button>
                     </form>
-
                 </div>
             </div>
-         
 
-            <h2 class="text-xl font-semibold mb-4">Invite Team Members</h2>
+            <h2 class="mb-4 text-xl font-semibold">Invite Team Members</h2>
 
             <!-- Search box -->
-            <div class="mb-4 flex">
-                <form method="POST" action="{{ url('/search_members') }}" class="mb-4 flex w-full">
-                @csrf   
+            <div class="flex mb-4">
+                <form method="POST" action="{{ url('/search_members') }}" class="flex w-full mb-4">
+                @csrf
                 <input type="text" name="search_members" id="search_members" value="{{ old('search_members') }}" placeholder="Search members..."
-                    class="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm" />
-                <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded-r-lg hover:bg-orange-600 text-sm">
+                    class="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                <button type="submit" class="px-4 py-2 text-sm text-white bg-orange-500 rounded-r-lg hover:bg-orange-600">
                     Search
                 </button>
                 </form>
             </div>
 
             <div>
-                    @php $invited = session('invite'); @endphp
+                @php $invited = session('invite'); @endphp
 
-                   @if($invited && $invited->count())
-                    <ul class="space-y-2 max-h-60 overflow-y-auto p-2 bg-white rounded-lg shadow-sm">
-                        @foreach($invited as $u)
-                            <li class="flex items-center gap-3">
-                                <img src="{{ asset('uploads/' . ($u->AVATAR ?? 'avt.jpg')) }}" class="w-9 h-9 rounded-full flex-shrink-0" />
-                                
-                                <span class="font-medium text-sm">{{ $u->HO_TEN }}</span>
-                                
-                                <form method="POST" action="{{ url('/invite') }}" 
-                                    class="ml-auto invite-form flex-shrink-0" 
-                                    data-user="{{ $u->ID_USER }}" 
-                                    data-nhom="{{ $nhom->ID_NHOM }}">
-                                    @csrf
-                                    <button type="submit"
-                                            class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs">
-                                        Mời
-                                    </button>
-                                </form>
-                            </li>
+                @if($invited && $invited->count())
+                <ul class="p-2 space-y-2 overflow-y-auto bg-white rounded-lg shadow-sm max-h-60">
+                    @foreach($invited as $u)
+                        <li class="flex items-center gap-3">
+                            <img src="{{ asset('uploads/' . ($u->AVATAR ?? 'avt.jpg')) }}" class="flex-shrink-0 rounded-full w-9 h-9" />
 
+                            <span class="text-sm font-medium">{{ $u->HO_TEN }}</span>
 
-                        @endforeach
-                    </ul>
-                    @else
+                            <form method="POST" action="{{ url('/invite') }}"
+                                class="flex-shrink-0 ml-auto invite-form"
+                                data-user="{{ $u->ID_USER }}"
+                                data-nhom="{{ $nhom->ID_NHOM }}">
+                                @csrf
+                                <button type="submit"
+                                        class="px-3 py-1 text-xs text-white bg-green-500 rounded hover:bg-green-600">
+                                    Mời
+                                </button>
+                            </form>
+                        </li>
+                    @endforeach
+                </ul>
+                @else
                     <p>Không tìm thấy người dùng.</p>
                     <br>
-                    @endif
-
+                @endif
             </div>
 
 
-                <!-- Members List -->
+            <!-- Members List -->
             <div>
-                    <br>    
-                    <h3 class="text-sm text-gray-500 font-medium mb-2">Members List:</h3>
+                <br>
+                <h3 class="mb-2 text-sm font-medium text-gray-500">Members List:</h3>
 
-                    <ul class="space-y-4">
+                <ul class="space-y-4">
                     <!-- Member Item -->
                     <li class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                        <img src="{{ asset('uploads/' . ($user->AVATAR ?? 'avt.jpg')) }}" class="w-9 h-9 rounded-full" />
-                        <span class="font-medium text-sm">{{ $user->HO_TEN }}</span></span>
+                            <img src="{{ asset('uploads/' . ($user->AVATAR ?? 'avt.jpg')) }}" class="rounded-full w-9 h-9" />
+                            <span class="text-sm font-medium">{{ $user->HO_TEN }}</span></span>
                         </div>
-                        <span class="bg-gray-200 text-xs font-medium px-3 py-1 rounded-lg">Owner</span>
+
+                        <span class="px-3 py-1 text-xs font-medium bg-gray-200 rounded-lg">Owner</span>
                     </li>
                     <li>
                         <br>
                     </li>
-                    <!-- Thêm các thành viên khác nếu cần -->
-                    </ul>
-
+                </ul>
             </div>
-
-            
-
-       </div>
+        </div>
     </main>
     <script>
         document.addEventListener('DOMContentLoaded', function () {

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 
-class PlansController extends Controller
+class GroupController extends Controller
 {
     public function index()
     {
