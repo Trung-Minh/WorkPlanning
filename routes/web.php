@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\ReminderController;
-use App\Models\KeHoach;
 use Illuminate\Support\Facades\Route;
 
 // Trang welcome
@@ -16,7 +15,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'doRegister']);
 });
 
-
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin']);
 
@@ -27,12 +25,8 @@ Route::get('/leader', [LeaderController::class, 'showLeader'])->name('showLeader
 Route::post('/search_members', [LeaderController::class, 'search_members'])->name('search_members');
 Route::post('/addgroup', [LeaderController::class, 'addgroup'])->name('addgroup');
 Route::post('/invite', [LeaderController::class, 'invite'])->name('invite');
-
-Route::get('/group', [LeaderController::class, 'showGroup'])->name('showGroup');
-Route::post('/group', [LeaderController::class, 'doGroup'])->name('doGroup');
 Route::post('/groups', [LeaderController::class, 'doGroups'])->name('doGroups');
 Route::post('/delete_group', [LeaderController::class, 'delete_group'])->name('delete_group');
-
 
 Route::get('/reminders', function () {
     return view('reminders');
@@ -80,8 +74,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/tasks/{id}', [PlansController::class, 'destroyTask'])->name('tasks.delete');
 });
 
-
-
 Route::get('/profile/upload-avatar', function () {
     return 'Đây là trang upload-avatar, chỉ xử lý POST mới có tác dụng.';
 });
@@ -111,4 +103,27 @@ Route::get('/reminders/deadline/{id}', [ReminderController::class, 'getDeadlineB
 Route::post('/leader/chap-nhan/{id}', [LeaderController::class, 'chapNhan'])->name('leader.chapnhan');
 Route::post('/leader/tu-choi/{id}', [LeaderController::class, 'tuChoi'])->name('leader.tuchoi');
 
+
+Route::get('/group', [LeaderController::class, 'showGroup'])->name('showGroup');
+Route::post('/group', [LeaderController::class, 'doGroup'])->name('doGroup');
+
+Route::post('/group/{id}/update', [LeaderController::class, 'updateGroup'])->name('group.update');
+Route::delete('/group/{id}', [LeaderController::class, 'delete'])->name('group.delete');
+
+
+Route::post('/group/{idNhom}/plans', [LeaderController::class, 'storeGroupPlan'])->name(name: 'group.plan');
+Route::put('/group/{id}/update-plan', [LeaderController::class, 'updateGroupPlan'])->name('group.update-plan');
+Route::delete('/group/{id}/delete-plan', [LeaderController::class, 'deleteGroupPlan'])->name('group.delete-plan');
+
+Route::post('/group/tasks', [LeaderController::class, 'storeGroupTask'])->name(name: 'group.task');
+Route::put('/group/{id}/update-task', [LeaderController::class, 'updateTask'])->name('group.update-task');
+Route::delete('/group/{id}/delete-task', [LeaderController::class, 'deleteGroupTask'])->name('group.delete-task');
+
+Route::post('/group/subtasks', [LeaderController::class, 'storeGroupSubTask'])->name(name: 'group.subtask');
+Route::put('/group/{id}/update-subtask', action: [LeaderController::class, 'updateGroupSubtask'])->name('group.update-subtask');
+Route::delete('/group/{id}/delete-subtask', action: [LeaderController::class, 'deleteGroupSubtask'])->name('group.delete-subtask');
+
+Route::post('/group/{id}/update-priority', [LeaderController::class, 'updateGroupTaskPriority'])->name('group.update-priority');
+Route::post('/group/{id}/update-subtask-priority', [LeaderController::class, 'updateGroupSubtaskPriority'])->name('group.update-subtask-priority');
+Route::post('/api/muc-cong-viec/{id}/toggle-status', action: [LeaderController::class, 'toggleStatus']);
 ?>

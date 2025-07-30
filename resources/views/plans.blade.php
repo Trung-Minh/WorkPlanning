@@ -15,14 +15,13 @@
     </h1>
 
    <button onclick="showModal('modalAddPlan')"
-    class="cursor-pointer bg-gradient-to-r
-           from-red-500 to-purple-500
-           hover:from-red-600 hover:to-purple-600
-           text-white px-5 py-2.5 rounded-lg shadow-xl
-           transition-transform transform hover:scale-110">
-    ➕ Thêm Kế hoạch
-</button>
-
+        class="cursor-pointer bg-gradient-to-r
+                from-red-500 to-purple-500
+                hover:from-red-600 hover:to-purple-600
+                text-white px-5 py-2.5 rounded-lg shadow-xl
+                transition-transform transform hover:scale-110">
+        ➕ Thêm Kế hoạch
+    </button>
 
     @foreach($keHoachs as $keHoach)
         <div class="p-4 mt-6 bg-white border border-blue-200 rounded-lg shadow-lg animate-fade-in">
@@ -50,7 +49,6 @@
                 text-sm text-white mb-4 animate-fade-in">
                 + Thêm Công việc
             </button>
-
 
             @if($keHoach->cong_viec->isEmpty())
                 <p class="italic text-gray-500">Chưa có công việc nào cho kế hoạch này.</p>
@@ -180,7 +178,6 @@
                                 </span>
                             </div>
 
-
                             </div>
                         @endforeach
 
@@ -205,7 +202,6 @@
         setupInlineEditing('{{ csrf_token() }}');
     });
 </script>
-
 
 @endsection
 

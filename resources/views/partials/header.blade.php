@@ -7,7 +7,9 @@
         </div>
         <button id="menuToggle" class="text-2xl text-gray-700 md:hidden focus:outline-none">☰</button>
 
-        <nav id="navMenu" class="absolute left-0 z-50 flex-col hidden w-full px-4 font-medium text-gray-700 bg-white md:flex md:flex-row md:items-center md:space-x-6 md:static md:bg-transparent top-16 md:w-auto md:px-0">
+        <nav id="navMenu"
+            class="absolute left-0 z-50 flex-col hidden w-full px-4 font-medium text-gray-700 bg-white md:flex md:flex-row md:items-center md:space-x-6 md:static md:bg-transparent top-16 md:w-auto md:px-0">
+
 
             @auth
                 <a href="#" class="cursor-pointer hover:text-blue-600" onclick="event.preventDefault(); document.getElementById('post-form').submit();">Tạo Nhóm</a>
@@ -16,6 +18,7 @@
                     @csrf
                     <input type="hidden" name="id_user" value="{{ Auth::user()->ID_USER }}">
                 </form>
+                {{-- <a href="{{ route('showLeader') }}" class="hover:text-blue-600 hover:underline">Tạo nhóm</a> --}}
             @endauth
 
             <a href="{{ url('/') }}" class="block py-2 hover:text-blue-600">Trang chủ</a>
@@ -52,22 +55,32 @@
                             @php
                                 $userId = Auth::user()->ID_USER;
                                 $dsNhom = \App\Models\Nhom::where('ID_NHOM_TRUONG', $userId)
-                                            ->select('ID_NHOM', 'TEN_NHOM')
-                                            ->get();
+                                    ->select('ID_NHOM', 'TEN_NHOM', 'AVATAR_NHOM')
+                                    ->get();
+
+                            @endphp
+
+                            @php
+                                $userId = Auth::user()->ID_USER;
+                                $dsNhomThamGia = \App\Models\Nhom::join('nhom_thanh_vien', 'nhom_lam_viec.ID_NHOM', '=', 'nhom_thanh_vien.ID_NHOM')
+                                    ->where('nhom_thanh_vien.ID_USER', $userId)
+                                    ->where('nhom_lam_viec.ID_NHOM_TRUONG', '!=', $userId)
+                                    ->select('nhom_lam_viec.ID_NHOM', 'nhom_lam_viec.TEN_NHOM', 'nhom_lam_viec.AVATAR_NHOM')
+                                    ->get();
                             @endphp
 
                             <h2 class="mb-4 text-lg font-semibold">Các nhóm bạn quản lý:</h2>
 
+                            {{-- Hiển thị danh sách nhóm quản lý --}}
                             @if($dsNhom->count())
                                 <ul class="pr-2 space-y-2 overflow-y-auto max-h-64">
                                     @foreach($dsNhom as $nhom)
                                         <li>
-                                            <form method="POST" action="{{ url('/group') }}">
+                                            <form method="POST" action="{{ route('doGroup') }}">
                                                 @csrf
                                                 <input type="hidden" name="id_nhom" value="{{ $nhom->ID_NHOM }}">
-
-                                                <button type="submit" class="flex items-center w-full gap-3 p-2 text-left transition bg-white border rounded hover:bg-gray-100">
-                                                    <img src="{{ asset('uploads/' . (Auth::user()->AVATAR ?? 'avt.jpg')) }}" class="flex-shrink-0 rounded-full w-9 h-9" />
+                                                <button type="submit" class="flex items-center w-full gap-3 p-2 text-left transition bg-white border rounded cursor-pointer hover:bg-gray-100">
+                                                    <img src="{{ asset($nhom->AVATAR_NHOM ?? 'upload_group/avt.jpg') }}" class="flex-shrink-0 object-cover rounded-full w-9 h-9" />
                                                     <span class="text-sm font-medium">{{ $nhom->TEN_NHOM }}</span>
                                                 </button>
                                             </form>
@@ -78,8 +91,29 @@
                                 <p class="text-gray-500">Bạn chưa quản lý nhóm nào.</p>
                             @endif
 
-                        </div>
+                            <hr class="my-4 border-t" />
+                            <h2 class="mb-4 text-lg font-semibold">Các nhóm bạn đã tham gia:</h2>
 
+                            {{-- Hiển thị danh sách nhóm tham gia --}}
+                            @if($dsNhomThamGia->count())
+                                <ul class="pr-2 space-y-2 overflow-y-auto max-h-64">
+                                    @foreach($dsNhomThamGia as $nhom)
+                                        <li>
+                                            <form method="POST" action="{{ route('doGroup') }}">
+                                                @csrf
+                                                <input type="hidden" name="id_nhom" value="{{ $nhom->ID_NHOM }}">
+                                                <button type="submit" class="flex items-center w-full gap-3 p-2 text-left transition border rounded cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                                    <img src="{{ asset($nhom->AVATAR_NHOM ?? 'upload_group/avt.jpg') }}" class="flex-shrink-0 object-cover rounded-full w-9 h-9" />
+                                                    <span class="text-sm font-medium">{{ $nhom->TEN_NHOM }}</span>
+                                                </button>
+                                            </form>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p class="text-gray-500">Bạn chưa tham gia nhóm nào.</p>
+                            @endif
+                        </div>
                     </div>
                 </div>
 

@@ -6,18 +6,21 @@
     $user = Auth::user();
 @endphp
 @section('content')
-    <head><meta name="csrf-token" content="{{ csrf_token() }}">
+    <head>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
-       <!-- Thêm Alpine.js nếu chưa có -->
-        <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Thêm Alpine.js nếu chưa có -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     @php
         $nhom = session('nhom')
     @endphp
-    <main class=" w-full pt-2 mx-auto mt-5 sm:w-3/4 md:w-5/10 lg:w-5/10 ">
-   
-       <div class="relative max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-md">
+
+    <main class="w-full pt-2 mx-auto mt-5 sm:w-3/4 md:w-5/10 lg:w-5/10">
+        <div class="relative max-w-3xl p-6 mx-auto bg-white shadow-md rounded-2xl">
 
             <!-- Editable heading -->
+
                 <div x-data="{
                         editing: false,
                         tenNhom: '{{ $nhom->TEN_NHOM }}',
@@ -81,62 +84,56 @@
                 </div>
 
             <div>
-                    @php $invited = session('invite'); @endphp
+                @php $invited = session('invite'); @endphp
 
-                   @if($invited && $invited->count())
-                    <ul class="space-y-2 max-h-60 overflow-y-auto p-2 bg-white rounded-lg shadow-sm">
-                        @foreach($invited as $u)
-                            <li class="flex items-center gap-3">
-                                <img src="{{ asset('uploads/' . ($u->AVATAR ?? 'avt.jpg')) }}" class="w-9 h-9 rounded-full flex-shrink-0" />
-                                
-                                <span class="font-medium text-sm">{{ $u->HO_TEN }}</span>
-                                
-                                <form method="POST" action="{{ url('/invite') }}" 
-                                    class="ml-auto invite-form flex-shrink-0" 
-                                    data-user="{{ $u->ID_USER }}" 
-                                    data-nhom="{{ $nhom->ID_NHOM }}">
-                                    @csrf
-                                    <button type="submit"
-                                            class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs">
-                                        Mời
-                                    </button>
-                                </form>
-                            </li>
+                @if($invited && $invited->count())
+                <ul class="p-2 space-y-2 overflow-y-auto bg-white rounded-lg shadow-sm max-h-60">
+                    @foreach($invited as $u)
+                        <li class="flex items-center gap-3">
+                            <img src="{{ asset('uploads/' . ($u->AVATAR ?? 'avt.jpg')) }}" class="flex-shrink-0 rounded-full w-9 h-9" />
 
+                            <span class="text-sm font-medium">{{ $u->HO_TEN }}</span>
 
-                        @endforeach
-                    </ul>
-                    @else
+                            <form method="POST" action="{{ url('/invite') }}"
+                                class="flex-shrink-0 ml-auto invite-form"
+                                data-user="{{ $u->ID_USER }}"
+                                data-nhom="{{ $nhom->ID_NHOM }}">
+                                @csrf
+                                <button type="submit"
+                                        class="px-3 py-1 text-xs text-white bg-green-500 rounded hover:bg-green-600">
+                                    Mời
+                                </button>
+                            </form>
+                        </li>
+                    @endforeach
+                </ul>
+                @else
                     <p>Không tìm thấy người dùng.</p>
                     <br>
-                    @endif
-
+                @endif
             </div>
 
 
-                <!-- Members List -->
+            <!-- Members List -->
             <div>
-                    <br>    
-                    <h3 class="text-sm text-gray-500 font-medium mb-2">Members List:</h3>
+                <br>
+                <h3 class="mb-2 text-sm font-medium text-gray-500">Members List:</h3>
 
-                    <ul class="space-y-4">
+                <ul class="space-y-4">
                     <!-- Member Item -->
                     <li class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                        <img src="{{ asset('uploads/' . ($user->AVATAR ?? 'avt.jpg')) }}" class="w-9 h-9 rounded-full" />
-                        <span class="font-medium text-sm">{{ $user->HO_TEN }}</span></span>
+                            <img src="{{ asset('uploads/' . ($user->AVATAR ?? 'avt.jpg')) }}" class="rounded-full w-9 h-9" />
+                            <span class="text-sm font-medium">{{ $user->HO_TEN }}</span></span>
                         </div>
-                        <span class="bg-gray-200 text-xs font-medium px-3 py-1 rounded-lg">Owner</span>
+
+                        <span class="px-3 py-1 text-xs font-medium bg-gray-200 rounded-lg">Owner</span>
                     </li>
                     <li>
                         <br>
                     </li>
-                    <!-- Thêm các thành viên khác nếu cần -->
-                    </ul>
-
-            </div>
-
-            
+                </ul>
+            </div>       
 
       <div id="leave-confirm-modal"
      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 hidden">
