@@ -31,6 +31,7 @@ Route::post('/invite', [LeaderController::class, 'invite'])->name('invite');
 Route::get('/group', [LeaderController::class, 'showGroup'])->name('showGroup');
 Route::post('/group', [LeaderController::class, 'doGroup'])->name('doGroup');
 Route::post('/groups', [LeaderController::class, 'doGroups'])->name('doGroups');
+Route::post('/delete_group', [LeaderController::class, 'delete_group'])->name('delete_group');
 
 
 Route::get('/reminders', function () {
