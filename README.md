@@ -86,6 +86,7 @@ extension=openssl
 extension=mbstring
 extension=pdo_mysql
 extension=mysqli
+extension=gd
 ```
 
 5. Lưu và **restart** terminal.
