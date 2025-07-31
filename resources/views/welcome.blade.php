@@ -3,7 +3,7 @@
 @section('title', 'Trang chủ - WorkPlanning')
 
 @section('content')
-    <main class="max-w-6xl px-4 py-12 mx-auto">
+    <main class=" max-w-6xl px-4 py-12 mx-auto">
         <!-- Giới thiệu -->
         <section class="mb-16">
             <h1 class=" mb-6 text-5xl font-bold text-blue-700">

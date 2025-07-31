@@ -1,4 +1,4 @@
-<header class="py-6  border-t shadow-md text-md ">
+<header class="hea py-6  border-t shadow-md text-md ">
 
     <div class="flex items-center justify-between px-4 py-4 mx-auto max-w-7xl" >
         <div class="text-2xl font-bold text-blue-600 dark-card">
@@ -104,7 +104,7 @@
                     </button>
 
                     {{-- Popover --}}
-                    <div class="absolute right-0 z-10 hidden p-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-md shadow-md w-80 group-hover:block top-10">
+                    <div class="div absolute right-0 z-10 hidden p-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-md shadow-md w-80 group-hover:block top-10">
                         <h4 class="mb-2 font-semibold text-blue-600">Thông báo sắp đến hạn</h4>
                         <ul class="space-y-2 overflow-auto max-h-64">
                             @forelse($notifications ?? [] as $tenCV => $mucs)
@@ -129,13 +129,13 @@
                     </div>
                 </div>
             @else
-                <a href="{{ route('login') }}" class="block py-2 hover:text-blue-600">Đăng nhập</a>
-                <a href="{{ route('register') }}" class="block py-2 hover:text-blue-600">Đăng ký</a>
+                <a href="{{ route('login') }}" class="a block py-2 hover:text-blue-600">Đăng nhập</a>
+                <a href="{{ route('register') }}" class="a block py-2 hover:text-blue-600">Đăng ký</a>
             
                 </button>
             @endauth
                <!-- Nút chuyển chế độ sáng/tối -->
-            <button id="darkModeToggle" class="p-2 ml-2 transition rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
+            <button id="darkModeToggle" class="p-2 ml-2 transition rounded-full cursor-pointer">
                 <svg id="darkModeIcon" class="a w-6 h-6 text-gray-700 dark:text-yellow-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
@@ -144,7 +144,7 @@
         </nav>
     </div>
 </header>
-<!-- <script>
+<script>
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
     menuToggle?.addEventListener('click', () => navMenu?.classList.toggle('hidden'));
@@ -169,4 +169,4 @@
             });
         }
     });
-</script> -->
+</script> 

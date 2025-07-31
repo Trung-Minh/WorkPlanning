@@ -32,7 +32,7 @@
 <body class="flex flex-col min-h-screen bg-gray-100">
   @include('partials.header')
 
-   <main class="flex-1 w-full px-4 py-4 mx-auto">
+   <main class="m flex-1 w-full px-4 py-4 mx-auto">
     @yield('content')
   </main> 
 

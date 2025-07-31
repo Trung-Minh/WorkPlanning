@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // // Cập nhật màu header theo theme đã lưu
 // header
 document.addEventListener('DOMContentLoaded', () => {
-  const header = document.querySelector('header');
-  const toggleButton = document.getElementById('darkModeToggle'); // nếu bạn có nút toggle
+  const header = document.querySelector('.hea');
+  const toggleButton = document.getElementById('darkModeToggle');
   const navLinks = document.querySelectorAll('.a');
   const link1 = document.querySelectorAll('.b')
   
@@ -79,8 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // footer
 document.addEventListener('DOMContentLoaded', () => {
-  const footer = document.querySelector('footer');
-  const toggleButton = document.getElementById('darkModeToggle'); // nếu bạn có nút toggle
+  const footer = document.querySelector('.f');
+  const toggleButton = document.getElementById('darkModeToggle');
 
   const divLinks = document.querySelectorAll('.a')
   
@@ -95,6 +95,86 @@ document.addEventListener('DOMContentLoaded', () => {
       if(isLight) {
         footer.classList.add('bg-white');
         footer.classList.remove('bg-gray-950');
+      }
+
+      divLinks.forEach(link => {
+      if (isDark) {
+        link.classList.add( 'text-white', 'hover:text-blue-400');
+        link.classList.remove( 'text-black', 'hover:text-blue-600');
+      } else {
+        link.classList.add( 'text-black', 'hover:text-blue-600');
+        link.classList.remove( 'text-white', 'hover:text-blue-400');
+      }
+    });
+
+
+    };
+
+    applyHeaderTheme();
+
+    if (toggleButton) {
+      toggleButton.addEventListener('click', applyHeaderTheme);
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const main = document.querySelector('.m');
+  const toggleButton = document.getElementById('darkModeToggle');
+
+  const divLinks = document.querySelectorAll('.a')
+  
+  if (main) {
+    const applyHeaderTheme = () => {
+      const isDark = localStorage.theme === 'dark';
+      const isLight = localStorage.theme === 'light';
+      if (isDark) {
+        main.classList.add('bg-gray-800');
+        main.classList.remove('bg-gray-100');
+      };
+      if(isLight) {
+        main.classList.add('bg-gray-150');
+        main.classList.remove('bg-gray-800');
+      }
+
+      divLinks.forEach(link => {
+      if (isDark) {
+        link.classList.add( 'text-white', 'hover:text-blue-400');
+        link.classList.remove( 'text-black', 'hover:text-blue-600');
+      } else {
+        link.classList.add( 'text-black', 'hover:text-blue-600');
+        link.classList.remove( 'text-white', 'hover:text-blue-400');
+      }
+    });
+
+
+    };
+
+    applyHeaderTheme();
+
+    if (toggleButton) {
+      toggleButton.addEventListener('click', applyHeaderTheme);
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const div = document.querySelector('.div');
+  const toggleButton = document.getElementById('darkModeToggle');
+
+  const divLinks = document.querySelectorAll('.a')
+  
+  if (div) {
+    const applyHeaderTheme = () => {
+      const isDark = localStorage.theme === 'dark';
+      const isLight = localStorage.theme === 'light';
+      if (isDark) {
+        div.classList.add('bg-gray-800');
+        div.classList.remove('bg-gray-100');
+      };
+      if(isLight) {
+        div.classList.add('bg-gray-150');
+        div.classList.remove('bg-gray-800');
       }
 
       divLinks.forEach(link => {

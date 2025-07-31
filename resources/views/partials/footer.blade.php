@@ -1,4 +1,4 @@
-<footer class="border-t border-gray-300 shadow-md bg-white text-center text-sm text-gray-600">
+<footer class="f border-t border-gray-300 shadow-md text-center text-sm text-gray-600">
   <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-6">
     <div class="flex-1">
       <h2 class="a font-semibold mb-2">WorkPlan 💼</h2>
@@ -19,7 +19,7 @@
       </ul>
     </div>
   </div>
-  <div class="a bg-gray-200 py-2 text-center">© 2025 WorkPlan. All rights reserved.</div>
+  <div class="div a py-2 text-center">© 2025 WorkPlan. All rights reserved.</div>
   <button id="scrollToTopBtn" class="fixed bottom-6 right-6 p-3 rounded-full bg-blue-600 text-white shadow-md
                 hover:bg-blue-700 transition-opacity opacity-0 pointer-events-none z-50">
     ↑

@@ -52,10 +52,10 @@
 
     {{-- Thông tin người dùng --}}
     <div class="w-3/5 mx-auto mt-16 text-center">
-        <h2 class="inline-flex items-center justify-center gap-2 text-3xl font-bold">
+        <h2 class="a inline-flex items-center justify-center gap-2 text-3xl font-bold">
         {{ $user->HO_TEN }}
         <a href="javascript:void(0)" id="openEditModal" class="hover:text-blue-600" title="Chỉnh sửa thông tin">
-            <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 w-7 h-7 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="a w-7 h-7 hover:text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M11 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
             </svg>
@@ -63,11 +63,11 @@
         </h2>
 
         @if (!empty($user->MO_TA))
-            <p class="text-xl text-gray-600">Mô tả: {{ $user->MO_TA }}</p>
+            <p class="a text-xl text-gray-600">Mô tả: {{ $user->MO_TA }}</p>
         @endif
-        <p class="text-xl text-gray-600">Email: {{ $user->EMAIL }}</p>
-        <p class="text-xl text-gray-600">Ngày sinh: {{ $user->NGAY_SINH }}</p>
-        <p class="text-xl text-gray-600">Giới tính: {{ $user->GIOI_TINH }}</p>
+        <p class="a text-xl text-gray-600">Email: {{ $user->EMAIL }}</p>
+        <p class="a text-xl text-gray-600">Ngày sinh: {{ $user->NGAY_SINH }}</p>
+        <p class="a text-xl text-gray-600">Giới tính: {{ $user->GIOI_TINH }}</p>
 
         <br>
         <a href="{{ route('logout') }}" class="text-xl text-red-500">Đăng xuất</a>
