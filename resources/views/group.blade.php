@@ -25,6 +25,17 @@
         </button>
 
         <div>
+            <h2 class="mb-2 text-sm font-bold">Trưởng nhóm</h2>
+            <div class="flex items-center gap-2 text-sm">
+                <img src="{{ asset('uploads/' . ($nhom->truongNhom->AVATAR ?? 'avt.jpg')) }}"
+                    alt="avatar"
+                    class="object-cover w-8 h-8 rounded-full" />
+                <span>{{ $nhom->truongNhom->HO_TEN ?? 'Không rõ' }}</span>
+            </div>
+        </div>
+
+
+        <div>
             <h2 class="mb-2 text-sm font-bold">Thành viên</h2>
             <ul class="space-y-2">
                 @foreach ($thanhVien as $tv)
@@ -39,13 +50,22 @@
         </div>
 
         @if(Auth::user()->ID_USER === $nhom->ID_NHOM_TRUONG)
+            <!-- Nút thêm thành viên -->
+            <a href="{{ url('/members') }}">
+                <button type="button"
+                    class="w-full py-2 mt-4 font-semibold text-white bg-green-600 rounded-lg cursor-pointer hover:bg-green-700">
+                    ➕ Thêm thành viên
+                </button>
+            </a>
+
+
             <!-- Nút xoá nhóm -->
             <form method="POST" action="{{ route('group.delete', $nhom->ID_NHOM) }}"
                 onsubmit="return confirm('Bạn có chắc muốn xoá nhóm không? Hành động này không thể hoàn tác!')">
 
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="w-full py-2 mt-4 font-semibold text-white bg-red-600 rounded-lg cursor-pointer hover:bg-red-700">
+                <button type="submit" class="w-full py-2 mt-2 font-semibold text-white bg-red-600 rounded-lg cursor-pointer hover:bg-red-700">
                     🗑️ Xoá nhóm
                 </button>
             </form>
@@ -210,7 +230,7 @@
                                                     </div>
 
                                                     {{-- Nút hành động --}}
-                                                    <div class="flex justify-center w-full space-x-4 text-xs">
+                                                    <div  id="action-buttons-{{ $muc->ID_MUC }}" class="flex justify-start w-full space-x-2 text-xs">
                                                         <button onclick="showViewSubtaskModal_Group('{{ $muc->ID_MUC }}')"
                                                                 class="text-blue-600 underline cursor-pointer hover:text-blue-800">
                                                             👁 Xem
@@ -224,6 +244,17 @@
                                                             🗑 Xóa
                                                         </button>
                                                     </div>
+
+                                                    <script>
+                                                        window.addEventListener('DOMContentLoaded', () => {
+                                                            const el = document.getElementById("action-buttons-{{ $muc->ID_MUC }}");
+                                                            if (el && el.offsetWidth > 240) {
+                                                                el.classList.remove("justify-start");
+                                                                el.classList.add("justify-center");
+                                                            }
+                                                        });
+                                                    </script>
+
                                                     {{-- Hiển thị độ ưu tiên --}}
                                                     <div class="absolute px-2 py-1 text-xs font-semibold rounded shadow cursor-pointer priority-display bottom-2 right-3 text-black-700 bg-white/60">
                                                         <span ondblclick="editMcvPriority(this, '{{ $muc->ID_MUC }}')">
@@ -234,13 +265,13 @@
                                             @endforeach
                                         </ul>
 
-                                        {{-- Thêm thư mục --}}
+                                        {{-- Thêm mục --}}
                                         <div class="flex justify-center mt-4">
                                             <button onclick="showAddSubTaskModal('{{ $cv->ID_CV }}')"
                                                     class="cursor-pointer w-[60%] bg-gradient-to-r from-green-400 via-green-500 to-emerald-500
                                                         text-white py-2 rounded-lg shadow hover:from-green-500 hover:to-emerald-600 hover:scale-105
                                                         transition-transform duration-300 text-sm">
-                                                ➕ Thêm Thư Mục
+                                                ➕ Thêm Mục
                                             </button>
                                         </div>
 
@@ -269,26 +300,53 @@
             @csrf
             @method('POST')
 
-            <h2 class="mb-4 text-lg font-semibold text-center text-purple-700">Chỉnh sửa nhóm</h2>
+            @if(Auth::user()->ID_USER === $nhom->ID_NHOM_TRUONG)
+                <h2 class="mb-4 text-lg font-semibold text-center text-purple-700">Chỉnh sửa nhóm</h2>
+            @else
+                <h2 class="mb-4 text-lg font-semibold text-center text-gray-700">Thông tin nhóm</h2>
+            @endif
 
-            <div class="mb-4">
-                <label class="block mb-1 font-medium">Ảnh nhóm</label>
-                <input type="file" name="AVATAR_NHOM" accept="image/*" class="w-full px-3 py-2 border rounded">
-            </div>
+            @if(Auth::user()->ID_USER === $nhom->ID_NHOM_TRUONG)
+                <div class="mb-4">
+                    <label class="block mb-1 font-medium">Ảnh nhóm</label>
+                    <input type="file" name="AVATAR_NHOM" accept="image/*" class="w-full px-3 py-2 border rounded">
+                </div>
+            @endif
 
             <div class="mb-4">
                 <label class="block mb-1 font-medium">Tên nhóm</label>
-                <input type="text" name="TEN_NHOM" value="{{ $nhom->TEN_NHOM }}" class="w-full px-3 py-2 border rounded" required>
+
+                @if(Auth::user()->ID_USER === $nhom->ID_NHOM_TRUONG)
+                    <input type="text" name="TEN_NHOM" value="{{ $nhom->TEN_NHOM }}" class="w-full px-3 py-2 border rounded" required>
+                @else
+                    <p class="px-3 py-2">{{ $nhom->TEN_NHOM }}</p>
+                @endif
             </div>
 
             <div class="mb-4">
                 <label class="block mb-1 font-medium">Mô tả nhóm</label>
-                <textarea name="MO_TA_NHOM" class="w-full px-3 py-2 border rounded">{{ $nhom->MO_TA_NHOM ?? '' }}</textarea>
+
+                @if(Auth::user()->ID_USER === $nhom->ID_NHOM_TRUONG)
+                    <textarea name="MO_TA_NHOM" class="w-full px-3 py-2 border rounded">{{ $nhom->MO_TA_NHOM ?? '' }}</textarea>
+                @else
+                    <p class="px-3 py-2">{{ $nhom->MO_TA_NHOM ?? 'Chưa có mô tả' }}</p>
+                @endif
             </div>
 
             <div class="flex justify-end gap-2">
-                <button type="button" onclick="document.getElementById('editGroupModal').close()" class="px-4 py-2 text-gray-600 bg-gray-200 rounded cursor-pointer">Huỷ</button>
-                <button type="submit" class="px-4 py-2 text-white bg-purple-600 rounded cursor-pointer">Lưu</button>
+                @if(Auth::user()->ID_USER === $nhom->ID_NHOM_TRUONG)
+                    <button type="submit" class="px-4 py-2 text-white bg-purple-600 rounded cursor-pointer">Lưu</button>
+                    <button type="button" onclick="document.getElementById('editGroupModal').close()"
+                            class="px-4 py-2 text-gray-600 bg-gray-200 rounded cursor-pointer">
+                        Huỷ
+                    </button>
+                @else
+                    <button type="button" onclick="document.getElementById('editGroupModal').close()"
+                            class="px-4 py-2 text-gray-600 bg-gray-200 rounded cursor-pointer">
+                        Đóng
+                    </button>
+                @endif
+
             </div>
         </form>
     </dialog>

@@ -1,4 +1,4 @@
-{{-- resources/views/register.blade.php --}}
+
 @extends('layouts.app')
 
 @section('title', 'Đăng ký – WorkPlan')

@@ -3,8 +3,7 @@
 @section('title', 'Nhắc nhở – WorkPlan')
 
 @section('content')
-<!--Danh sách nhắc nhở đã thiết lập-->
-<h2 class="mb-4 text-2xl font-bold text-blue-700">🔔 Danh sách nhắc nhở đã thiết lập</h2>
+<h2 class=" mb-4 text-2xl font-bold text-blue-700">🔔 Danh sách nhắc nhở đã thiết lập</h2>
 
 @if($thongBaos->isEmpty())
 <div class="p-4 text-yellow-800 bg-yellow-100 rounded shadow-md">
@@ -50,7 +49,7 @@
 
 {{-- Dropdown chọn kế hoạch --}}
 <div class="flex items-center mb-8 space-x-4">
-  <label for="select-ke-hoach" class="text-sm font-semibold text-gray-700 whitespace-nowrap"> Chọn kế hoạch:</label>
+  <label for="select-ke-hoach" class="a text-sm font-semibold text-gray-700 whitespace-nowrap"> Chọn kế hoạch:</label>
   <div class="relative w-full max-w-xs">
     <select id="select-ke-hoach" onchange="filterKeHoach()"
       class="w-full px-4 py-2 pr-10 text-sm text-gray-800 bg-white border border-gray-300 rounded-lg shadow-sm appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500">

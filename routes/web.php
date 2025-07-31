@@ -132,4 +132,11 @@ Route::post('/group/{id}/update-subtask-priority', [LeaderController::class, 'up
 Route::post('/api/muc-cong-viec/{id}/toggle-status', action: [LeaderController::class, 'toggleStatus']);
 
 
+Route::get('/members', [LeaderController::class, 'indexMembers'])->name('indexMembers');
+
+Route::get('/add-members', [LeaderController::class, 'indexMembers']);
+Route::post('/add-members', [LeaderController::class, 'searchGroupMembers'])->name('add_members');
+
+Route::post('/invite-members', [LeaderController::class, 'inviteGroup'])->name('inviteGroup');
+
 ?>
