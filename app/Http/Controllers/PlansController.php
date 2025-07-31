@@ -6,6 +6,8 @@ use App\Models\MucCongViec;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\KeHoach;
+use App\Models\CongViec;
 
 use Illuminate\Support\Str;
 
@@ -384,5 +386,28 @@ class PlansController extends Controller
             ->update(['DO_UU_TIEN' => $newPriority]);
 
         return response()->json(['success' => true, 'new' => $newPriority]);
+    }
+
+    public function deletePlan($id)
+    {
+        $plan = KeHoach::find($id);
+
+        if (!$plan) {
+            return redirect()->back()->with('error', 'Không tìm thấy kế hoạch!');
+        }
+
+        // Tìm tất cả công việc trong kế hoạch
+        $tasks = CongViec::where('ID_KH', $id)->get();
+
+        foreach ($tasks as $task) {
+            MucCongViec::where('ID_CV', $task->ID_CV)->delete();
+        }
+
+        // Xoá toàn bộ công việc thuộc kế hoạch
+        CongViec::where('ID_KH', $id)->delete();
+
+        $plan->delete();
+
+        return redirect()->back()->with('success', 'Đã xoá kế hoạch và toàn bộ dữ liệu liên quan!');
     }
 }

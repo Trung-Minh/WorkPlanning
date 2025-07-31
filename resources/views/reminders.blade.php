@@ -374,9 +374,7 @@
 <!-- Container để hiện popup -->
 <div id="toast-container" class="fixed z-50 space-y-4 top-5 right-5"></div>
 
-<script>
-  const reminders = @json($reminderData);
-</script>
+
 
 <style>
   .toast {
@@ -426,87 +424,5 @@
   });
 </script>
 
-<script>
-  const sound = document.getElementById('reminder-sound');
-  const toastContainer = document.getElementById('toast-container');
-  const notified = new Set();
-
-  function showReminderToast(reminder) {
-    const toast = document.createElement('div');
-    toast.className = "toast bg-blue-600 text-white px-4 py-3 rounded shadow w-80";
-    toast.innerHTML = `
-      <p class="font-semibold">🔔 Nhắc nhở</p>
-      <p>${reminder.noi_dung}</p>
-      <p class="mt-1 text-sm opacity-80">${new Date(reminder.thoidiem_thongbao).toLocaleString()}</p>
-    `;
-
-    toastContainer.appendChild(toast);
-
-    // Tự ẩn sau 16s
-    setTimeout(() => {
-      toast.remove();
-    }, 16000);
-  }
-
-  function checkReminders() {
-    const now = new Date();
-
-    reminders.forEach(reminder => {
-      const notifyTime = new Date(reminder.thoidiem_thongbao);
-      const deadline = reminder.thoihan_hoanthanh ? new Date(reminder.thoihan_hoanthanh) : null;
-
-      if (notified.has(reminder.id)) return;
-
-      const diff = Math.abs(now - notifyTime); // chênh lệch mili giây
-      // Chỉ thông báo khi đúng thời điểm (trong khoảng 30s), và chưa quá hạn nếu có deadline
-      if (diff <= 30000 && (!deadline || now < deadline)) {
-        // Báo
-        showReminderToast(reminder);
-        sound.play();
-        notified.add(reminder.id);
-      }
-    });
-  }
-
-  // Kiểm tra mỗi 30 giây
-  setInterval(checkReminders, 30000);
-  window.addEventListener('load', checkReminders);
-</script>
-
-<script>
-  window.filterKeHoach = function() {
-    const selected = document.getElementById('select-ke-hoach').value;
-    const blocks = document.querySelectorAll('.kehoach-block');
-
-    // Ẩn tất cả
-    blocks.forEach(block => block.classList.add('hidden'));
-
-    // Hiện block tương ứng
-    if (selected) {
-      const selectedBlock = document.getElementById(selected);
-      if (selectedBlock) {
-        selectedBlock.classList.remove('hidden');
-      }
-    }
-
-    // Lưu lựa chọn vào localStorage
-    localStorage.setItem('selectedKeHoach', selected);
-  }
-
-  document.addEventListener('DOMContentLoaded', function() {
-    const saved = localStorage.getItem('selectedKeHoach');
-    const selectBox = document.getElementById('select-ke-hoach');
-    const blocks = document.querySelectorAll('.kehoach-block');
-
-    // Ẩn hết
-    blocks.forEach(block => block.classList.add('hidden'));
-
-    // Nếu có giá trị đã lưu
-    if (saved && document.getElementById(saved)) {
-      selectBox.value = saved;
-      document.getElementById(saved).classList.remove('hidden');
-    }
-  });
-</script>
 
 @endsection
