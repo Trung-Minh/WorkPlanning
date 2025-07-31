@@ -133,6 +133,7 @@
             </div>
         </div>
 
+
         <div id="leave-confirm-modal"
             class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/40 backdrop-blur-sm">
             <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md w-full translate-y-[-40px]">
@@ -251,6 +252,21 @@
                         }
                     });
                 });
+
+                window.addEventListener("pageshow", function (event) {
+                    const isBack = event.persisted || performance.getEntriesByType("navigation")[0]?.type === "back_forward";
+
+                    if (isBack) {
+
+                        // Cảnh báo khi quay lại trang bằng nút Back
+                        pendingUrl = document.referrer || '/'; // Gán referrer làm đường dẫn quay lại
+                        const modal = document.getElementById('leave-confirm-modal');
+                        if (modal) {
+                            modal.classList.remove('hidden');
+                        }
+                    }
+                });
+
 
                 // Nút "Tiếp tục"
                 document.getElementById('confirm-leave').addEventListener('click', function () {

@@ -6,9 +6,15 @@ use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\ReminderController;
 use Illuminate\Support\Facades\Route;
 
+
+
 // Trang welcome
 Route::get('/', fn () => view('welcome'))->name('welcome');
-
+Route::middleware(['auth', 'prevent-back'])->group(function () {
+   Route::get('/account', function () {
+    return view('account');
+});
+});
 // Auth
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -32,9 +38,7 @@ Route::get('/reminders', function () {
     return view('reminders');
 });
 
-Route::get('/account', function () {
-    return view('account');
-});
+
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 

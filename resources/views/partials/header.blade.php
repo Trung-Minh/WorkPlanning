@@ -206,6 +206,7 @@
                         </ul>
                     </div>
                 </div>
+
             @else
                 <a href="{{ route('login') }}" class="a block py-2 hover:text-blue-600">Đăng nhập</a>
                 <a href="{{ route('register') }}" class="a block py-2 hover:text-blue-600">Đăng ký</a>
@@ -222,6 +223,7 @@
         </nav>
     </div>
 </header>
+
 <script>
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
