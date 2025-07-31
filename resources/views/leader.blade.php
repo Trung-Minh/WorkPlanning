@@ -169,11 +169,6 @@
     </div>
 </div>
 
-            <!-- <input type="hidden" id="id-nhom-value" value="{{ $nhom->ID_NHOM }}">
-            <button id="confirm-leave"
-                    class="bg-red-500 text-white px-5 py-2 rounded-full hover:bg-red-600 transition">
-                Tiếp tục
-            </button> -->
 
     </main>
     <script>
@@ -238,6 +233,21 @@
                         }
                     });
                 });
+
+                window.addEventListener("pageshow", function (event) {
+                    const isBack = event.persisted || performance.getEntriesByType("navigation")[0]?.type === "back_forward";
+
+                    if (isBack) {
+
+                        // Cảnh báo khi quay lại trang bằng nút Back
+                        pendingUrl = document.referrer || '/'; // Gán referrer làm đường dẫn quay lại
+                        const modal = document.getElementById('leave-confirm-modal');
+                        if (modal) {
+                            modal.classList.remove('hidden');
+                        }
+                    }
+                });
+
 
                 // Nút "Tiếp tục"
                 document.getElementById('confirm-leave').addEventListener('click', function () {

@@ -201,14 +201,15 @@
                 </div>
 
                 {{-- 🌙 Nút Dark Mode --}}
-                <button id="darkModeToggle"
-                    class="p-2 ml-2 transition rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
-                    <svg id="darkModeIcon" class="w-6 h-6 text-gray-700 dark:text-yellow-300" fill="none"
-                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 3v1m0 16v1m8.66-8.66h-1M4.34 12h-1m15.36-4.95l-.7.7M6.34 17.66l-.7.7m0-13.72l.7.7M17.66 17.66l.7.7M12 5a7 7 0 000 14a7 7 0 000-14z" />
-                    </svg>
-                </button>
+                    <button id="darkModeToggle"
+                            class="p-2 ml-2 transition rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <svg id="darkModeIcon" class="w-6 h-6 text-gray-700 dark:text-yellow-300" fill="none"
+                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 3v1m0 16v1m8.66-8.66h-1M4.34 12h-1m15.36-4.95l-.7.7M6.34 17.66l-.7.7m0-13.72l.7.7M17.66 17.66l.7.7M12 5a7 7 0 000 14a7 7 0 000-14z" />
+                        </svg>
+                    </button>
+
 
 
             @else
@@ -220,42 +221,29 @@
 </header>
 
 {{-- Script mobile menu toggle --}}
-<script>
-    const toggle = document.getElementById('darkModeToggle');
-    const icon = document.getElementById('darkModeIcon');
-    const html = document.documentElement;
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggle = document.getElementById('darkModeToggle');
+        const html = document.documentElement;
 
-    // Load dark mode từ localStorage
-    if (localStorage.getItem('theme') === 'dark') {
-        html.classList.add('dark');
-    }
-
-    toggle.addEventListener('click', () => {
-        html.classList.toggle('dark');
-        const isDark = html.classList.contains('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    });
-
-    const menuToggle = document.getElementById('menuToggle');
-    const navMenu = document.getElementById('navMenu');
-    menuToggle?.addEventListener('click', () => navMenu?.classList.toggle('hidden'));
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const toggleBtn = document.getElementById('userDropdownToggle');
-        const dropdownMenu = document.getElementById('userDropdownMenu');
-        const dropdownIcon = document.getElementById('dropdownIcon');
-
-        toggleBtn?.addEventListener('click', function (e) {
-        e.stopPropagation();
-        dropdownMenu.classList.toggle('hidden');
-        dropdownIcon.classList.toggle('rotate-180');
-        });
-
-        document.addEventListener('click', function (e) {
-        if (!document.getElementById('userDropdownWrapper')?.contains(e.target)) {
-            dropdownMenu.classList.add('hidden');
-            dropdownIcon.classList.remove('rotate-180');
+        // Load từ localStorage
+        if (localStorage.getItem('theme') === 'dark') {
+            html.classList.add('dark');
         }
+
+        toggle?.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+            fetch('/toggle-dark', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({})
+            });
         });
     });
-</script>
+</script> -->
