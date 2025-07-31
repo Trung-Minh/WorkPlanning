@@ -22,22 +22,37 @@
                     </div>
 
                     {{-- Email --}}
-                    <div class="md:flex">
+                    <div class="md:flex md:items-start mb-4">
+                        {{-- Label chiếm 1/3 --}}
                         <label for="email" class="mb-1 font-medium sm:w-1/3 sm:mb-0">Email</label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" placeholder="Email" required
-                            class="w-full px-3 py-2 border rounded md:w-2/3 sm:flex-1" />
+
+                        {{-- Input và lỗi nằm trong 1 khối 2/3 --}}
+                        <div class="w-full md:w-2/3">
+                            <input id="email" name="email" type="email" value="{{ old('email') }}" placeholder="Email" required
+                                class="w-full px-3 py-2 border rounded" />
+
+                            @error('email')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     {{-- Mật khẩu --}}
-                    <div class="md:flex">
+                    <div class="md:flex md:items-start mb-4">
+                        {{-- Label chiếm 1/3 --}}
                         <label for="mat_khau" class="mb-1 font-medium sm:w-1/3 sm:mb-0">Mật khẩu</label>
-                        <input id="mat_khau" name="mat_khau" type="password" placeholder="Password" required
-                            class="w-full px-3 py-2 border rounded md:w-2/3 sm:flex-1" />
+
+                        {{-- Ô input và lỗi nằm trong 1 div chiếm 2/3 --}}
+                        <div class="w-full md:w-2/3">
+                            <input id="mat_khau" name="mat_khau" type="password" placeholder="Password" required
+                                class="w-full px-3 py-2 border rounded" />
+
+                            @error('mat_khau')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
-                    @error('mat_khau')
-                        <p class="-mt-5 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
 
                     {{-- Nhập lại mật khẩu --}}
                     <div class="md:flex">
@@ -45,17 +60,27 @@
                         <input id="mat_khau_confirmation" name="mat_khau_confirmation" type="password" placeholder="Confirm Password"
                             required class="w-full px-3 py-2 border rounded md:w-2/3 sm:flex-1" />
                     </div>
-
+                    @php
+                        $today = now()->format('Y-m-d'); // Ngày hiện tại dạng yyyy-mm-dd
+                    @endphp
                     {{-- Ngày sinh --}}
-                    <div class="md:flex">
+                    <div class="md:flex md:items-start mb-4">
+                        {{-- Label trái --}}
                         <label for="ngay_sinh" class="mb-1 font-medium sm:w-1/3 sm:mb-0">Ngày sinh</label>
-                        <input id="ngay_sinh" name="ngay_sinh" value="{{ old('ngay_sinh') }}" type="date"
-                            class="w-full px-3 py-2 border rounded md:w-2/3 sm:flex-1" />
+
+                        {{-- Input + lỗi --}}
+                        <div class="w-full md:w-2/3">
+                            <input id="ngay_sinh" name="ngay_sinh" value="{{ old('ngay_sinh') }}" type="date"
+                                class="w-full px-3 py-2 border rounded" 
+                                min="1900-01-01"
+                                max="{{ $today }}"
+                                 />
+                            @error('ngay_sinh')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
-                    @error('ngay_sinh')
-                        <p class="-mt-5 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
 
                     {{-- Giới tính --}}
                     <div class="md:flex">
@@ -69,7 +94,7 @@
 
                     {{-- Nút Đăng ký --}}
                     <div>
-                        <button type="submit" class="w-full py-2 text-lg text-white transition bg-blue-600 rounded hover:bg-blue-700">
+                        <button type="submit" class="w-full py-2 cursor-pointer text-lg text-white transition bg-blue-600 rounded hover:bg-blue-700">
                             Đăng ký
                         </button>
                     </div>

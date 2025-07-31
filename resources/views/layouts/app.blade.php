@@ -6,10 +6,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link rel="shortcut icon" href="{{ asset('newlogo.ico') }}" type="image/x-icon">
 
   <title>@yield('title', 'WorkPlan')</title>
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
+  <style>
+    [x-cloak] { display: none !important; }
+</style>
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-100">
