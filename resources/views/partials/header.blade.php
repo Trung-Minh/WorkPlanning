@@ -12,13 +12,21 @@
 
 
             @auth
-                <a href="#" class="cursor-pointer hover:text-blue-600" onclick="event.preventDefault(); document.getElementById('post-form').submit();">Tạo Nhóm</a>
+                @php
+                    $isOnCreateGroupPage = request()->url() === route('showLeader');
+                @endphp
 
-                <form id="post-form" method="POST" action="{{ route('addgroup') }}" style="display:none;">
-                    @csrf
-                    <input type="hidden" name="id_user" value="{{ Auth::user()->ID_USER }}">
-                </form>
-                {{-- <a href="{{ route('showLeader') }}" class="hover:text-blue-600 hover:underline">Tạo nhóm</a> --}}
+                @if (!$isOnCreateGroupPage)
+                    <a href="#" class="cursor-pointer hover:text-blue-600"
+                        onclick="event.preventDefault(); document.getElementById('post-form').submit();">
+                        Tạo Nhóm
+                    </a>
+
+                    <form id="post-form" method="POST" action="{{ route('addgroup') }}" style="display:none;">
+                        @csrf
+                        <input type="hidden" name="id_user" value="{{ Auth::user()->ID_USER }}">
+                    </form>
+                @endif
             @endauth
 
             <a href="{{ url('/') }}" class="block py-2 hover:text-blue-600">Trang chủ</a>

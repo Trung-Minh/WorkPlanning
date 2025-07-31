@@ -18,70 +18,67 @@
 
     <main class="w-full pt-2 mx-auto mt-5 sm:w-3/4 md:w-5/10 lg:w-5/10">
         <div class="relative max-w-3xl p-6 mx-auto bg-white shadow-md rounded-2xl">
-
             <!-- Editable heading -->
+            <div x-data="{
+                    editing: false,
+                    tenNhom: '{{ $nhom->TEN_NHOM }}',
+                    tenMoi: '',
+                    width: 0,
+                    updateWidth() {
+                        this.width = this.tenMoi.length * 10 + 30; // công thức tạm tính
+                    }
+                }"
+                x-init="tenMoi = tenNhom; updateWidth();"
+                class="text-center">
 
-                <div x-data="{
-                        editing: false,
-                        tenNhom: '{{ $nhom->TEN_NHOM }}',
-                        tenMoi: '',
-                        width: 0,
-                        updateWidth() {
-                            this.width = this.tenMoi.length * 10 + 30; // công thức tạm tính
-                        }
-                    }"
-                    x-init="tenMoi = tenNhom; updateWidth();"
-                    class="text-center">
+                <!-- Hiển thị <h1> nếu không chỉnh sửa -->
+                <h1 x-show="!editing"
+                    @dblclick="editing = true; updateWidth()"
+                    x-text="tenNhom"
+                    class="mb-4 text-xl font-semibold cursor-pointer">
+                </h1>
 
-                    <!-- Hiển thị <h1> nếu không chỉnh sửa -->
-                    <h1 x-show="!editing"
-                        @dblclick="editing = true; updateWidth()"
-                        x-text="tenNhom"
-                        class="text-xl font-semibold mb-4 cursor-pointer">
-                    </h1>
+                <!-- Ô input auto-resize -->
+                <input x-show="editing"
+                    x-model="tenMoi"
+                    @input="updateWidth()"
+                    @keydown.enter="tenNhom = tenMoi; editing = false"
+                    @blur="tenNhom = tenMoi; editing = false"
+                    class="px-2 py-1 text-lg text-center transition-all border rounded"
+                    :style="'width: ' + width + 'px'"
+                    type="text"
+                    autofocus />
 
-                    <!-- Ô input auto-resize -->
-                    <input x-show="editing"
-                        x-model="tenMoi"
-                        @input="updateWidth()"
-                        @keydown.enter="tenNhom = tenMoi; editing = false"
-                        @blur="tenNhom = tenMoi; editing = false"
-                        class="border rounded px-2 py-1 text-lg text-center transition-all"
-                        :style="'width: ' + width + 'px'"
-                        type="text"
-                        autofocus />
-                    <div>
-                        <form method="POST" action="{{ url('/groups') }}" class="absolute bottom-0 right-0 mb-2 mr-2">
-                            @csrf
-                            <input type="hidden" name="id_nhom" value="{{ $nhom->ID_NHOM }}">
-                            <input type="hidden" name="ten_nhom" x-model="tenNhom">
-                            <button type="submit"
-                                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-5 rounded-full shadow-lg text-sm">
-                                + Tạo nhóm
-                            </button>
-                        </form>
+                <div>
+                    <form method="POST" action="{{ url('/groups') }}" class="absolute bottom-0 right-0 mb-2 mr-2">
+                        @csrf
+                        <input type="hidden" name="id_nhom" value="{{ $nhom->ID_NHOM }}">
+                        <input type="hidden" name="ten_nhom" x-model="tenNhom">
 
-                    </div>
-            
-         
+                        <button type="submit"
+                            class="px-5 py-3 text-sm font-bold text-white bg-blue-600 rounded-full shadow-lg hover:bg-blue-700">
+                            + Tạo nhóm
+                        </button>
+                    </form>
+                </div>
 
-                    <h2 class="text-xl font-semibold mb-4 text-left">Invite Team Members</h2>
+                <h2 class="mb-4 text-xl font-semibold text-left">Invite Team Members</h2>
 
                 <!-- Search box -->
-                        <div class="mb-4 flex">
-                            <form method="POST" action="{{ url('/search_members') }}" class="mb-4 flex w-full">
-                            @csrf   
-                            <input type="text" name="search_members" id="search_members" value="{{ old('search_members') }}" placeholder="Search members..."
-                                class="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm" />
-                                <input type="hidden" name="id_nhom" value="{{ $nhom->ID_NHOM }}">
-                                <input type="hidden" name="id_nhom_truong" value="{{ $nhom->ID_NHOM_TRUONG}}">
-                                <input type="hidden" name="ten_nhom" x-model="tenNhom">
-                            <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded-r-lg hover:bg-orange-600 text-sm">
-                                Search
-                            </button>
-                            </form>
-                        </div>
+                <div class="flex mb-4">
+                    <form method="POST" action="{{ url('/search_members') }}" class="flex w-full mb-4">
+                    @csrf
+                    <input type="text" name="search_members" id="search_members" value="{{ old('search_members') }}" placeholder="Search members..."
+                        class="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                        <input type="hidden" name="id_nhom" value="{{ $nhom->ID_NHOM }}">
+                        <input type="hidden" name="id_nhom_truong" value="{{ $nhom->ID_NHOM_TRUONG}}">
+                        <input type="hidden" name="ten_nhom" x-model="tenNhom">
+                    <button type="submit" class="px-4 py-2 text-sm text-white bg-orange-500 rounded-r-lg hover:bg-orange-600">
+                        Search
+                    </button>
+                    </form>
                 </div>
+            </div>
 
             <div>
                 @php $invited = session('invite'); @endphp
@@ -133,49 +130,40 @@
                         <br>
                     </li>
                 </ul>
-            </div>       
-
-      <div id="leave-confirm-modal"
-     class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 hidden">
-    <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md w-full translate-y-[-40px]">
-        
-
-        <!-- Tiêu đề -->
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 whitespace-normal leading-snug">
-            Cảnh báo: Hành động này sẽ hủy quá trình tạo nhóm hiện tại. Bạn có chắc muốn tiếp tục?
-        </h2>
-
-        <!-- Nút hành động -->
-        <div class="flex justify-center gap-4">
-            <button id="cancel-leave"
-                    class="bg-gray-300 px-5 py-2 rounded-full hover:bg-gray-400 transition">
-                Hủy
-            </button>
-
-
-            <form id="delete-form" method="POST" action="{{ url('/delete_group') }}">
-                @csrf
-                <input type="hidden" name="id_nhom" value="{{ $nhom->ID_NHOM }}">
-                <input type="hidden" name="redirect_to" id="redirect_to">
-            </form>
-
-            <button type="button" id="confirm-leave"
-                    class="bg-red-500 text-white px-5 py-2 rounded-full hover:bg-red-600 transition">
-                Tiếp tục
-            </button>
-
-
+            </div>
         </div>
-    </div>
-</div>
 
-            <!-- <input type="hidden" id="id-nhom-value" value="{{ $nhom->ID_NHOM }}">
-            <button id="confirm-leave"
-                    class="bg-red-500 text-white px-5 py-2 rounded-full hover:bg-red-600 transition">
-                Tiếp tục
-            </button> -->
+        <div id="leave-confirm-modal"
+            class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/40 backdrop-blur-sm">
+            <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md w-full translate-y-[-40px]">
+                <!-- Tiêu đề -->
+                <h2 class="mb-6 text-2xl font-bold leading-snug text-gray-800 whitespace-normal">
+                    Cảnh báo: Hành động này sẽ hủy quá trình tạo nhóm hiện tại. Bạn có chắc muốn tiếp tục?
+                </h2>
 
+                <!-- Nút hành động -->
+                <div class="flex justify-center gap-4">
+                    <button id="cancel-leave"
+                            class="px-5 py-2 transition bg-gray-300 rounded-full hover:bg-gray-400">
+                        Hủy
+                    </button>
+
+
+                    <form id="delete-form" method="POST" action="{{ url('/delete_group') }}">
+                        @csrf
+                        <input type="hidden" name="id_nhom" value="{{ $nhom->ID_NHOM }}">
+                        <input type="hidden" name="redirect_to" id="redirect_to">
+                    </form>
+
+                    <button type="button" id="confirm-leave"
+                            class="px-5 py-2 text-white transition bg-red-500 rounded-full hover:bg-red-600">
+                        Tiếp tục
+                    </button>
+                </div>
+            </div>
+        </div>
     </main>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.invite-form').forEach(form => {
@@ -211,17 +199,42 @@
             });
         });
     </script>
+
     <!-- modal rời khỏi -->
-   <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
 
             if (true) {
                 let formSubmitted = false;
                 let pendingUrl = null;
+                let modalOpen = false;
+                let pendingForm = null;
 
-                // Gắn sự kiện cho form submit
+                // ✅ BƯỚC 1: Theo dõi trạng thái modal nhóm
+                const modal = document.querySelector('[x-show="show"]');
+
+                if (modal) {
+                    const observer = new MutationObserver(() => {
+                        const isHidden = getComputedStyle(modal).display === 'none';
+                        modalOpen = !isHidden;
+                    });
+                    observer.observe(modal, { attributes: true, attributeFilter: ['style'] });
+                }
+
+                // ✅ BƯỚC 2: Bắt tất cả form submit
                 document.querySelectorAll('form').forEach(form => {
-                    form.addEventListener('submit', function () {
+                    form.addEventListener('submit', function (e) {
+                        if (formSubmitted) return;
+
+                        // Nếu đang mở modal nhóm thì hỏi xác nhận
+                        if (modalOpen) {
+                            e.preventDefault(); // chặn submit tạm thời
+                            pendingForm = form; // lưu lại form sẽ submit
+                            document.getElementById('leave-confirm-modal').classList.remove('hidden');
+                            return;
+                        }
+
+                        // Nếu không ở trong modal, cứ submit bình thường
                         formSubmitted = true;
                     });
                 });
@@ -241,21 +254,29 @@
 
                 // Nút "Tiếp tục"
                 document.getElementById('confirm-leave').addEventListener('click', function () {
-                    document.getElementById('redirect_to').value = pendingUrl; // hoặc dynamic
-                    document.getElementById('delete-form').submit();
-                });
+                    const modal = document.getElementById('leave-confirm-modal');
+                    if (pendingForm) {
+                        formSubmitted = true;
+                        pendingForm.submit();
+                        pendingForm = null;
+                    } else if (pendingUrl) {
+                        document.getElementById('redirect_to').value = pendingUrl;
+                        document.getElementById('delete-form').submit();
+                        pendingUrl = null;
+                    }
 
+                    modal.classList.add('hidden');
+                });
 
                 // Nút "Hủy"
                 document.getElementById('cancel-leave').addEventListener('click', function () {
                     document.getElementById('leave-confirm-modal').classList.add('hidden');
                     pendingUrl = null;
+                    pendingForm = null;
                 });
-
             }
         });
     </script>
-
 
 @endsection
 

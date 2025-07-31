@@ -6,6 +6,8 @@ use App\Models\MucCongViec;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\KeHoach;
+use App\Models\CongViec;
 
 use Illuminate\Support\Str;
 
@@ -20,6 +22,7 @@ class PlansController extends Controller
 
         $keHoachs = DB::table('KE_HOACH')
             ->where('NGUOI_TAO', operator: Auth::user()->ID_USER)
+            ->whereNull('ID_NHOM')
             ->get();
 
         foreach ($keHoachs as $keHoach) {
@@ -37,7 +40,6 @@ class PlansController extends Controller
                 $tong = $cv->muc_cong_viec->count();
                 $hoanThanh = $cv->muc_cong_viec->where('TRANG_THAI', 1)->count();
                 $tienDo = $tong > 0 ? round($hoanThanh / $tong * 100) : 0;
-
 
                 $cv->TIEN_DO = $tienDo;
 
@@ -180,6 +182,12 @@ class PlansController extends Controller
         $idKh = $task->ID_KH;
         $priority = $task->DO_UU_TIEN;
 
+        // 1. Lấy danh sách ID_MUC liên quan đến công việc
+        $mucIds = DB::table('MUC_CONG_VIEC')->where('ID_CV', $id)->pluck('ID_MUC');
+
+        // 2. Xoá cấu hình thông báo trước
+        DB::table('CAU_HINH_THONG_BAO')->whereIn('ID_MUC', $mucIds)->delete();
+
         // Xoá tất cả các mục công việc liên quan
         DB::table('MUC_CONG_VIEC')->where('ID_CV', $id)->delete();
 
@@ -206,6 +214,9 @@ class PlansController extends Controller
 
         $idCv = $muc->ID_CV;
         $priority = $muc->DO_UU_TIEN_MUC;
+
+        // Xoá cấu hình thông báo liên quan trước
+        DB::table('CAU_HINH_THONG_BAO')->where('ID_MUC', $id)->delete();
 
         // Xoá mục công việc
         DB::table('MUC_CONG_VIEC')->where('ID_MUC', $id)->delete();
@@ -275,6 +286,29 @@ class PlansController extends Controller
         }
 
         return response()->json(['success' => true]);
+    }
+
+    public function deletePlan($id)
+    {
+        $plan = KeHoach::find($id);
+
+        if (!$plan) {
+            return redirect()->back()->with('error', 'Không tìm thấy kế hoạch!');
+        }
+
+        // Tìm tất cả công việc trong kế hoạch
+        $tasks = CongViec::where('ID_KH', $id)->get();
+
+        foreach ($tasks as $task) {
+            MucCongViec::where('ID_CV', $task->ID_CV)->delete();
+        }
+
+        // Xoá toàn bộ công việc thuộc kế hoạch
+        CongViec::where('ID_KH', $id)->delete();
+
+        $plan->delete();
+
+        return redirect()->back()->with('success', 'Đã xoá kế hoạch và toàn bộ dữ liệu liên quan!');
     }
 
     public function updateSubtask1(Request $request, $id)
