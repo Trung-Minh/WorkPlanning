@@ -38,10 +38,11 @@ class LeaderController extends Controller
         $nhom = Nhom::where('ID_NHOM', $r->input('id_nhom'))->first();
 
         session(['nhom' => $nhom]);
-        return redirect()->back()
-        ->withInput()          // <-- flash tất cả inputs
-        ->with('invite', value: $user);
+        session()->push('invited_success', $r->user_id);
 
+        return redirect()->back()
+            ->withInput()
+            ->with('invite', value: $user);
     }
 
     public function addgroup (Request $r)
@@ -78,7 +79,7 @@ class LeaderController extends Controller
             'ID_NHOM' =>  $request->input('id_nhom'),
         ]);
 
-        return redirect()->back()   ;
+        return redirect()->back()->with('invite_success', '✅ Đã gửi lời mời thành công!');;
     }
 
     public function doGroups(Request $request){
@@ -94,7 +95,7 @@ class LeaderController extends Controller
         DB::table('ke_hoach')->insert([
             'NGUOI_TAO' => $nhom -> ID_NHOM_TRUONG,
             'ID_NHOM' =>  $request->input('id_nhom'),
-        ]); 
+        ]);
 
         session(['group' => $nhom]);
         return redirect()->route('showGroup') ;
@@ -107,15 +108,13 @@ class LeaderController extends Controller
             'redirect_to' => 'required'
         ]);
 
-         DB::table('loi_moi')
-             ->where('ID_NHOM', $request->input('id_nhom'))
-             ->delete();
+        DB::table('loi_moi')
+            ->where('ID_NHOM', $request->input('id_nhom'))
+            ->delete();
 
-         Nhom::where('ID_NHOM', $request->input('id_nhom'))->delete();
-
+        Nhom::where('ID_NHOM', $request->input('id_nhom'))->delete();
 
         return redirect()->to($request->input('redirect_to'));
-
     }
 
     public function chapNhan($id)
@@ -148,15 +147,17 @@ class LeaderController extends Controller
         DB::table('loi_moi')
             ->where('ID_NHOM', $id)
             ->where('ID_USER', Auth::id())
-            ->update(['TRANG_THAI_LOI_MOI' => false]);
+            ->delete();
 
         return back()->with('info', 'Bạn đã từ chối lời mời.');
     }
+
 
     // Hiển thị nhóm hiện tại
     public function showGroup()
     {
         $nhom = session('group');
+        $nhom = Nhom::with('truongNhom')->find($nhom->ID_NHOM);
 
         if (!$nhom) {
             return redirect()->back()->with('error', 'Không có nhóm nào được chọn');
@@ -281,20 +282,26 @@ class LeaderController extends Controller
             // 2. Lấy tất cả ID_CV theo các kế hoạch
             $congViecIds = DB::table('cong_viec')->whereIn('ID_KH', $keHoachIds)->pluck('ID_CV');
 
-            // 3. Xoá MUC_CONG_VIEC theo ID_CV
+             // 3. Lấy tất cả ID_MUC theo ID_CV
+            $mucIds = DB::table('muc_cong_viec')->whereIn('ID_CV', $congViecIds)->pluck('ID_MUC');
+
+            // 4. Xoá CAU_HINH_THONG_BAO theo ID_MUC
+            DB::table('cau_hinh_thong_bao')->whereIn('ID_MUC', $mucIds)->delete();
+
+            // 5. Xoá MUC_CONG_VIEC theo ID_CV
             DB::table('muc_cong_viec')->whereIn('ID_CV', $congViecIds)->delete();
 
-            // 4. Xoá CONG_VIEC theo ID_KH
+            // 6. Xoá CONG_VIEC theo ID_KH
             DB::table('cong_viec')->whereIn('ID_KH', $keHoachIds)->delete();
 
-            // 5. Xoá KE_HOACH theo ID_NHOM
+            // 7. Xoá KE_HOACH theo ID_NHOM
             DB::table('ke_hoach')->where('ID_NHOM', $id)->delete();
 
-            // 6. Xoá các bảng liên quan đến nhóm
+            // 8. Xoá các bảng liên quan đến nhóm
             DB::table('loi_moi')->where('ID_NHOM', $id)->delete();
             DB::table('nhom_thanh_vien')->where('ID_NHOM', $id)->delete();
 
-            // 7. Xoá nhóm
+            // 9. Xoá nhóm
             DB::table('nhom_lam_viec')->where('ID_NHOM', $id)->delete();
         });
 
@@ -495,20 +502,33 @@ class LeaderController extends Controller
             return redirect()->back()->with('error', 'Không tìm thấy kế hoạch!');
         }
 
-        // Tìm tất cả công việc trong kế hoạch
-        $tasks = CongViec::where('ID_KH', $id)->get();
+        DB::transaction(function () use ($id, $plan) {
+            // Tìm tất cả công việc trong kế hoạch
+            $tasks = CongViec::where('ID_KH', $id)->get();
 
-        foreach ($tasks as $task) {
-            MucCongViec::where('ID_CV', $task->ID_CV)->delete();
-        }
+            foreach ($tasks as $task) {
+                // Tìm tất cả mục công việc của công việc đó
+                $subtasks = MucCongViec::where('ID_CV', $task->ID_CV)->get();
 
-        // Xoá toàn bộ công việc thuộc kế hoạch
-        CongViec::where('ID_KH', $id)->delete();
+                foreach ($subtasks as $subtask) {
+                    // Xoá thông báo liên quan đến từng mục công việc
+                    DB::table('CAU_HINH_THONG_BAO')->where('ID_MUC', $subtask->ID_MUC)->delete();
+                }
 
-        $plan->delete();
+                // Xoá toàn bộ mục công việc
+                MucCongViec::where('ID_CV', $task->ID_CV)->delete();
+            }
+
+            // Xoá toàn bộ công việc
+            CongViec::where('ID_KH', $id)->delete();
+
+            // Xoá kế hoạch
+            $plan->delete();
+        });
 
         return redirect()->back()->with('success', 'Đã xoá kế hoạch và toàn bộ dữ liệu liên quan!');
     }
+
 
     public function deleteGroupTask($id)
     {
@@ -522,20 +542,31 @@ class LeaderController extends Controller
         $idKh = $task->ID_KH;
         $priority = $task->DO_UU_TIEN;
 
-        // Xoá tất cả các mục công việc liên quan
-        DB::table('MUC_CONG_VIEC')->where('ID_CV', $id)->delete();
+        DB::transaction(function () use ($id, $idKh, $priority) {
+            // Lấy các mục công việc
+            $subtasks = DB::table('MUC_CONG_VIEC')->where('ID_CV', $id)->get();
 
-        // Xoá công việc
-        DB::table('CONG_VIEC')->where('ID_CV', $id)->delete();
+            foreach ($subtasks as $subtask) {
+                // Xoá cấu hình thông báo liên quan đến từng mục công việc
+                DB::table('CAU_HINH_THONG_BAO')->where('ID_MUC', $subtask->ID_MUC)->delete();
+            }
 
-        // Cập nhật lại độ ưu tiên: giảm các công việc sau đó
-        DB::table('CONG_VIEC')
-            ->where('ID_KH', $idKh)
-            ->where('DO_UU_TIEN', '>', $priority)
-            ->decrement('DO_UU_TIEN');
+            // Xoá các mục công việc
+            DB::table('MUC_CONG_VIEC')->where('ID_CV', $id)->delete();
+
+            // Xoá công việc
+            DB::table('CONG_VIEC')->where('ID_CV', $id)->delete();
+
+            // Cập nhật độ ưu tiên còn lại
+            DB::table('CONG_VIEC')
+                ->where('ID_KH', $idKh)
+                ->where('DO_UU_TIEN', '>', $priority)
+                ->decrement('DO_UU_TIEN');
+        });
 
         return redirect()->route('showGroup')->with('success', 'Đã xóa công việc và cập nhật lại độ ưu tiên.');
     }
+
 
     public function deleteGroupSubtask($id)
     {
@@ -549,14 +580,19 @@ class LeaderController extends Controller
         $idCv = $muc->ID_CV;
         $priority = $muc->DO_UU_TIEN_MUC;
 
-        // Xoá mục công việc
-        DB::table('MUC_CONG_VIEC')->where('ID_MUC', $id)->delete();
+        DB::transaction(function () use ($id, $idCv, $priority) {
+            // Xoá cấu hình thông báo liên quan đến mục công việc
+            DB::table('CAU_HINH_THONG_BAO')->where('ID_MUC', $id)->delete();
 
-        // Giảm độ ưu tiên của các mục phía sau
-        DB::table('MUC_CONG_VIEC')
-            ->where('ID_CV', $idCv)
-            ->where('DO_UU_TIEN_MUC', '>', $priority)
-            ->decrement('DO_UU_TIEN_MUC');
+            // Xoá mục công việc
+            DB::table('MUC_CONG_VIEC')->where('ID_MUC', $id)->delete();
+
+            // Giảm độ ưu tiên của các mục phía sau
+            DB::table('MUC_CONG_VIEC')
+                ->where('ID_CV', $idCv)
+                ->where('DO_UU_TIEN_MUC', '>', $priority)
+                ->decrement('DO_UU_TIEN_MUC');
+        });
 
         return redirect()->route('showGroup')->with('success', 'Đã xoá mục công việc và cập nhật lại độ ưu tiên.');
     }
@@ -677,5 +713,86 @@ class LeaderController extends Controller
         $muc->save();
 
         return response()->json(['success' => true, 'status' => $muc->TRANG_THAI]);
+    }
+
+    public function indexMembers()
+    {
+        // Lấy thông tin nhóm từ session
+        $nhomSession = session('group');
+        if (! $nhomSession) {
+            return redirect()->back()->with('error', 'Không xác định được nhóm.');
+        }
+
+        // Lấy lại thông tin nhóm cùng quan hệ trưởng nhóm
+        $nhom = Nhom::with('truongNhom')->find($nhomSession->ID_NHOM);
+        // Đặt biến trưởng nhóm để view nhận
+        $truongNhom = $nhom->truongNhom;
+
+        // Lấy thành viên nhóm (trừ khóa ngoại nhóm trưởng đã ở trên)
+        $thanhVien = DB::table('nhom_thanh_vien')
+            ->join('nguoi_dung_ca_nhan', 'nhom_thanh_vien.ID_USER', '=', 'nguoi_dung_ca_nhan.ID_USER')
+            ->where('nhom_thanh_vien.ID_NHOM', $nhom->ID_NHOM)
+            ->get();
+
+        return view('members', compact('nhom', 'truongNhom', 'thanhVien'));
+    }
+
+    public function searchGroupMembers(Request $r)
+    {
+        $search         = $r->input('search_members');
+        $id_nhom        = $r->input('id_nhom');
+        $id_truong_nhom = $r->input('id_nhom_truong');
+
+        // Danh sách người chưa được mời (ngoại trừ trưởng nhóm và thành viên hiện tại)
+        $invited = DB::table('nguoi_dung_ca_nhan')
+            ->when($search, fn($q) => $q->where('HO_TEN', 'like', "%{$search}%"))
+            ->where('ID_USER', '!=', $id_truong_nhom)
+            ->whereNotIn('ID_USER', function ($sub) use ($id_nhom) {
+                $sub->select('ID_USER')
+                    ->from('nhom_thanh_vien')
+                    ->where('ID_NHOM', $id_nhom);
+            })
+            ->get();
+
+        // Lấy lại thông tin nhóm và cập nhật session
+        $nhom = Nhom::with('truongNhom')->find($id_nhom);
+        session(['group' => $nhom]);
+        $truongNhom = $nhom->truongNhom;
+
+        // Lấy thành viên nhóm
+        $thanhVien = DB::table('nhom_thanh_vien')
+            ->join('nguoi_dung_ca_nhan', 'nhom_thanh_vien.ID_USER', '=', 'nguoi_dung_ca_nhan.ID_USER')
+            ->where('nhom_thanh_vien.ID_NHOM', $id_nhom)
+            ->get();
+
+        return view('members', compact('invited', 'nhom', 'truongNhom', 'thanhVien'));
+    }
+
+    public function inviteGroup(Request $request)
+    {
+        $request->validate([
+            'id_user' => 'required|exists:nguoi_dung_ca_nhan,ID_USER',
+            'id_nhom'  => 'required|exists:nhom_lam_viec,ID_NHOM',
+        ]);
+
+        // Kiểm tra đã gửi lời mời chưa
+        $exists = DB::table('loi_moi')
+            ->where('ID_USER', $request->id_user)
+            ->where('ID_NHOM', $request->id_nhom)
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()
+                ->with('invite_error', '⚠️ Bạn đã gửi lời mời cho người này rồi!');
+        }
+
+        // Thêm lời mời
+        DB::table('loi_moi')->insert([
+            'ID_USER' => $request->id_user,
+            'ID_NHOM' => $request->id_nhom,
+        ]);
+
+        return redirect()->back()
+            ->with('invite_success', '✅ Đã gửi lời mời thành công!');
     }
 }

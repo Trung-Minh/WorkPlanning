@@ -137,7 +137,7 @@
                                             </div>
 
                                             {{-- Nút hành động --}}
-                                            <div class="flex justify-center w-full space-x-4 text-xs">
+                                            <div id="action-buttons-{{ $muc->ID_MUC }}" class="flex justify-start w-full space-x-2 text-xs">
                                                 <button onclick="showViewSubtaskModal('{{ $muc->ID_MUC }}')"
                                                         class="text-blue-600 underline cursor-pointer hover:text-blue-800">
                                                     👁 Xem
@@ -151,7 +151,18 @@
                                                     🗑 Xóa
                                                 </button>
                                             </div>
-                                                                {{-- Hiển thị độ ưu tiên --}}
+
+                                            <script>
+                                                window.addEventListener('DOMContentLoaded', () => {
+                                                    const el = document.getElementById("action-buttons-{{ $muc->ID_MUC }}");
+                                                    if (el && el.offsetWidth > 240) {
+                                                        el.classList.remove("justify-start");
+                                                        el.classList.add("justify-center");
+                                                    }
+                                                });
+                                            </script>
+
+                                            {{-- Hiển thị độ ưu tiên --}}
                                             <div class="absolute px-2 py-1 text-xs font-semibold rounded shadow bottom-2 right-3 text-black-700 bg-white/60">
                                                 🎯{{ $muc->DO_UU_TIEN_MUC }}
                                             </div>
