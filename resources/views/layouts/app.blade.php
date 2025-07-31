@@ -1,25 +1,41 @@
 {{-- resources/views/layouts/app.blade.php --}}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
+   <script>
+    (function () {
+        try {
+            const theme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (theme === 'dark' || (!theme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        } catch (e) {
+            console.error('Dark mode script error:', e);
+        }
+    })();
+</script>
+  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
-
   <title>@yield('title', 'WorkPlan')</title>
-
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
+  
+  @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/plans.js', 'resources/js/header.js', 'resources/js/footer.js', 'resources/js/main.js'])
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-100">
   @include('partials.header')
 
-  <main class="flex-1 w-full px-4 py-4 mx-auto">
+   <main class="m flex-1 w-full px-4 py-4 mx-auto">
     @yield('content')
-  </main>
+  </main> 
 
-  @if(empty($noFooter) && !(request()->is('reminders')))
+   @if(empty($noFooter) && !(request()->is('reminders')))
   @include('partials.footer')
   @endif
 
@@ -76,8 +92,15 @@
   </script>
 
   {{-- Để các script cụ thể của từng trang (nếu có) --}}
-  @stack('scripts')
+  @stack('scripts') 
 
+
+
+
+
+
+
+  
 </body>
 
 </html>
