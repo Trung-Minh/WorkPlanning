@@ -413,14 +413,25 @@ class LeaderController extends Controller
 
     public function updateGroupPlan(Request $request, $id)
     {
+        $request->validate([
+            'TEN_KE_HOACH' => 'required|string|max:255',
+        ]);
+
+        $keHoach = DB::table('KE_HOACH')->where('ID_KH', $id)->first();
+
+        if (!$keHoach) {
+            return redirect()->back()->with('error', 'Kế hoạch không tồn tại.');
+        }
+
         DB::table('KE_HOACH')
             ->where('ID_KH', $id)
             ->update([
                 'TEN_KE_HOACH' => $request->TEN_KE_HOACH,
             ]);
 
-        return redirect()->route('showGroup');
+        return redirect()->route('showGroup')->with('success', 'Cập nhật kế hoạch thành công!');
     }
+
 
     public function updateGroupTask(Request $request, $id)
     {
