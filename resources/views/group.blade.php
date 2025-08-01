@@ -102,7 +102,7 @@
                     {{-- Tiêu đề & nút xóa kế hoạch --}}
                     <div class="flex items-center justify-between mb-4">
                         @if(Auth::user()->ID_USER === $nhom->ID_NHOM_TRUONG)
-                            <h2 class="text-2xl font-semibold text-gray-800 cursor-pointer editable task-title hover:underline">
+                            <h2 class="text-2xl font-semibold text-gray-800 cursor-pointer editable plan-title hover:underline " data-id="{{ $keHoach->ID_KH }}">
                                 {{ $keHoach->TEN_KE_HOACH }}
                             </h2>
                         @else
@@ -255,9 +255,10 @@
                                                         });
                                                     </script>
 
-                                                    {{-- Hiển thị độ ưu tiên --}}
-                                                    <div class="absolute px-2 py-1 text-xs font-semibold rounded shadow cursor-pointer priority-display bottom-2 right-3 text-black-700 bg-white/60">
-                                                        <span ondblclick="editMcvPriority(this, '{{ $muc->ID_MUC }}')">
+                                                    {{-- Hiển thị độ ưu tiên mục --}}
+                                                    <div class="absolute bottom-2 right-3">
+                                                        <span class="px-2 py-1 text-sm font-semibold rounded shadow cursor-pointer bg-white/70 hover:ring hover:ring-indigo-300"
+                                                            ondblclick="editMcvPriority(this, '{{ $muc->ID_MUC }}')">
                                                             🎯 <span class="priority-muc-value">{{ $muc->DO_UU_TIEN_MUC }}</span>
                                                         </span>
                                                     </div>
@@ -280,6 +281,12 @@
                                             <div class="absolute bottom-2 right-3">
                                                 <span class="px-2 py-1 text-sm font-semibold rounded shadow cursor-pointer priority-display bg-white/70 hover:ring hover:ring-indigo-300"
                                                     ondblclick="editCvPriority(this, '{{ $cv->ID_CV }}')">
+                                                    ⭐ <span class="priority-value">{{ $cv->DO_UU_TIEN }}</span>
+                                                </span>
+                                            </div>
+                                        @else
+                                            <div class="absolute bottom-2 right-3">
+                                                <span class="px-2 py-1 text-sm font-semibold rounded shadow bg-white/70">
                                                     ⭐ <span class="priority-value">{{ $cv->DO_UU_TIEN }}</span>
                                                 </span>
                                             </div>

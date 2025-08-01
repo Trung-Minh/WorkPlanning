@@ -37,95 +37,6 @@ window.confirmDelete_Group = function (actionUrl, title, message) {
     showModal("modalConfirmDelete");
 };
 
-window.editCvPriority = function (span, idCv) {
-    const valueSpan = span.querySelector(".priority-value");
-    const current = valueSpan.innerText.trim();
-
-    const input = document.createElement("input");
-    input.type = "number";
-    input.value = current;
-    input.className = "w-12 text-center border border-gray-400 rounded";
-    input.style.fontSize = "0.875rem";
-
-    input.addEventListener("blur", () => saveCvPriority(input, idCv));
-    input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") input.blur();
-    });
-
-    valueSpan.replaceWith(input);
-    input.focus();
-    input.select();
-};
-
-function saveCvPriority(input, idCv) {
-    const newValue = input.value.trim();
-
-    fetch(`/group/${idCv}/update-priority`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content"),
-        },
-        body: JSON.stringify({ DO_UU_TIEN: newValue }),
-    })
-        .then((res) => res.json())
-        .then((data) => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert("Lỗi cập nhật độ ưu tiên công việc!");
-            }
-        })
-        .catch((err) => {
-            alert("Lỗi kết nối máy chủ");
-        });
-}
-
-document.querySelectorAll(".editable-priority").forEach((el) => {
-    el.ondblclick = function () {
-        const id = el.dataset.id;
-        const oldValue = el.querySelector(".priority-value").innerText;
-        const input = document.createElement("input");
-        input.type = "number";
-        input.value = oldValue;
-        input.classList.add("w-10", "text-xs");
-        el.innerHTML = "⭐ ";
-        el.appendChild(input);
-        input.focus();
-
-        const submitPriority = () => {
-            const newValue = parseInt(input.value);
-            if (isNaN(newValue)) {
-                location.reload();
-                return;
-            }
-
-            fetch(`/group/${id}/update-priority`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                },
-                body: JSON.stringify({ DO_UU_TIEN: newValue }),
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    location.reload(); // ✅ Reload lại trang khi cập nhật thành công
-                })
-                .catch(() => location.reload()); // reload luôn nếu lỗi
-        };
-
-        input.addEventListener("blur", submitPriority); // Khi mất focus
-        input.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                submitPriority(); // Khi nhấn Enter
-            }
-        });
-    };
-});
-
 function handleDelete(event) {
     event.preventDefault();
 
@@ -248,6 +159,95 @@ window.setupInlineEditing = function (csrfToken) {
     });
 };
 
+window.editCvPriority = function (span, idCv) {
+    const valueSpan = span.querySelector(".priority-value");
+    const current = valueSpan.innerText.trim();
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.value = current;
+    input.className = "w-12 text-center border border-gray-400 rounded";
+    input.style.fontSize = "0.875rem";
+
+    input.addEventListener("blur", () => saveCvPriority(input, idCv));
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") input.blur();
+    });
+
+    valueSpan.replaceWith(input);
+    input.focus();
+    input.select();
+};
+
+function saveCvPriority(input, idCv) {
+    const newValue = input.value.trim();
+
+    fetch(`/group/${idCv}/update-priority`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+        },
+        body: JSON.stringify({ DO_UU_TIEN: newValue }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert("Lỗi cập nhật độ ưu tiên công việc!");
+            }
+        })
+        .catch((err) => {
+            alert("Lỗi kết nối máy chủ");
+        });
+}
+
+document.querySelectorAll(".editable-priority").forEach((el) => {
+    el.ondblclick = function () {
+        const id = el.dataset.id;
+        const oldValue = el.querySelector(".priority-value").innerText;
+        const input = document.createElement("input");
+        input.type = "number";
+        input.value = oldValue;
+        input.classList.add("w-10", "text-xs");
+        el.innerHTML = "⭐ ";
+        el.appendChild(input);
+        input.focus();
+
+        const submitPriority = () => {
+            const newValue = parseInt(input.value);
+            if (isNaN(newValue)) {
+                location.reload();
+                return;
+            }
+
+            fetch(`/group/${id}/update-priority`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                },
+                body: JSON.stringify({ DO_UU_TIEN: newValue }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    location.reload(); // ✅ Reload lại trang khi cập nhật thành công
+                })
+                .catch(() => location.reload()); // reload luôn nếu lỗi
+        };
+
+        input.addEventListener("blur", submitPriority); // Khi mất focus
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                submitPriority(); // Khi nhấn Enter
+            }
+        });
+    };
+});
+
 window.editMcvPriority = function (span, idMcv) {
     const valueSpan = span.querySelector(".priority-muc-value");
     const current = valueSpan.innerText.trim();
@@ -319,7 +319,7 @@ document.querySelectorAll(".editable-priority").forEach((el) => {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": "{{ csrf_token() }}",
                 },
-                body: JSON.stringify({ DO_UU_TIEN: newValue }),
+                body: JSON.stringify({ DO_UU_TIEN_MUC: newValue }),
             })
                 .then((res) => res.json())
                 .then((data) => {

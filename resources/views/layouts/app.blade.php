@@ -9,7 +9,8 @@
 
   <title>@yield('title', 'WorkPlan')</title>
 
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
+  @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/plans.js', 'resources/js/header.js'])
+  @vite(['resources/js/group.js'])
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-100">

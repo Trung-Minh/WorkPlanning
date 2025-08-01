@@ -101,7 +101,7 @@ window.setupInlineEditing = function (csrfToken) {
                 let url, field;
                 switch (type) {
                     case "plan":
-                        url = `/ke-hoach/${id}`;
+                        url = `/ke-hoach/update-plan/${id}`;
                         field = "TEN_KE_HOACH";
                         break;
                     case "task":
@@ -117,15 +117,15 @@ window.setupInlineEditing = function (csrfToken) {
                         field = "DO_UU_TIEN";
                         break;
                     case "deadline":
-                        url = `/muc-cong-viec/${id}`;
+                        url = `/muc-cong-viec/${id}/sua`;
                         field = "THOI_HAN_HOAN_THANH";
                         break;
                     case "priority":
-                        url = `/muc-cong-viec/${id}`;
+                        url = `/muc-cong-viec/${id}/sua`;
                         field = "DO_UU_TIEN_MUC";
                         break;
                     case "subtask":
-                        url = `/muc-cong-viec/${id}`;
+                        url = `/muc-cong-viec/${id}/sua`;
                         field = "TEN_MUC";
                         break;
                 }
@@ -269,18 +269,104 @@ document.querySelectorAll(".editable-priority").forEach((el) => {
 });
 
 // PT thời gian buộc ở tương lai
-    // const a = document.getElementById('deadlineInput1');
-    const deadlineInput = document.getElementById('editDeadline');
+// const a = document.getElementById('deadlineInput1');
+const deadlineInput = document.getElementById("editDeadline");
 
-    function getMinTimeOneHourLater() {
-        const now = new Date();
-        now.setHours(now.getHours() + 1); // cộng 1 giờ
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // điều chỉnh múi giờ địa phương
-        return now.toISOString().slice(0, 16); // định dạng "yyyy-MM-ddTHH:mm"
-        
-    }
+function getMinTimeOneHourLater() {
+    const now = new Date();
+    now.setHours(now.getHours() + 1); // cộng 1 giờ
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // điều chỉnh múi giờ địa phương
+    return now.toISOString().slice(0, 16); // định dạng "yyyy-MM-ddTHH:mm"
+}
 
-    
+// a.min = getMinTimeOneHourLater();
+deadlineInput.min = getMinTimeOneHourLater();
 
-    a.min = getMinTimeOneHourLater();
-    deadlineInput.min = getMinTimeOneHourLater();
+window.editMcvPriority = function (span, idMcv) {
+    const valueSpan = span.querySelector(".priority-muc-value");
+    const current = valueSpan.innerText.trim();
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.value = current;
+    input.className = "w-12 text-center border border-gray-400 rounded";
+    input.style.fontSize = "0.875rem";
+
+    input.addEventListener("blur", () => saveMcvPriority(input, idMcv));
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") input.blur();
+    });
+
+    valueSpan.replaceWith(input);
+    input.focus();
+    input.select();
+};
+
+function saveMcvPriority(input, idMcv) {
+    const newValue = input.value.trim();
+
+    fetch(`/subtask/${idMcv}/update-subtask-priority`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
+        },
+        body: JSON.stringify({ DO_UU_TIEN_MUC: newValue }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert("Lỗi cập nhật độ ưu tiên mục công việc!");
+            }
+        })
+        .catch((err) => {
+            alert("Lỗi kết nối máy chủ");
+        });
+}
+
+document.querySelectorAll(".editable-priority").forEach((el) => {
+    el.ondblclick = function () {
+        const id = el.dataset.id;
+        const oldValue = el.querySelector(".priority-muc-value").innerText;
+        const input = document.createElement("input");
+        input.type = "number";
+        input.value = oldValue;
+        input.classList.add("w-10", "text-xs");
+        el.innerHTML = "🎯 ";
+        el.appendChild(input);
+        input.focus();
+
+        const submitPriority = () => {
+            const newValue = parseInt(input.value);
+            if (isNaN(newValue)) {
+                location.reload();
+                return;
+            }
+
+            fetch(`/subtask/${id}/update-subtask-priority`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                },
+                body: JSON.stringify({ DO_UU_TIEN: newValue }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    location.reload(); // ✅ Reload lại trang khi cập nhật thành công
+                })
+                .catch(() => location.reload()); // reload luôn nếu lỗi
+        };
+
+        input.addEventListener("blur", submitPriority); // Khi mất focus
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                submitPriority(); // Khi nhấn Enter
+            }
+        });
+    };
+});
