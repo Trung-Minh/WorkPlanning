@@ -3,19 +3,19 @@
 @section('title', 'Trang chủ - WorkPlanning')
 
 @section('content')
-    <main class="max-w-6xl px-4 py-12 mx-auto">
+    <main class=" max-w-6xl px-4 py-12 mx-auto">
         <!-- Giới thiệu -->
         <section class="mb-16">
-            <h1 class="mb-6 text-5xl font-bold text-blue-700">
+            <h1 class=" mb-6 text-5xl font-bold text-blue-700">
                 ✨ WorkPlan - Quản lý kế hoạch cực đơn giản
             </h1>
-            <p class="mb-4 text-lg leading-relaxed text-gray-700">
+            <p class="a mb-4 text-lg leading-relaxed text-gray-700">
                 Với WorkPlan, bạn dễ dàng:
             </p>
             <ul class="space-y-1 text-base text-gray-700 list-disc list-inside">
-                <li>Tạo và sắp xếp kế hoạch công việc hằng ngày</li>
-                <li>Nhận nhắc nhở tự động trước deadline</li>
-                <li>Theo dõi tiến độ và quản lý hiệu quả thời gian</li>
+                <li class= "a" >Tạo và sắp xếp kế hoạch công việc hằng ngày</li>
+                <li class= "a">Nhận nhắc nhở tự động trước deadline</li>
+                <li class= "a">Theo dõi tiến độ và quản lý hiệu quả thời gian</li>
             </ul>
             <div class="mt-6">
                 <a href="{{ url('/register') }}"
@@ -52,5 +52,15 @@
                 </p>
             </div>
         </section>
+<script>
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+            location.reload();
+        }
+    });
+</script>
     </main>
 @endsection
+
+
+

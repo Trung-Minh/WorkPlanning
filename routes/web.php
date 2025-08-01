@@ -6,9 +6,15 @@ use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\ReminderController;
 use Illuminate\Support\Facades\Route;
 
+
+
 // Trang welcome
 Route::get('/', fn () => view('welcome'))->name('welcome');
-
+Route::middleware(['auth', 'prevent-back'])->group(function () {
+   Route::get('/account', function () {
+    return view('account');
+});
+});
 // Auth
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -32,9 +38,7 @@ Route::get('/reminders', function () {
     return view('reminders');
 });
 
-Route::get('/account', function () {
-    return view('account');
-});
+
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -126,4 +130,13 @@ Route::delete('/group/{id}/delete-subtask', action: [LeaderController::class, 'd
 Route::post('/group/{id}/update-priority', [LeaderController::class, 'updateGroupTaskPriority'])->name('group.update-priority');
 Route::post('/group/{id}/update-subtask-priority', [LeaderController::class, 'updateGroupSubtaskPriority'])->name('group.update-subtask-priority');
 Route::post('/api/muc-cong-viec/{id}/toggle-status', action: [LeaderController::class, 'toggleStatus']);
+
+
+Route::get('/members', [LeaderController::class, 'indexMembers'])->name('indexMembers');
+
+Route::get('/add-members', [LeaderController::class, 'indexMembers']);
+Route::post('/add-members', [LeaderController::class, 'searchGroupMembers'])->name('add_members');
+
+Route::post('/invite-members', [LeaderController::class, 'inviteGroup'])->name('inviteGroup');
+
 ?>
