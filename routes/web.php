@@ -139,6 +139,7 @@ Route::get('/add-members', [LeaderController::class, 'indexMembers']);
 Route::post('/add-members', [LeaderController::class, 'searchGroupMembers'])->name('add_members');
 
 Route::post('/invite-members', [LeaderController::class, 'inviteGroup'])->name('inviteGroup');
+Route::delete('/group/{id}/leave-group', action: [LeaderController::class, 'leaveGroup'])->name('group.leave');
 
 
 Route::post('/check-email', function (Illuminate\Http\Request $request) {

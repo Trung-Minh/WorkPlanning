@@ -800,4 +800,25 @@ class LeaderController extends Controller
         return redirect()->back()
             ->with('invite_success', '✅ Đã gửi lời mời thành công!');
     }
+
+    public function leaveGroup($id)
+    {
+        $userId = Auth::id();
+
+        // Xoá thành viên khỏi nhóm
+        DB::table('nhom_thanh_vien')
+            ->where('ID_NHOM', $id)
+            ->where('ID_USER', $userId)
+            ->delete();
+
+        // Xoá luôn lời mời (nếu có)
+        DB::table('loi_moi')
+            ->where('ID_NHOM', $id)
+            ->where('ID_USER', $userId)
+            ->where('TRANG_THAI_LOI_MOI', 1)
+            ->delete();
+
+        return redirect()->route('welcome')->with('info', 'Bạn đã rời nhóm thành công.');
+    }
+
 }
