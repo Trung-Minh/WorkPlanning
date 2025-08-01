@@ -27,6 +27,7 @@
   @include('partials.footer')
   @endif
 
+  @if (Auth::check() && !session('disable_reminder_notification'))
   {{-- Phần này bạn giữ lại để toast + âm thanh hoạt động xuyên trang --}}
   <audio id="reminder-sound" src="{{ asset('sounds/notificationx3_reminders.mp3') }}" preload="auto"></audio>
   <div id="toast-container" class="fixed z-50 space-y-2 bottom-5 right-5"></div>
@@ -46,10 +47,10 @@
       const toast = document.createElement('div');
       toast.className = "bg-blue-600 text-white px-4 py-3 rounded shadow w-80";
       toast.innerHTML = `
-        <p class="font-semibold">🔔 Nhắc nhở</p>
-        <p>${reminder.noi_dung}</p>
-        <p class="mt-1 text-sm text-white/80">${new Date(reminder.thoidiem_thongbao).toLocaleString()}</p>
-      `;
+      <p class="font-semibold">🔔 Nhắc nhở</p>
+      <p>${reminder.noi_dung}</p>
+      <p class="mt-1 text-sm text-white/80">${new Date(reminder.thoidiem_thongbao).toLocaleString()}</p>
+    `;
       toastContainer.appendChild(toast);
       setTimeout(() => toast.remove(), 15000);
     }
@@ -75,9 +76,9 @@
       });
     }
 
-    setInterval(checkReminders, 30000);
     window.addEventListener('load', checkReminders);
   </script>
+  @endif
 
   {{-- Để các script cụ thể của từng trang (nếu có) --}}
   @stack('scripts')
