@@ -1,8 +1,8 @@
-<header class="hea py-6  border-t shadow-md text-md ">
+<header class="py-6 border-t shadow-md hea text-md ">
 
     <div class="flex items-center justify-between px-4 py-4 mx-auto max-w-7xl" >
         <div class="text-2xl font-bold text-blue-600 dark-card">
-            <a href="{{route('welcome')  }}"> 
+            <a href="{{route('welcome')  }}">
                 WorkPlanning
             </a>
         </div>
@@ -27,7 +27,7 @@
                     </form>
                 @endif
             @endauth
-            
+
             <a class="a" href="{{ url('/') }}" class="block py-2 hover:text-blue-600">Trang chủ</a>
             <a class="a" href="{{ route('plans.index') }}" class="block py-2 hover:text-blue-600">Kế hoạch</a>
             <a class= "a" href="{{ route('reminders') }}" class="block py-2 hover:text-blue-600">Nhắc nhở</a>
@@ -39,13 +39,21 @@
                 <!-- Bọc toàn bộ popup và trigger trong 1 x-data -->
                 <div x-data="{ show: false }">
 
-                    <!-- Nút mở popup -->
-                    <a href="#" @click.prevent="show = true" class="hover:text-blue-600 hover:underline">Nhóm của bạn</a>
+                    @auth
+                        @php
+                            $isOnCreateGroupPage = request()->url() === route('showLeader');
+                        @endphp
+
+                        @if (!$isOnCreateGroupPage)
+                            <!-- Nút mở popup -->
+                            <a href="#" @click.prevent="show = true" class="hover:text-blue-600 hover:underline">Nhóm của bạn</a>
+                        @endif
+                    @endauth
 
                     <!-- Overlay popup với nền trong suốt và mờ -->
                     <div x-show="show"
                         x-transition
-                         x-cloak
+                        x-cloak
                         class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/20">
 
                         <!-- Nội dung popup -->
@@ -127,14 +135,14 @@
 
 
                 <a href="/account" class="flex items-center gap-2 py-2 hover:text-blue-600">
-                    <img src="{{ asset('uploads/' . (Auth::user()->AVATAR ?? 'avt.jpg')) }}" alt="AVT" class="a w-6 h-6 rounded-full">
+                    <img src="{{ asset('uploads/' . (Auth::user()->AVATAR ?? 'avt.jpg')) }}" alt="AVT" class="w-6 h-6 rounded-full a">
                     <span class = "a" >{{ Auth::user()->HO_TEN ?? 'Không có tên' }}</span>
                 </a>
 
                 {{-- 🔔 Chuông thông báo --}}
                 <div class="relative group">
                     <button class="relative p-2 rounded-full hover:bg-gray-200 focus:outline-none">
-                        <svg class="a w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="2"
+                        <svg class="w-6 h-6 text-gray-700 a" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -209,14 +217,14 @@
                 </div>
 
             @else
-                <a href="{{ route('login') }}" class="a block py-2 hover:text-blue-600">Đăng nhập</a>
-                <a href="{{ route('register') }}" class="a block py-2 hover:text-blue-600">Đăng ký</a>
-            
+                <a href="{{ route('login') }}" class="block py-2 a hover:text-blue-600">Đăng nhập</a>
+                <a href="{{ route('register') }}" class="block py-2 a hover:text-blue-600">Đăng ký</a>
+
                 </button>
             @endauth
                <!-- Nút chuyển chế độ sáng/tối -->
             <button id="darkModeToggle" class="p-2 ml-2 transition rounded-full cursor-pointer">
-                <svg id="darkModeIcon" class="a w-6 h-6 text-gray-700 dark:text-yellow-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg id="darkModeIcon" class="w-6 h-6 text-gray-700 a dark:text-yellow-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </button>
@@ -250,4 +258,4 @@
             });
         }
     });
-</script> 
+</script>

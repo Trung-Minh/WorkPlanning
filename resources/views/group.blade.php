@@ -14,7 +14,7 @@
 
     <aside id="groupSidebar" class="w-64 p-4 space-y-4 transition-all duration-300 bg-white border-r">
 
-        <button onclick="toggleSidebar()" class="flex items-center w-full gap-2 px-3 py-2 text-lg font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+        <button onclick="toggleSidebar()" class="flex items-center w-full gap-2 px-3 py-2 text-lg font-semibold text-gray-700 bg-gray-100 rounded-md cursor-pointer hover:bg-gray-200">
             <span id="toggleIcon" class="text-2xl">&#9776;</span>
             <span id="toggleLabel">Thành viên</span>
         </button>
@@ -57,7 +57,6 @@
                     ➕ Thêm thành viên
                 </button>
             </a>
-
 
             <!-- Nút xoá nhóm -->
             <form method="POST" action="{{ route('group.delete', $nhom->ID_NHOM) }}"

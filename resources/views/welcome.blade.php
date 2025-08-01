@@ -3,13 +3,13 @@
 @section('title', 'Trang chủ - WorkPlanning')
 
 @section('content')
-    <main class=" max-w-6xl px-4 py-12 mx-auto">
+    <main class="max-w-6xl px-4 py-12 mx-auto ">
         <!-- Giới thiệu -->
         <section class="mb-16">
-            <h1 class=" mb-6 text-5xl font-bold text-blue-700">
+            <h1 class="mb-6 text-5xl font-bold text-blue-700 ">
                 ✨ WorkPlan - Quản lý kế hoạch cực đơn giản
             </h1>
-            <p class="a mb-4 text-lg leading-relaxed text-gray-700">
+            <p class="mb-4 text-lg leading-relaxed text-gray-700 a">
                 Với WorkPlan, bạn dễ dàng:
             </p>
             <ul class="space-y-1 text-base text-gray-700 list-disc list-inside">
@@ -18,7 +18,7 @@
                 <li class= "a">Theo dõi tiến độ và quản lý hiệu quả thời gian</li>
             </ul>
             <div class="mt-6">
-                <a href="{{ url('/register') }}"
+                <a href="{{ route('plans.index') }}"
                     class="inline-block px-6 py-3 text-base font-medium text-white transition bg-blue-600 rounded-md hover:bg-blue-700">
                     👉 Bắt đầu ngay
                 </a>
