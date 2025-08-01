@@ -10,8 +10,8 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
 
-    <div class="div flex min-h-screen text-gray-800 bg-gray-100">
-        <aside id="groupSidebar" class="aside w-64 p-4 space-y-4 transition-all duration-300 border-r">
+    <div class="flex min-h-screen text-gray-800 bg-gray-100 div">
+        <aside id="groupSidebar" class="w-64 p-4 space-y-4 transition-all duration-300 border-r aside">
 
             <button onclick="toggleSidebar()" class="flex items-center w-full gap-2 px-3 py-2 text-lg font-semibold text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
                 <span id="a toggleIcon" class="text-2xl">&#9776;</span>
@@ -24,7 +24,7 @@
             </button>
 
             <div>
-                <h2 class="a mb-2 text-sm font-bold">Trưởng nhóm</h2>
+                <h2 class="mb-2 text-sm font-bold a">Trưởng nhóm</h2>
                 <div class="flex items-center gap-2 text-sm">
                     <img src="{{ asset('uploads/' . ($nhom->truongNhom->AVATAR ?? 'avt.jpg')) }}"
                         alt="avatar"
@@ -32,14 +32,14 @@
                     <span class = "a" >{{ $nhom->truongNhom->HO_TEN ?? 'Không rõ' }}</span>
                 </div>
             </div>
-        </div>
+
 
 
         <div>
-            <h2 class="mb-2 text-sm font-bold">Thành viên</h2>
+            <h2 class="mb-2 text-sm font-bold a">Thành viên</h2>
             <ul class="space-y-2">
                 @foreach ($thanhVien as $tv)
-                    <li class="flex items-center gap-2 text-sm">
+                    <li class="flex items-center gap-2 text-sm a">
                         <img src="{{ asset('uploads/' . ($tv->AVATAR ?? 'avt.jpg')) }}"
                             alt="avatar"
                             class="object-cover w-8 h-8 rounded-full" />
@@ -80,55 +80,6 @@
                 </button>
             </form>
         @endif
-    </aside>
-
-    <!-- Nội dung chính -->
-    <main class="flex-1 px-4">
-        <div class="container py-4 mx-auto animate-fade-in">
-            <h1 class="flex items-center gap-2 mb-6 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-purple-600 to-pink-500 animate-bounce">
-                <svg class="w-8 h-8 text-blue-600 animate-pulse" fill="none"
-                    stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 12h6m-3-3v6m8 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Danh sách Kế hoạch
-            </h1>
-
-            <div>
-                <h2 class="a mb-2 text-sm font-bold">Thành viên</h2>
-                <ul class="space-y-2">
-                    @foreach ($thanhVien as $tv)
-                        <li class="flex items-center gap-2 text-sm">
-                            <img src="{{ asset('uploads/' . ($tv->AVATAR ?? 'avt.jpg')) }}"
-                                alt="avatar"
-                                class="object-cover w-8 h-8 rounded-full" />
-                            <span>{{ $tv->HO_TEN }}</span>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-
-            @if(Auth::user()->ID_USER === $nhom->ID_NHOM_TRUONG)
-                <!-- Nút thêm thành viên -->
-                <a href="{{ url('/members') }}">
-                    <button type="button"
-                        class="w-full py-2 mt-4 font-semibold text-white bg-green-600 rounded-lg cursor-pointer hover:bg-green-700">
-                        ➕ Thêm thành viên
-                    </button>
-                </a>
-
-
-                <!-- Nút xoá nhóm -->
-                <form method="POST" action="{{ route('group.delete', $nhom->ID_NHOM) }}"
-                    onsubmit="return confirm('Bạn có chắc muốn xoá nhóm không? Hành động này không thể hoàn tác!')">
-
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="w-full py-2 mt-2 font-semibold text-white bg-red-600 rounded-lg cursor-pointer hover:bg-red-700">
-                        🗑️ Xoá nhóm
-                    </button>
-                </form>
-            @endif
         </aside>
 
         <!-- Nội dung chính -->
@@ -324,89 +275,7 @@
                                                 @endforeach
                                             </ul>
 
-                                            {{-- Thêm mục --}}
-                                            <div class="flex justify-center mt-4">
-                                                <button onclick="showAddSubTaskModal('{{ $cv->ID_CV }}')"
-                                                        class="cursor-pointer w-[60%] bg-gradient-to-r from-green-400 via-green-500 to-emerald-500
-                                                            text-white py-2 rounded-lg shadow hover:from-green-500 hover:to-emerald-600 hover:scale-105
-                                                            transition-transform duration-300 text-sm">
-                                                    ➕ Thêm Mục
-                                                </button>
-                                            </div>
 
-                                            @if(Auth::user()->ID_USER === $nhom->ID_NHOM_TRUONG)
-                                                {{-- Hiển thị độ ưu tiên --}}
-                                                <div class="absolute bottom-2 right-3">
-                                                    <span class="px-2 py-1 text-sm font-semibold rounded shadow cursor-pointer priority-display bg-white/70 hover:ring hover:ring-indigo-300"
-                                                        ondblclick="editCvPriority(this, '{{ $cv->ID_CV }}')">
-                                                        ⭐ <span class="priority-value">{{ $cv->DO_UU_TIEN }}</span>
-                                                    </span>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        {{-- Thư mục --}}
-                                        <ul class="mt-2 ml-5 space-y-2 text-sm list-none">
-                                            @foreach($cv->muc_cong_viec as $muc)
-                                                @php
-                                                    $deadline = \Carbon\Carbon::parse($muc->THOI_HAN_HOAN_THANH);
-                                                    $now = \Carbon\Carbon::now();
-                                                    $isDone = $muc->TRANG_THAI;
-                                                    $bgColor = $isDone ? 'bg-green-300' : ($deadline->lt($now) ? 'bg-red-300' : 'bg-blue-100');
-                                                @endphp
-
-                                                <li class="relative p-3 rounded shadow-sm transition {{ $bgColor }} hover:brightness-105 hover:scale-105 duration-200 text-left" data-id="{{ $muc->ID_MUC }}">
-                                                    {{-- Tên mục --}}
-                                                    <div class="w-full mb-1">
-                                                        <span class="font-medium text-gray-800 cursor-pointer editable subtask-title hover:text-indigo-700 hover:underline"
-                                                            data-id="{{ $muc->ID_MUC }}">
-                                                            {{ $muc->TEN_MUC }}
-                                                        </span>
-                                                    </div>
-
-                                                    {{-- Thời hạn --}}
-                                                    <div class="w-full mb-2 text-center text-gray-600">
-                                                        <span class="cursor-pointer editable subtask-deadline" data-id="{{ $muc->ID_MUC }}">
-                                                            {{ $muc->THOI_HAN_HOAN_THANH }}
-                                                        </span>
-                                                    </div>
-
-                                                    {{-- Nút hành động --}}
-                                                    <div  id="action-buttons-{{ $muc->ID_MUC }}" class="flex justify-start w-full space-x-2 text-xs">
-                                                        <button onclick="showViewSubtaskModal_Group('{{ $muc->ID_MUC }}')"
-                                                                class="text-blue-600 underline cursor-pointer hover:text-blue-800">
-                                                            👁 Xem
-                                                        </button>
-                                                        <button onclick="showEditSubtaskModal_Group('{{ $muc->ID_MUC }}')"
-                                                                class="text-yellow-600 underline cursor-pointer hover:text-yellow-800">
-                                                            ✏️ Chỉnh Sửa
-                                                        </button>
-                                                        <button onclick="confirmDelete_Group('{{ route('group.delete-subtask', $muc->ID_MUC) }}', 'Xoá Thư Mục', 'Bạn có chắc chắn?')"
-                                                                class="text-red-600 underline cursor-pointer hover:text-red-800">
-                                                            🗑 Xóa
-                                                        </button>
-                                                    </div>
-
-                                                    <script>
-                                                        window.addEventListener('DOMContentLoaded', () => {
-                                                            const el = document.getElementById("action-buttons-{{ $muc->ID_MUC }}");
-                                                            if (el && el.offsetWidth > 240) {
-                                                                el.classList.remove("justify-start");
-                                                                el.classList.add("justify-center");
-                                                            }
-                                                        });
-                                                    </script>
-
-                                                    {{-- Hiển thị độ ưu tiên mục --}}
-                                                    <div class="absolute bottom-2 right-3">
-                                                        <span class="px-2 py-1 text-sm font-semibold rounded shadow cursor-pointer bg-white/70 hover:ring hover:ring-indigo-300"
-                                                            ondblclick="editMcvPriority(this, '{{ $muc->ID_MUC }}')">
-                                                            🎯 <span class="priority-muc-value">{{ $muc->DO_UU_TIEN_MUC }}</span>
-                                                        </span>
-                                                    </div>
-                                                </li>
-                                            @endforeach
-                                        </ul>
 
                                         {{-- Thêm mục --}}
                                         <div class="flex justify-center mt-4">

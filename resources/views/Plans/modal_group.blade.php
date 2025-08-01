@@ -9,11 +9,6 @@
         <div class="flex justify-end gap-2">
             <button type="submit"
                 class="px-4 py-2 text-white rounded shadow bg-gradient-to-r from-blue-500 to-indigo-500 hover:brightness-110">Thêm</button>
-                @if (session('success'))
-                    <div class="px-4 py-2 mt-4 text-green-700 bg-green-100 rounded shadow">
-                        ✅ {{ session('success') }}
-                    </div>
-                @endif
             <button type="button" onclick="hideModal('modalAddPlan')"
                 class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200">Huỷ</button>
         </div>
