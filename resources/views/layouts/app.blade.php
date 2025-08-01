@@ -8,10 +8,14 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="shortcut icon" href="{{ asset('newlogo.ico') }}" type="image/x-icon">
 
-  <title>@yield('title', 'WorkPlan')</title>
+  <title>@yield('title', 'WorkPlanning')</title>
 
   @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/plans.js', 'resources/js/header.js'])
   @vite(['resources/js/group.js'])
+  
+  <style>
+    [x-cloak] { display: none !important; }
+  </style>
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-100">
