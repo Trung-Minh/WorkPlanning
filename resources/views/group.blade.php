@@ -58,7 +58,6 @@
                 </button>
             </a>
 
-
             <!-- Nút xoá nhóm -->
             <form method="POST" action="{{ route('group.delete', $nhom->ID_NHOM) }}"
                 onsubmit="return confirm('Bạn có chắc muốn xoá nhóm không? Hành động này không thể hoàn tác!')">
