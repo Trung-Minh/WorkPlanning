@@ -155,4 +155,4 @@ document.addEventListener('DOMContentLoaded', function () {
   </main>
 
 @endsection
-@php($noFooter = false)
+@php($noFooter = true)
