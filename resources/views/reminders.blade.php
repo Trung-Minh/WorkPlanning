@@ -54,9 +54,18 @@
     <select id="select-ke-hoach" onchange="filterKeHoach()"
       class="w-full px-4 py-2 pr-10 text-sm text-gray-800 bg-white border border-gray-300 rounded-lg shadow-sm appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500">
       <option value="">-- Ẩn kế hoạch --</option>
-      @foreach ($reminders as $reminder)
-      <option value="kh-{{ $reminder->ID_KH }}">{{ $reminder->TEN_KE_HOACH }}</option>
-      @endforeach
+
+      <optgroup label="👤 Kế hoạch cá nhân">
+        @foreach ($keHoachCaNhan as $kehoach)
+        <option value="kh-{{ $kehoach->ID_KH }}">{{ $kehoach->TEN_KE_HOACH }}</option>
+        @endforeach
+      </optgroup>
+
+      <optgroup label="👥 Kế hoạch nhóm">
+        @foreach ($keHoachNhom as $kehoach)
+        <option value="kh-{{ $kehoach->ID_KH }}">{{ $kehoach->TEN_KE_HOACH }}</option>
+        @endforeach
+      </optgroup>
     </select>
     <div class="absolute inset-y-0 flex items-center pointer-events-none right-2">
       <svg class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,62 +76,101 @@
 </div>
 
 {{-- Danh sách kế hoạch --}}
-@foreach ($reminders as $reminder)
-<div id="kh-{{ $reminder->ID_KH }}" class="hidden mb-10 space-y-4 kehoach-block">
-  <div class="w-full mx-auto overflow-hidden bg-white border border-gray-200 rounded-lg shadow max-w-7xl">
-    {{-- Tên kế hoạch --}}
-    <div class="px-6 py-3 text-xl font-bold tracking-wide text-white bg-indigo-600 rounded-t-lg shadow">
-      <h3 class="text-xl font-bold tracking-wide">
-        {{ $reminder->TEN_KE_HOACH }}
-      </h3>
-    </div>
-
-    {{-- Nội dung kế hoạch --}}
-    <div class="p-6 space-y-6 bg-white border border-gray-200 shadow rounded-b-xl">
-
-      @foreach ($reminder->congviecs as $congviec)
-      <div class="p-4 space-y-2 border border-blue-100 rounded-lg shadow-inner bg-blue-50">
-        <h4 class="text-lg font-semibold text-blue-800"> {{ $congviec->TEN_CV }}</h4>
-
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div class="text-gray-700">
-            <strong>Tiến độ:</strong> {{ $congviec['TIEN_DO'] }} %
-          </div>
-          <div class="text-gray-700">
-            <strong>Ưu tiên:</strong> {{ $congviec['DO_UU_TIEN'] }}
-          </div>
+@foreach (['keHoachCaNhan' => $keHoachCaNhan, 'keHoachNhom' => $keHoachNhom] as $type => $keHoachGroup)
+@if (count($keHoachGroup) > 0)
+    @if ($type === 'keHoachCaNhan')
+      <h2 id="title-kehoach-canhan" class="mb-4 text-xl font-semibold text-indigo-700 hidden">👤 Kế hoạch cá nhân</h2>
+    @else
+      <h2 id="title-kehoach-nhom" class="mb-4 text-xl font-semibold text-green-700 hidden">👥 Kế hoạch nhóm</h2>
+    @endif
+  @foreach ($keHoachGroup as $reminder)
+    <div id="kh-{{ $reminder->ID_KH }}" class="hidden mb-10 space-y-4 kehoach-block">
+      <div class="w-full mx-auto overflow-hidden bg-white border border-gray-200 rounded-lg shadow max-w-7xl">
+        {{-- Tên kế hoạch --}}
+        <div class="px-6 py-3 text-xl font-bold tracking-wide text-white bg-indigo-600 rounded-t-lg shadow">
+          <h3 class="text-xl font-bold tracking-wide">
+            {{ $reminder->TEN_KE_HOACH }}
+          </h3>
         </div>
 
-        {{-- Các mục công việc --}}
-        @foreach ($congviec->mucCongViecs as $muc)
-        <div class="flex items-start justify-between p-4 mt-3 bg-white border border-gray-200 rounded shadow-sm">
-          <div>
-            <p class="font-semibold text-gray-800">{{ $muc->TEN_MUC }}</p>
-            <p class="text-sm text-gray-600">{{ $muc->NOI_DUNG_CHI_TIET }}</p>
-            <p class="mt-1 text-xs text-gray-500">
-              📅 <strong>Hạn:</strong>
-              @if ($muc->THOI_HAN_HOAN_THANH)
-              {{ ($thoi_gian_het_han = $muc->THOI_HAN_HOAN_THANH) ? $thoi_gian_het_han->format('d/m/Y H:i') : '' }}
-              @else
-              <em>Chưa cập nhật</em>
-              @endif
-            </p>
-          </div>
-          <button
-            class="px-3 py-2 text-xs text-white transition bg-blue-600 rounded shadow cursor-pointer hover:bg-blue-700"
-            onclick="openReminderForm('{{ $muc->ID_MUC }}')">
-            ⏰ Nhắc nhở
-          </button>
-        </div>
-        @endforeach
+        {{-- Nội dung kế hoạch --}}
+        <div class="p-6 space-y-6 bg-white border border-gray-200 shadow rounded-b-xl">
 
+          @foreach ($reminder->congviecs as $congviec)
+          <div class="p-4 space-y-2 border border-blue-100 rounded-lg shadow-inner bg-blue-50">
+            <h4 class="text-lg font-semibold text-blue-800"> {{ $congviec->TEN_CV }}</h4>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div class="text-gray-700">
+                <strong>Tiến độ:</strong> {{ $congviec['TIEN_DO'] }} %
+              </div>
+              <div class="text-gray-700">
+                <strong>Ưu tiên:</strong> {{ $congviec['DO_UU_TIEN'] }}
+              </div>
+            </div>
+
+            {{-- Các mục công việc --}}
+            @foreach ($congviec->mucCongViecs as $muc)
+            <div class="flex items-start justify-between p-4 mt-3 bg-white border border-gray-200 rounded shadow-sm">
+              <div>
+                <p class="font-semibold text-gray-800">{{ $muc->TEN_MUC }}</p>
+                <p class="text-sm text-gray-600">{{ $muc->NOI_DUNG_CHI_TIET }}</p>
+                <p class="mt-1 text-xs text-gray-500">
+                  📅 <strong>Hạn:</strong>
+                  @if ($muc->THOI_HAN_HOAN_THANH)
+                    {{ ($thoi_gian_het_han = $muc->THOI_HAN_HOAN_THANH) ? $thoi_gian_het_han->format('d/m/Y H:i') : '' }}
+                  @else
+                    <em>Chưa cập nhật</em>
+                  @endif
+                </p>
+              </div>
+              <button
+                class="px-3 py-2 text-xs text-white transition bg-blue-600 rounded shadow cursor-pointer hover:bg-blue-700"
+                onclick="openReminderForm('{{ $muc->ID_MUC }}', '{{ optional($muc->THOI_HAN_HOAN_THANH)->format('Y-m-d\TH:i') }}')">
+                Nhắc nhở
+              </button>
+            </div>
+            @endforeach
+
+          </div>
+          @endforeach
+        </div>
       </div>
-      @endforeach
     </div>
-  </div>
-</div>
+  @endforeach
+  @endif
 @endforeach
 
+<script>
+  const selectBox = document.getElementById('select-kehoach');
+  const titleCaNhan = document.getElementById('title-kehoach-canhan');
+  const titleNhom = document.getElementById('title-kehoach-nhom');
+
+  selectBox.addEventListener('change', function () {
+    const selected = this.value;
+    const type = this.options[this.selectedIndex].dataset.type;
+
+    // Ẩn hết các block kế hoạch
+    document.querySelectorAll('.kehoach-block').forEach(div => div.classList.add('hidden'));
+
+    // Ẩn cả 2 tiêu đề
+    titleCaNhan.classList.add('hidden');
+    titleNhom.classList.add('hidden');
+
+    if (selected) {
+      // Hiện block kế hoạch được chọn
+      const block = document.getElementById(selected);
+      if (block) block.classList.remove('hidden');
+
+      // Hiện đúng tiêu đề theo loại
+      if (type === 'canhan') {
+        titleCaNhan.classList.remove('hidden');
+      } else if (type === 'nhom') {
+        titleNhom.classList.remove('hidden');
+      }
+    }
+  });
+</script>
 
 {{-- Modal tạo nhắc nhở --}}
 <div id="reminder-modal" class="fixed inset-0 z-50 items-center justify-center hidden">
@@ -187,12 +235,15 @@
 @endif
 
 
+
 {{-- JavaScript - Form thiết lập thông báo --}}
 <script>
-  function openReminderForm(idMuc) {
+  function openReminderForm(idMuc, thoiGianHetHan) {
     document.getElementById('modal-id-muc').value = idMuc;
     document.getElementById('reminder-modal').classList.remove('hidden');
     document.getElementById('reminder-modal').classList.add('flex');
+
+    window.THOI_GIAN_HET_HAN = thoiGianHetHan ? new Date(thoiGianHetHan) : null;
 
     //Ẩn lỗi cũ khi mở lại form
     const errorElement = document.getElementById('thoi-gian-error');
@@ -213,7 +264,7 @@
     const now = new Date();
 
     // Giới hạn trên từ biến PHP đưa vào
-    const hetHan = THOI_GIAN_HET_HAN;
+    const hetHan = window.THOI_GIAN_HET_HAN;
 
     // Tìm thẻ báo lỗi
     const errorElement = document.getElementById('thoi-gian-error');
