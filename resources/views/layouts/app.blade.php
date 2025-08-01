@@ -25,7 +25,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'WorkPlan')</title>
 
-  @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/plans.js', 'resources/js/header.js', 'resources/js/footer.js', 'resources/js/main.js'])
+  @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/plans.js', 'resources/js/header.js'])
 
 </head>
 
