@@ -41,7 +41,7 @@
                 <div x-data="{ show: false }">
 
                     <!-- Nút mở popup -->
-                    <a href="#" @click.prevent="show = true" class="hover:text-blue-600 hover:underline">Nhóm của bạn</a>
+                    <a href="#" @click.prevent="show = true" class="a cursor-pointer hover:text-blue-600">Nhóm của bạn</a>
 
                     <!-- Overlay popup với nền trong suốt và mờ -->
                     <div x-show="show"
