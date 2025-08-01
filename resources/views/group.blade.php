@@ -69,6 +69,17 @@
                     🗑️ Xoá nhóm
                 </button>
             </form>
+        @else
+            <!-- Nút rời nhóm -->
+            <form method="POST" action="{{ route('group.leave', $nhom->ID_NHOM) }}"
+                onsubmit="return confirm('Bạn có chắc muốn rời nhóm không?')">
+
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="w-full py-2 mt-4 font-semibold text-white bg-red-600 rounded-lg cursor-pointer hover:bg-red-700">
+                    🏃 Rời nhóm
+                </button>
+            </form>
         @endif
     </aside>
 
