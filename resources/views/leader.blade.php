@@ -81,7 +81,15 @@
             </div>
 
             <div>
-                @php $invited = session('invite'); @endphp
+                @php $invited = session('invite'); 
+                
+                use Illuminate\Support\Facades\DB;
+
+                $daMoi = DB::table('loi_moi')
+                            ->where('ID_NHOM', $nhom->ID_NHOM)
+                            ->pluck('ID_USER')
+                            ->toArray();
+                @endphp
 
                 @if($invited && $invited->count())
                 <ul class="p-2 space-y-2 overflow-y-auto bg-white rounded-lg shadow-sm max-h-60">
@@ -91,23 +99,30 @@
 
                             <span class="text-sm font-medium">{{ $u->HO_TEN }}</span>
 
+                            @php
+                                $daMoiRoi = in_array($u->ID_USER, $daMoi ?? []);
+                            @endphp
+
                             <form method="POST" action="{{ url('/invite') }}"
                                 class="flex-shrink-0 ml-auto invite-form"
                                 data-user="{{ $u->ID_USER }}"
                                 data-nhom="{{ $nhom->ID_NHOM }}">
                                 @csrf
                                 <button type="submit"
-                                        class="px-3 py-1 text-xs text-white bg-green-500 rounded hover:bg-green-600">
-                                    Mời
+                                        @if($daMoiRoi) disabled class="opacity-50 px-3 py-1 text-xs text-white bg-green-400 rounded" @else class="px-3 py-1 text-xs text-white bg-green-500 rounded hover:bg-green-600" @endif>
+                                    {{ $daMoiRoi ? 'Đã mời' : 'Mời' }}
                                 </button>
                             </form>
                         </li>
                     @endforeach
+
                 </ul>
                 @else
-                    <p>Không tìm thấy người dùng.</p>
-                    <br>
+                        <p >Không tìm thấy người dùng.</p>
+                        <br>
                 @endif
+
+
             </div>
 
 
@@ -132,6 +147,7 @@
                 </ul>
             </div>
         </div>
+
 
         <div id="leave-confirm-modal"
             class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/40 backdrop-blur-sm">
@@ -251,6 +267,21 @@
                         }
                     });
                 });
+
+                window.addEventListener("pageshow", function (event) {
+                    const isBack = event.persisted || performance.getEntriesByType("navigation")[0]?.type === "back_forward";
+
+                    if (isBack) {
+
+                        // Cảnh báo khi quay lại trang bằng nút Back
+                        pendingUrl = document.referrer || '/'; // Gán referrer làm đường dẫn quay lại
+                        const modal = document.getElementById('leave-confirm-modal');
+                        if (modal) {
+                            modal.classList.remove('hidden');
+                        }
+                    }
+                });
+
 
                 // Nút "Tiếp tục"
                 document.getElementById('confirm-leave').addEventListener('click', function () {

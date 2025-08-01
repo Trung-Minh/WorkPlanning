@@ -23,7 +23,7 @@ class LeaderController extends Controller
     public function search_members(Request $r)
     {
         $r->validate([
-            'search_members' => '',
+            'search_members' => 'required',
             'ten_nhom' => 'required',
             'id_nhom' => 'required|exists:nhom_lam_viec,ID_NHOM',
             'id_nhom_truong' => 'required|exists:nhom_lam_viec,ID_NHOM_TRUONG',
@@ -78,7 +78,6 @@ class LeaderController extends Controller
             'ID_USER' => $request->input('id_user'),
             'ID_NHOM' =>  $request->input('id_nhom'),
         ]);
-
         return redirect()->back()->with('invite_success', '✅ Đã gửi lời mời thành công!');;
     }
 
@@ -91,11 +90,6 @@ class LeaderController extends Controller
 
         Nhom::where('ID_NHOM', $request->input('id_nhom'))->update(['TEN_NHOM' => $request->ten_nhom]);
         $nhom = Nhom::where('ID_NHOM', $request->input('id_nhom'))->first();
-
-        DB::table('ke_hoach')->insert([
-            'NGUOI_TAO' => $nhom -> ID_NHOM_TRUONG,
-            'ID_NHOM' =>  $request->input('id_nhom'),
-        ]);
 
         session(['group' => $nhom]);
         return redirect()->route('showGroup') ;

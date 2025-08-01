@@ -45,6 +45,7 @@
                     <!-- Overlay popup với nền trong suốt và mờ -->
                     <div x-show="show"
                         x-transition
+                         x-cloak
                         class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/20">
 
                         <!-- Nội dung popup -->
@@ -206,6 +207,7 @@
                         </ul>
                     </div>
                 </div>
+
             @else
                 <a href="{{ route('login') }}" class="a block py-2 hover:text-blue-600">Đăng nhập</a>
                 <a href="{{ route('register') }}" class="a block py-2 hover:text-blue-600">Đăng ký</a>
@@ -222,6 +224,7 @@
         </nav>
     </div>
 </header>
+
 <script>
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');

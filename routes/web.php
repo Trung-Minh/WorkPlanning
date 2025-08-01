@@ -6,9 +6,15 @@ use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\ReminderController;
 use Illuminate\Support\Facades\Route;
 
+
+
 // Trang welcome
 Route::get('/', fn () => view('welcome'))->name('welcome');
-
+Route::middleware(['auth', 'prevent-back'])->group(function () {
+   Route::get('/account', function () {
+    return view('account');
+});
+});
 // Auth
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -19,7 +25,7 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin']);
 
 Route::get('/repassword', [AuthController::class, 'showRepassword'])->name('repassword');
-Route::post('/repassword', [AuthController::class, 'doRepassword']);
+Route::post('/repassword', [AuthController::class, 'doRepassword'])->name('doRepassword');
 
 Route::get('/leader', [LeaderController::class, 'showLeader'])->name('showLeader');
 Route::post('/search_members', [LeaderController::class, 'search_members'])->name('search_members');
@@ -32,9 +38,7 @@ Route::get('/reminders', function () {
     return view('reminders');
 });
 
-Route::get('/account', function () {
-    return view('account');
-});
+
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -134,5 +138,11 @@ Route::get('/add-members', [LeaderController::class, 'indexMembers']);
 Route::post('/add-members', [LeaderController::class, 'searchGroupMembers'])->name('add_members');
 
 Route::post('/invite-members', [LeaderController::class, 'inviteGroup'])->name('inviteGroup');
+
+
+Route::post('/check-email', function (Illuminate\Http\Request $request) {
+    $exists = \App\Models\NguoiDungCaNhan::where('email', $request->email)->exists();
+    return response()->json(['exists' => $exists]);
+});
 
 ?>

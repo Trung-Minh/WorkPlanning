@@ -208,6 +208,15 @@
       );
   </script>
 
+
+<script>
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+            location.reload();
+        }
+    });
+</script>
+
   <script>
       document.addEventListener('DOMContentLoaded', function () {
           setupInlineEditing('{{ csrf_token() }}');
