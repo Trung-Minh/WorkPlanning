@@ -1,6 +1,6 @@
 {{-- Modal Thêm kế hoạch --}}
 <div id="modalAddPlan" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-transparent">
-    <form method="POST" action="{{ route('plans.store') }}"
+    <form method="POST" action="{{ route('group.plan', ['idNhom' => $nhom->ID_NHOM]) }}"
         class="p-6 border border-blue-200 rounded-lg shadow-xl bg-gradient-to-br from-white via-blue-50 to-pink-50 w-96 animate-fade-in">
         @csrf
         <h2 class="mb-4 text-xl font-bold text-blue-700">📌 Thêm Kế hoạch</h2>
@@ -23,7 +23,7 @@
 
 {{-- Modal Thêm công việc --}}
 <div id="modalAddTask" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-transparent">
-    <form method="POST" action="{{ route('tasks.store') }}"
+    <form method="POST" action="{{ route('group.task') }}"
         class="p-6 border border-green-300 rounded-lg shadow-xl bg-gradient-to-br from-white via-green-50 to-lime-100 w-96 animate-fade-in">
         @csrf
         <input type="hidden" name="ID_KH" id="task_kehoach_id">
@@ -48,8 +48,8 @@
 
 <!-- Modal Thêm Mục Công Việc -->
 <div id="modalAddSubTask" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-transparent">
-    <form method="POST" action="{{ route('subtasks.store') }}"
-          class="w-full max-w-md p-6 scale-95 border border-indigo-200 shadow-2xl bg-gradient-to-tr from-indigo-100 via-white to-pink-100 rounded-2xl animate-fadeIn">
+    <form method="POST" action="{{ route('group.subtask') }}"
+            class="w-full max-w-md p-6 scale-95 border border-indigo-200 shadow-2xl bg-gradient-to-tr from-indigo-100 via-white to-pink-100 rounded-2xl animate-fadeIn">
         @csrf
         <input type="hidden" name="ID_CV" id="subtask_congviec_id">
 
@@ -60,25 +60,22 @@
         <input type="text" name="TEN_MUC" placeholder="Tên mục" class="w-full p-2 mb-3 border border-purple-300 rounded focus:ring-2 focus:ring-purple-400" required>
 
         <textarea name="NOI_DUNG_CHI_TIET" placeholder="Nội dung chi tiết" rows="3"
-                  class="w-full p-2 mb-3 border border-indigo-200 rounded focus:ring-2 focus:ring-indigo-300"></textarea>
+            class="w-full p-2 mb-3 border border-indigo-200 rounded focus:ring-2 focus:ring-indigo-300"></textarea>
 
-       <input type="datetime-local" name="THOI_HAN_HOAN_THANH"
-         id="deadlineInput1"
-         class="w-full p-2 border border-pink-300 rounded mb-3 focus:ring-2 focus:ring-pink-400"
-         required>
-       
-        <input type="number" name="DO_UU_TIEN_MUC" placeholder="Độ ưu tiên" min="1" 
-               class="w-full p-2 border border-yellow-300 rounded mb-4 focus:ring-2 focus:ring-yellow-400" >
+        <input type="datetime-local" name="THOI_HAN_HOAN_THANH"
+            class="w-full p-2 mb-3 border border-pink-300 rounded focus:ring-2 focus:ring-pink-400" required>
+
+        <input type="number" name="DO_UU_TIEN_MUC" placeholder="Độ ưu tiên" min="1"
+            class="w-full p-2 mb-4 border border-yellow-300 rounded focus:ring-2 focus:ring-yellow-400" required>
 
         <div class="flex justify-end gap-2">
             <button type="button" onclick="hideModal('modalAddSubTask')"
-                    class="px-4 py-2 text-gray-700 transition bg-gray-200 rounded hover:bg-gray-300">Huỷ</button>
+                class="px-4 py-2 text-gray-700 transition bg-gray-200 rounded hover:bg-gray-300">Huỷ</button>
             <button type="submit"
-                    class="px-4 py-2 text-white transition-all rounded bg-gradient-to-r from-purple-500 to-pink-500 hover:scale-105"> Thêm</button>
+                class="px-4 py-2 text-white transition-all rounded bg-gradient-to-r from-purple-500 to-pink-500 hover:scale-105"> Thêm</button>
         </div>
     </form>
 </div>
-
 
 {{-- Modal Sửa mục công việc --}}
 <div id="modalEditSubTask" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-transparent">
@@ -97,7 +94,8 @@
             class="w-full p-2 mb-3 border rounded" min="1" max="10" required>
 
         <label class="flex items-center mb-3 space-x-2">
-            <input type="checkbox" name="TRANG_THAI" id="editTrangThai" class="accent-green-600">
+            <input type="hidden" name="TRANG_THAI" value="0">
+            <input type="checkbox" name="TRANG_THAI" id="editTrangThai" class="accent-green-600" value="1">
             <span>Đánh dấu là hoàn thành</span>
         </label>
 
@@ -109,8 +107,6 @@
         </div>
     </form>
 </div>
-
-
 
 {{-- Modal Xem chi tiết mục công việc --}}
 <div id="modalViewSubTask" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-transparent">
@@ -126,7 +122,6 @@
         </div>
     </div>
 </div>
-
 
 {{-- Modal xác nhận xoá --}}
 <div id="modalConfirmDelete"
