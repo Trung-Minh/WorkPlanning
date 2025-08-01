@@ -27,7 +27,7 @@
           <div class="p-4 mt-6 bg-white border border-blue-200 rounded-lg shadow-lg animate-fade-in">
               {{-- Tiêu đề & nút xóa kế hoạch --}}
               <div class="flex items-center justify-between mb-4">
-                  <h2 class="text-2xl font-semibold text-gray-800 cursor-pointer hover:underline">
+                  <h2 class="text-2xl font-semibold text-gray-800 cursor-pointer editable plan-title hover:underline" data-id="{{ $keHoach->ID_KH }}">
                       {{ $keHoach->TEN_KE_HOACH }}
                   </h2>
                   <button onclick="confirmDelete(
@@ -163,21 +163,22 @@
                                               </script>
 
                                               {{-- Hiển thị độ ưu tiên --}}
-                                              <div class="absolute px-2 py-1 text-xs font-semibold rounded shadow bottom-2 right-3 text-black-700 bg-white/60">
-                                                  🎯{{ $muc->DO_UU_TIEN_MUC }}
-                                              </div>
-
+                                                <div class="absolute px-2 py-1 text-xs font-semibold rounded shadow cursor-pointer priority-display bottom-2 right-3 text-black-700 bg-white/60">
+                                                    <span ondblclick="editMcvPriority(this, '{{ $muc->ID_MUC }}')">
+                                                        🎯 <span class="priority-muc-value">{{ $muc->DO_UU_TIEN_MUC }}</span>
+                                                    </span>
+                                                </div>
                                           </li>
                                       @endforeach
                                   </ul>
 
-                                  {{-- Thêm thư mục --}}
+                                  {{-- Thêm mục --}}
                                   <div class="flex justify-center mt-4">
                                       <button onclick="showAddSubTaskModal('{{ $cv->ID_CV }}')"
                                               class="cursor-pointer w-[60%] bg-gradient-to-r from-green-400 via-green-500 to-emerald-500
                                                   text-white py-2 rounded-lg shadow hover:from-green-500 hover:to-emerald-600 hover:scale-105
                                                   transition-transform duration-300 text-sm">
-                                          ➕ Thêm Thư Mục
+                                          ➕ Thêm Mục
                                       </button>
                                   </div>
 
@@ -191,8 +192,6 @@
 
                               </div>
                           @endforeach
-
-
                       </div>
                   </div>
               @endif
@@ -200,31 +199,31 @@
       @endforeach
   </div>
 
+
+  <script>
+    window.subtaskData = @json(
+        $keHoachs->flatMap->cong_viec->flatMap->muc_cong_viec->keyBy('ID_MUC')
+    );
+    </script>
+
+
+    <script>
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+                location.reload();
+            }
+        });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                setupInlineEditing('{{ csrf_token() }}');
+            });
+
+
+            </script>
+
 @include('Plans.modals')
-
-  <script>
-      window.subtaskData = @json(
-          $keHoachs->flatMap->cong_viec->flatMap->muc_cong_viec->keyBy('ID_MUC')
-      );
-  </script>
-
-
-<script>
-    window.addEventListener("pageshow", function (event) {
-        if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
-            location.reload();
-        }
-    });
-</script>
-
-  <script>
-      document.addEventListener('DOMContentLoaded', function () {
-          setupInlineEditing('{{ csrf_token() }}');
-      });
-
-
-  </script>
-
 @endsection
 
 @php($noFooter = true)

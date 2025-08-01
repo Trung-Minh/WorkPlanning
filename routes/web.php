@@ -55,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ke-hoach', [PlansController::class, 'index'])->name('plans.index');
     Route::post('/ke-hoach', [PlansController::class, 'store'])->name('plans.store');
     Route::delete('/ke-hoach/{id}', [PlansController::class, 'deletePlan'])->name('plans.delete');
-    Route::put('/ke-hoach/{id}', [PlansController::class, 'updatePlan'])->name('plans.update');
+    Route::put('/ke-hoach/update-plan/{id}', [PlansController::class, 'updatePlan'])->name('plans.update');
 
     // Công việc
     Route::post('/cong-viec', [PlansController::class, 'storeTask'])->name('tasks.store');
@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/muc-cong-viec/{id}', [PlansController::class, 'deleteSubtask'])->name('subtasks.delete');
 
     Route::put('/muc-cong-viec/{id}/sua', [PlansController::class, 'updateSubtask1'])->name('subtasks.update1');
+    Route::post('/subtask/{id}/update-subtask-priority', [LeaderController::class, 'updateGroupSubtaskPriority'])->name('group.update-subtask-priority');
     Route::post('/tasks/update-priority/{id}', [PlansController::class, 'updateTaskPriority']);
 
     // Load công việc HTML
@@ -138,6 +139,13 @@ Route::get('/add-members', [LeaderController::class, 'indexMembers']);
 Route::post('/add-members', [LeaderController::class, 'searchGroupMembers'])->name('add_members');
 
 Route::post('/invite-members', [LeaderController::class, 'inviteGroup'])->name('inviteGroup');
+Route::delete('/group/{id}/leave-group', action: [LeaderController::class, 'leaveGroup'])->name('group.leave');
+
+
+Route::post('/check-email', function (Illuminate\Http\Request $request) {
+    $exists = \App\Models\NguoiDungCaNhan::where('email', $request->email)->exists();
+    return response()->json(['exists' => $exists]);
+});
 
 
 Route::post('/check-email', function (Illuminate\Http\Request $request) {

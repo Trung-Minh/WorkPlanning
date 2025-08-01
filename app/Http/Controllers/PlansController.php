@@ -232,14 +232,25 @@ class PlansController extends Controller
 
     public function updatePlan(Request $request, $id)
     {
+        $request->validate([
+            'TEN_KE_HOACH' => 'required|string|max:255',
+        ]);
+
+        $keHoach = DB::table('KE_HOACH')->where('ID_KH', $id)->first();
+
+        if (!$keHoach) {
+            return response()->json(['success' => false, 'message' => 'Kế hoạch không tồn tại.'], 404);
+        }
+
         DB::table('KE_HOACH')
             ->where('ID_KH', $id)
             ->update([
                 'TEN_KE_HOACH' => $request->TEN_KE_HOACH,
             ]);
 
-        return redirect()->route('plans.index');
+        return response()->json(['success' => true, 'message' => 'Cập nhật thành công!']);
     }
+
 
     public function updateTask(Request $request, $id)
     {
@@ -316,17 +327,18 @@ class PlansController extends Controller
         $muc = DB::table('MUC_CONG_VIEC')->where('ID_MUC', $id)->first();
 
         if (!$muc) {
-            return redirect()->route('plans.index')->with('error', 'Không tìm thấy mục công việc');
+            return response()->json(['error' => 'Không tìm thấy mục công việc'], 404);
         }
 
         $idCv = $muc->ID_CV;
         $oldPriority = $muc->DO_UU_TIEN_MUC;
-        $inputPriority = $request->input('DO_UU_TIEN_MUC');
+        $inputPriority = $request->input('DO_UU_TIEN_MUC', $oldPriority);
 
         // Giới hạn độ ưu tiên không vượt quá số mục hiện có
         $count = DB::table('MUC_CONG_VIEC')->where('ID_CV', $idCv)->count();
-        $newPriority = $inputPriority > $count ? $count : $inputPriority;
+        $newPriority = min(max(1, $inputPriority), $count);
 
+        // Cập nhật lại độ ưu tiên nếu thay đổi
         if ($newPriority != $oldPriority) {
             if ($newPriority > $oldPriority) {
                 DB::table('MUC_CONG_VIEC')
@@ -341,17 +353,17 @@ class PlansController extends Controller
             }
         }
 
-        DB::table('MUC_CONG_VIEC')
-            ->where('ID_MUC', $id)
-            ->update([
-                'TEN_MUC' => $request->TEN_MUC,
-                'NOI_DUNG_CHI_TIET' => $request->NOI_DUNG_CHI_TIET,
-                'THOI_HAN_HOAN_THANH' => $request->THOI_HAN_HOAN_THANH,
-                'DO_UU_TIEN_MUC' => $newPriority,
-                'TRANG_THAI' => $request->has('TRANG_THAI') ? 1 : 0,
-            ]);
+        // Chỉ update các trường được gửi lên
+        $updateData = [];
+        if ($request->has('TEN_MUC')) $updateData['TEN_MUC'] = $request->TEN_MUC;
+        if ($request->has('NOI_DUNG_CHI_TIET')) $updateData['NOI_DUNG_CHI_TIET'] = $request->NOI_DUNG_CHI_TIET;
+        if ($request->has('THOI_HAN_HOAN_THANH')) $updateData['THOI_HAN_HOAN_THANH'] = $request->THOI_HAN_HOAN_THANH;
+        if ($request->has('DO_UU_TIEN_MUC')) $updateData['DO_UU_TIEN_MUC'] = $newPriority;
+        if ($request->has('TRANG_THAI')) $updateData['TRANG_THAI'] = $request->TRANG_THAI ? 1 : 0;
 
-        return redirect()->route('plans.index')->with('success', 'Đã cập nhật mục công việc và sắp xếp lại độ ưu tiên.');
+        DB::table('MUC_CONG_VIEC')->where('ID_MUC', $id)->update($updateData);
+
+        return redirect()->back();
     }
 
 
@@ -416,6 +428,59 @@ class PlansController extends Controller
         DB::table('CONG_VIEC')
             ->where('ID_CV', $id)
             ->update(['DO_UU_TIEN' => $newPriority]);
+
+        return response()->json(['success' => true, 'new' => $newPriority]);
+    }
+
+    public function updateSubtaskPriority(Request $request, $id)
+    {
+        $inputPriority = (int) $request->DO_UU_TIEN_MUC;
+
+        // 1. Lấy mục công việc hiện tại
+        $subtask = DB::table('MUC_CONG_VIEC')->where('ID_MUC', $id)->first();
+        if (!$subtask) {
+            return response()->json(['success' => false, 'message' => 'Không tìm thấy mục công việc.']);
+        }
+
+        $idCv = $subtask->ID_CV;
+        $oldPriority = $subtask->DO_UU_TIEN_MUC;
+
+        // 2. Lấy số lượng mục trong cùng công việc
+        $maxPriority = DB::table('MUC_CONG_VIEC')
+                        ->where('ID_CV', $idCv)
+                        ->count();
+
+        // 3. Giới hạn inputPriority
+        if ($inputPriority < 1) {
+            $newPriority = 1;
+        } elseif ($inputPriority > $maxPriority) {
+            $newPriority = $maxPriority ;
+        } else {
+            $newPriority = $inputPriority;
+        }
+
+        // 4. Không thay đổi thì bỏ qua
+        if ($newPriority == $oldPriority) {
+            return response()->json(['success' => true, 'message' => 'Không có thay đổi.']);
+        }
+
+        // 5. Điều chỉnh các mục khác
+        if ($newPriority < $oldPriority) {
+            DB::table('MUC_CONG_VIEC')
+                ->where('ID_CV', $idCv)
+                ->whereBetween('DO_UU_TIEN_MUC', [$newPriority, $oldPriority - 1])
+                ->increment('DO_UU_TIEN_MUC');
+        } elseif ($newPriority > $oldPriority) {
+            DB::table('MUC_CONG_VIEC')
+                ->where('ID_CV', $idCv)
+                ->whereBetween('DO_UU_TIEN_MUC', [$oldPriority + 1, $newPriority])
+                ->decrement('DO_UU_TIEN_MUC');
+        }
+
+        // 6. Cập nhật mục hiện tại
+        DB::table('MUC_CONG_VIEC')
+            ->where('ID_MUC', $id)
+            ->update(['DO_UU_TIEN_MUC' => $newPriority]);
 
         return response()->json(['success' => true, 'new' => $newPriority]);
     }
