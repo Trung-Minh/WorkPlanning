@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\NguoiDungCaNhan;
@@ -7,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\Session;
 
 
 
@@ -41,7 +43,8 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Đăng ký thành công!');
     }
 
-    public function showLogin(){
+    public function showLogin()
+    {
         return view('login');
     }
 
@@ -62,15 +65,17 @@ class AuthController extends Controller
 
         // Chuyển về trang ban đầu bị chặn (nếu có), hoặc trang kế hoạch
         return redirect()->route('welcome')
-                            ->with('success', 'Đăng nhập thành công!');
+            ->with('success', 'Đăng nhập thành công!');
     }
 
     public function logout(Request $request)
     {
+        // Xóa session tùy chỉnh
+        Session::forget('disable_reminder_notification');
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login')->with('success','Đã đăng xuất');
+        return redirect()->route('login')->with('success', 'Đã đăng xuất');
     }
 
     public function showRepassword()
@@ -88,7 +93,7 @@ class AuthController extends Controller
 
         $user = NguoiDungCaNhan::where('email', $r->email)->first();
         NguoiDungCaNhan::where('email', $r->email)
-        ->update(['MAT_KHAU' => Hash::make($r->mat_khau_moi)]);
+            ->update(['MAT_KHAU' => Hash::make($r->mat_khau_moi)]);
 
         session(['user' => $user]);
         return redirect('/')->with('success', 'Đổi mật khẩu thành công');
@@ -189,6 +194,3 @@ class AuthController extends Controller
         return redirect()->back()->with('success', 'Cập nhật thông tin thành công!');
     }
 }
-
-
-
