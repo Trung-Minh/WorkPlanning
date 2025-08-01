@@ -2,8 +2,9 @@
 
     <div class="flex items-center justify-between px-4 py-4 mx-auto max-w-7xl" >
         <div class="text-2xl font-bold text-blue-600 dark-card">
-            <a href="{{route('welcome')  }}">
-                WorkPlanning
+             <a href="{{ route('welcome') }}" class="flex items-center gap-2">
+                <img src="{{ asset('newlogo.png') }}" alt="logo" class="w-20 h-20 object-cover">
+                <span>WorkPlanning</span>
             </a>
         </div>
         <button id="menuToggle" class="text-2xl text-gray-700 md:hidden focus:outline-none">☰</button>
@@ -38,7 +39,6 @@
 
                 <!-- Bọc toàn bộ popup và trigger trong 1 x-data -->
                 <div x-data="{ show: false }">
-
                     @auth
                         @php
                             $isOnCreateGroupPage = request()->url() === route('showLeader');

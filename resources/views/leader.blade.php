@@ -217,7 +217,7 @@
     </script>
 
     <!-- modal rời khỏi -->
-    <script>
+ <script>
         document.addEventListener('DOMContentLoaded', function () {
 
             if (true) {
@@ -225,6 +225,8 @@
                 let pendingUrl = null;
                 let modalOpen = false;
                 let pendingForm = null;
+                let confirmLeave = false;
+
 
                 // ✅ BƯỚC 1: Theo dõi trạng thái modal nhóm
                 const modal = document.querySelector('[x-show="show"]');
@@ -268,19 +270,6 @@
                     });
                 });
 
-                window.addEventListener("pageshow", function (event) {
-                    const isBack = event.persisted || performance.getEntriesByType("navigation")[0]?.type === "back_forward";
-
-                    if (isBack) {
-
-                        // Cảnh báo khi quay lại trang bằng nút Back
-                        pendingUrl = document.referrer || '/'; // Gán referrer làm đường dẫn quay lại
-                        const modal = document.getElementById('leave-confirm-modal');
-                        if (modal) {
-                            modal.classList.remove('hidden');
-                        }
-                    }
-                });
 
 
                 // Nút "Tiếp tục"
@@ -307,7 +296,7 @@
                 });
             }
         });
-    </script>
+    </script> 
 
 @endsection
 

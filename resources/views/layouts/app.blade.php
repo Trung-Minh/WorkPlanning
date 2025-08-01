@@ -8,10 +8,11 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="shortcut icon" href="{{ asset('newlogo.ico') }}" type="image/x-icon">
 
-  <title>@yield('title', 'WorkPlan')</title>
+  <title>@yield('title', 'WorkPlanning')</title>
 
   @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/plans.js', 'resources/js/header.js'])
   @vite(['resources/js/group.js'])
+  
   <style>
     [x-cloak] { display: none !important; }
   </style>
@@ -20,7 +21,7 @@
 <body class="flex flex-col min-h-screen bg-gray-100">
   @include('partials.header')
 
-  <main class="flex-1 w-full px-4 py-4 mx-auto">
+  <main class="m flex-1 w-full px-4 py-4 mx-auto">
     @yield('content')
   </main>
 

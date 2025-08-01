@@ -115,4 +115,4 @@
     </main>
 @endsection
 
-@php($noFooter = true)
+@php($noFooter = false)

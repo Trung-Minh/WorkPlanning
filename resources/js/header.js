@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const header = document.querySelector('.hea');
   const toggleButton = document.getElementById('darkModeToggle');
   const navLinks = document.querySelectorAll('.a');
-  const link1 = document.querySelectorAll('.b')
   
   if (header) {
     const applyHeaderTheme = () => {
@@ -53,16 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         link.classList.add( 'text-black', 'hover:text-blue-600');
         link.classList.remove( 'text-white', 'hover:text-blue-400');
-      }
-    });
-
-         link1.forEach(link => {
-      if (isDark) {
-        header.classList.add('bg-gray-950');
-        header.classList.remove('bg-white');
-      } else {
-        header.classList.add('bg-white');
-        header.classList.remove('bg-gray-950');
       }
     });
 
@@ -197,3 +186,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const aside = document.querySelector('.aside');
+  const toggleButton = document.getElementById('darkModeToggle');
+
+  const divLinks = document.querySelectorAll('.a')
+  
+  if (aside) {
+    const applyHeaderTheme = () => {
+      const isDark = localStorage.theme === 'dark';
+      const isLight = localStorage.theme === 'light';
+      if (isDark) {
+        aside.classList.add('bg-gray-950');
+        aside.classList.remove('bg-white');
+      };
+      if(isLight) {
+        aside.classList.add('bg-white');
+        aside.classList.remove('bg-gray-950');
+      }
+
+      divLinks.forEach(link => {
+      if (isDark) {
+        link.classList.add( 'text-white', 'hover:text-blue-400');
+        link.classList.remove( 'text-black', 'hover:text-blue-600');
+      } else {
+        link.classList.add( 'text-black', 'hover:text-blue-600');
+        link.classList.remove( 'text-white', 'hover:text-blue-400');
+      }
+    });
+
+
+    };
+
+    applyHeaderTheme();
+
+    if (toggleButton) {
+      toggleButton.addEventListener('click', applyHeaderTheme);
+    }
+  }
+});
+
