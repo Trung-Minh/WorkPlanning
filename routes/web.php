@@ -147,4 +147,10 @@ Route::post('/check-email', function (Illuminate\Http\Request $request) {
     return response()->json(['exists' => $exists]);
 });
 
+
+Route::post('/check-email', function (Illuminate\Http\Request $request) {
+    $exists = \App\Models\NguoiDungCaNhan::where('email', $request->email)->exists();
+    return response()->json(['exists' => $exists]);
+});
+
 ?>
