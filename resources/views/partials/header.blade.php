@@ -45,6 +45,7 @@
                     <!-- Overlay popup với nền trong suốt và mờ -->
                     <div x-show="show"
                         x-transition
+                         x-cloak
                         class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/20">
 
                         <!-- Nội dung popup -->
