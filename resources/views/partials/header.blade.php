@@ -46,7 +46,7 @@
 
                         @if (!$isOnCreateGroupPage)
                             <!-- Nút mở popup -->
-                            <a href="#" @click.prevent="show = true" class="hover:text-blue-600 hover:underline">Nhóm của bạn</a>
+                            <a href="#" @click.prevent="show = true" class="a block py-2 hover:text-blue-600">Nhóm của bạn</a>
                         @endif
                     @endauth
 
