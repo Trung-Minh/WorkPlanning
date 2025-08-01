@@ -419,27 +419,4 @@ class PlansController extends Controller
 
         return response()->json(['success' => true, 'new' => $newPriority]);
     }
-
-    public function deletePlan($id)
-    {
-        $plan = KeHoach::find($id);
-
-        if (!$plan) {
-            return redirect()->back()->with('error', 'Không tìm thấy kế hoạch!');
-        }
-
-        // Tìm tất cả công việc trong kế hoạch
-        $tasks = CongViec::where('ID_KH', $id)->get();
-
-        foreach ($tasks as $task) {
-            MucCongViec::where('ID_CV', $task->ID_CV)->delete();
-        }
-
-        // Xoá toàn bộ công việc thuộc kế hoạch
-        CongViec::where('ID_KH', $id)->delete();
-
-        $plan->delete();
-
-        return redirect()->back()->with('success', 'Đã xoá kế hoạch và toàn bộ dữ liệu liên quan!');
-    }
 }
