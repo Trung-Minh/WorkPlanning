@@ -14,8 +14,16 @@ class ReminderController extends Controller
     {
         $userId = Auth::user()->ID_USER;
 
-        $reminders = KeHoach::with('congViecs.mucCongViecs')
+        // 1. Kế hoạch cá nhân
+        $keHoachCaNhan = KeHoach::with('congViecs.mucCongViecs')
             ->where('NGUOI_TAO', $userId)
+            ->whereNull('ID_NHOM')
+            ->get();
+
+        // 2. Kế hoạch nhóm
+        $keHoachNhom = KeHoach::with('congViecs.mucCongViecs')
+            ->where('NGUOI_TAO', $userId)
+            ->whereNotNull('ID_NHOM')
             ->get();
 
         $thongBaos = CauHinhThongBao::with('mucCongViec')
@@ -32,7 +40,12 @@ class ReminderController extends Controller
             ];
         });
 
-        return view('reminders', compact('reminders', 'thongBaos', 'reminderData'));
+        return view('reminders', [
+            'keHoachCaNhan' => $keHoachCaNhan,
+            'keHoachNhom' => $keHoachNhom,
+            'thongBaos' => $thongBaos,
+            'reminderData' => $reminderData
+        ]);
     }
 
     public function set(Request $request)

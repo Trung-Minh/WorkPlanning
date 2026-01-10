@@ -18,5 +18,19 @@ class Nhom extends Model
         'NGAY_TAO',
         'MO_TA_NHOM',
         'TEN_NHOM',
+        'AVATAR_NHOM',
     ];
+
+    public function truongNhom()
+    {
+        return $this->belongsTo(NguoiDungCaNhan::class, 'ID_NHOM_TRUONG', 'ID_USER');
+    }
+
+    public function thanhVien()
+    {
+        return $this->belongsToMany(NguoiDungCaNhan::class, 'NHOM_THANH_VIEN', 'ID_NHOM', 'ID_USER');
+    }
+
+
+
 }

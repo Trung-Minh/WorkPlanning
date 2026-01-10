@@ -4,42 +4,41 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\ReminderController;
-use App\Models\KeHoach;
 use Illuminate\Support\Facades\Route;
+
+
 
 // Trang welcome
 Route::get('/', fn () => view('welcome'))->name('welcome');
-
+Route::middleware(['auth', 'prevent-back'])->group(function () {
+   Route::get('/account', function () {
+    return view('account');
+});
+});
 // Auth
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'doRegister']);
 });
 
-
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'doLogin']);
 
 Route::get('/repassword', [AuthController::class, 'showRepassword'])->name('repassword');
-Route::post('/repassword', [AuthController::class, 'doRepassword']);
+Route::post('/repassword', [AuthController::class, 'doRepassword'])->name('doRepassword');
 
 Route::get('/leader', [LeaderController::class, 'showLeader'])->name('showLeader');
 Route::post('/search_members', [LeaderController::class, 'search_members'])->name('search_members');
 Route::post('/addgroup', [LeaderController::class, 'addgroup'])->name('addgroup');
 Route::post('/invite', [LeaderController::class, 'invite'])->name('invite');
-
-Route::get('/group', [LeaderController::class, 'showGroup'])->name('showGroup');
-Route::post('/group', [LeaderController::class, 'doGroup'])->name('doGroup');
 Route::post('/groups', [LeaderController::class, 'doGroups'])->name('doGroups');
-
+Route::post('/delete_group', [LeaderController::class, 'delete_group'])->name('delete_group');
 
 Route::get('/reminders', function () {
     return view('reminders');
 });
 
-Route::get('/account', function () {
-    return view('account');
-});
+
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -56,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ke-hoach', [PlansController::class, 'index'])->name('plans.index');
     Route::post('/ke-hoach', [PlansController::class, 'store'])->name('plans.store');
     Route::delete('/ke-hoach/{id}', [PlansController::class, 'deletePlan'])->name('plans.delete');
-    Route::put('/ke-hoach/{id}', [PlansController::class, 'updatePlan'])->name('plans.update');
+    Route::put('/ke-hoach/update-plan/{id}', [PlansController::class, 'updatePlan'])->name('plans.update');
 
     // Công việc
     Route::post('/cong-viec', [PlansController::class, 'storeTask'])->name('tasks.store');
@@ -69,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/muc-cong-viec/{id}', [PlansController::class, 'deleteSubtask'])->name('subtasks.delete');
 
     Route::put('/muc-cong-viec/{id}/sua', [PlansController::class, 'updateSubtask1'])->name('subtasks.update1');
+    Route::post('/subtask/{id}/update-subtask-priority', [LeaderController::class, 'updateGroupSubtaskPriority'])->name('group.update-subtask-priority');
     Route::post('/tasks/update-priority/{id}', [PlansController::class, 'updateTaskPriority']);
 
     // Load công việc HTML
@@ -78,8 +78,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/subtasks/{id}', [PlansController::class, 'updateSubtask1'])->name('subtasks.update');
     Route::delete('/tasks/{id}', [PlansController::class, 'destroyTask'])->name('tasks.delete');
 });
-
-
 
 Route::get('/profile/upload-avatar', function () {
     return 'Đây là trang upload-avatar, chỉ xử lý POST mới có tác dụng.';
@@ -106,4 +104,53 @@ Route::post('/reminders/set', [ReminderController::class, 'set'])->name('reminde
 Route::patch('/reminders/update/{id}', [ReminderController::class, 'update'])->name('reminders.update');
 Route::delete('/reminders/delete/{id}', [ReminderController::class, 'delete'])->name('reminders.delete');
 Route::get('/reminders/deadline/{id}', [ReminderController::class, 'getDeadlineByCauHinh']);
+
+Route::post('/leader/chap-nhan/{id}', [LeaderController::class, 'chapNhan'])->name('leader.chapnhan');
+Route::post('/leader/tu-choi/{id}', [LeaderController::class, 'tuChoi'])->name('leader.tuchoi');
+
+
+Route::get('/group', [LeaderController::class, 'showGroup'])->name('showGroup');
+Route::post('/group', [LeaderController::class, 'doGroup'])->name('doGroup');
+
+Route::post('/group/{id}/update', [LeaderController::class, 'updateGroup'])->name('group.update');
+Route::delete('/group/{id}', [LeaderController::class, 'delete'])->name('group.delete');
+
+
+Route::post('/group/{idNhom}/plans', [LeaderController::class, 'storeGroupPlan'])->name(name: 'group.plan');
+Route::put('/group/{id}/update-plan', [LeaderController::class, 'updateGroupPlan'])->name('group.update-plan');
+Route::delete('/group/{id}/delete-plan', [LeaderController::class, 'deleteGroupPlan'])->name('group.delete-plan');
+
+Route::post('/group/tasks', [LeaderController::class, 'storeGroupTask'])->name(name: 'group.task');
+Route::put('/group/{id}/update-task', [LeaderController::class, 'updateTask'])->name('group.update-task');
+Route::delete('/group/{id}/delete-task', [LeaderController::class, 'deleteGroupTask'])->name('group.delete-task');
+
+Route::post('/group/subtasks', [LeaderController::class, 'storeGroupSubTask'])->name(name: 'group.subtask');
+Route::put('/group/{id}/update-subtask', action: [LeaderController::class, 'updateGroupSubtask'])->name('group.update-subtask');
+Route::delete('/group/{id}/delete-subtask', action: [LeaderController::class, 'deleteGroupSubtask'])->name('group.delete-subtask');
+
+Route::post('/group/{id}/update-priority', [LeaderController::class, 'updateGroupTaskPriority'])->name('group.update-priority');
+Route::post('/group/{id}/update-subtask-priority', [LeaderController::class, 'updateGroupSubtaskPriority'])->name('group.update-subtask-priority');
+Route::post('/api/muc-cong-viec/{id}/toggle-status', action: [LeaderController::class, 'toggleStatus']);
+
+
+Route::get('/members', [LeaderController::class, 'indexMembers'])->name('indexMembers');
+
+Route::get('/add-members', [LeaderController::class, 'indexMembers']);
+Route::post('/add-members', [LeaderController::class, 'searchGroupMembers'])->name('add_members');
+
+Route::post('/invite-members', [LeaderController::class, 'inviteGroup'])->name('inviteGroup');
+Route::delete('/group/{id}/leave-group', action: [LeaderController::class, 'leaveGroup'])->name('group.leave');
+
+
+Route::post('/check-email', function (Illuminate\Http\Request $request) {
+    $exists = \App\Models\NguoiDungCaNhan::where('email', $request->email)->exists();
+    return response()->json(['exists' => $exists]);
+});
+
+
+Route::post('/check-email', function (Illuminate\Http\Request $request) {
+    $exists = \App\Models\NguoiDungCaNhan::where('email', $request->email)->exists();
+    return response()->json(['exists' => $exists]);
+});
+
 ?>

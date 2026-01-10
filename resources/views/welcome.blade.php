@@ -3,22 +3,23 @@
 @section('title', 'Trang chủ - WorkPlanning')
 
 @section('content')
-    <main class="max-w-6xl px-4 py-12 mx-auto">
+    <main class="max-w-6xl px-4 py-12 mx-auto ">
         <!-- Giới thiệu -->
         <section class="mb-16">
-            <h1 class="mb-6 text-5xl font-bold text-blue-700">
+            <h1 class="mb-6 text-5xl font-bold text-blue-700 ">
                 ✨ WorkPlan - Quản lý kế hoạch cực đơn giản
             </h1>
-            <p class="mb-4 text-lg leading-relaxed text-gray-700">
-                Với WorkPlan, bạn dễ dàng:
+
+            <p class="a mb-4 text-lg leading-relaxed text-gray-700">
+                Với WorkPlanning, bạn dễ dàng:
             </p>
             <ul class="space-y-1 text-base text-gray-700 list-disc list-inside">
-                <li>Tạo và sắp xếp kế hoạch công việc hằng ngày</li>
-                <li>Nhận nhắc nhở tự động trước deadline</li>
-                <li>Theo dõi tiến độ và quản lý hiệu quả thời gian</li>
+                <li class= "a" >Tạo và sắp xếp kế hoạch công việc hằng ngày</li>
+                <li class= "a">Nhận nhắc nhở tự động trước deadline</li>
+                <li class= "a">Theo dõi tiến độ và quản lý hiệu quả thời gian</li>
             </ul>
             <div class="mt-6">
-                <a href="{{ url('/register') }}"
+                <a href="{{ route('plans.index') }}"
                     class="inline-block px-6 py-3 text-base font-medium text-white transition bg-blue-600 rounded-md hover:bg-blue-700">
                     👉 Bắt đầu ngay
                 </a>
@@ -27,30 +28,60 @@
 
         <!-- Các tính năng nổi bật -->
         <section class="grid gap-6 md:grid-cols-3">
+            
             <div class="p-6 transition bg-white border rounded-lg shadow hover:shadow-md">
+                <a href="{{ route('plans.index') }}">
                 <h2 class="mb-2 text-2xl font-semibold text-blue-600">
                     📅 Tạo kế hoạch
                 </h2>
                 <p class="text-gray-600">
                     Tùy chỉnh lịch trình theo ngày, tuần hoặc tháng.
                 </p>
+                </a>
             </div>
+            
             <div class="p-6 transition bg-white border rounded-lg shadow hover:shadow-md">
+                <a href="{{ url('/reminders') }}">
                 <h2 class="mb-2 text-2xl font-semibold text-blue-600">
                     ⏰ Nhắc nhở thông minh
                 </h2>
                 <p class="text-gray-600">
                     Luôn đúng giờ, luôn đúng việc – tránh trễ hạn quan trọng.
                 </p>
+                </a>
             </div>
             <div class="p-6 transition bg-white border rounded-lg shadow hover:shadow-md">
+                @auth
+                <a href="#" class="cursor-pointer hover:text-blue-600"
+                        onclick="event.preventDefault(); document.getElementById('post-form').submit();">
                 <h2 class="mb-2 text-2xl font-semibold text-blue-600">
                     📊 Giao diện dễ dùng
                 </h2>
                 <p class="text-gray-600">
                     Đơn giản, tối ưu cho mọi thiết bị – kể cả điện thoại.
                 </p>
+                </a>
+                @else
+                <a href="{{ route('login') }}">
+                <h2 class="mb-2 text-2xl font-semibold text-blue-600">
+                    📊 Giao diện dễ dùng
+                </h2>
+                <p class="text-gray-600">
+                    Đơn giản, tối ưu cho mọi thiết bị – kể cả điện thoại.
+                </p>
+                </a>    
+                @endauth
             </div>
         </section>
+<script>
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+            location.reload();
+        }
+    });
+</script>
     </main>
 @endsection
+
+
+

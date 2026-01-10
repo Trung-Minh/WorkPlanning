@@ -1,0 +1,229 @@
+// PT Giao dien swap sang <-> toi
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.getElementById('darkModeToggle');
+    const icon = document.getElementById('darkModeIcon');
+    const iconPath = icon.querySelector('path');
+    const html = document.documentElement;
+
+    const sunPath = "M12 3v1m0 16v1m8.66-8.66h-1M4.34 12h-1m15.36-4.95l-.7.7M6.34 17.66l-.7.7m0-13.72l.7.7M17.66 17.66l.7.7M12 5a7 7 0 000 14a7 7 0 000-14z";
+    const moonPath = "M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z";
+
+    if (localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        html.classList.add('dark');
+        iconPath.setAttribute("d", moonPath);
+    } else {
+        html.classList.remove('dark');
+        iconPath.setAttribute("d", sunPath);
+    }
+
+    toggleButton.addEventListener('click', () => {
+        html.classList.toggle('dark');
+        const isDark = html.classList.contains('dark');
+        iconPath.setAttribute("d", isDark ? moonPath : sunPath);
+        localStorage.theme = isDark ? 'dark' : 'light';
+    });
+});
+
+
+// // Cập nhật màu header theo theme đã lưu
+// header
+document.addEventListener('DOMContentLoaded', () => {
+  const header = document.querySelector('.hea');
+  const toggleButton = document.getElementById('darkModeToggle');
+  const navLinks = document.querySelectorAll('.a');
+  
+  if (header) {
+    const applyHeaderTheme = () => {
+      const isDark = localStorage.theme === 'dark';
+      const isLight = localStorage.theme === 'light';
+      if (isDark) {
+        header.classList.add('bg-gray-950');
+        header.classList.remove('bg-white');
+      };
+      if(isLight) {
+        header.classList.add('bg-white');
+        header.classList.remove('bg-gray-950');
+      }
+
+      navLinks.forEach(link => {
+      if (isDark) {
+        link.classList.add( 'text-white', 'hover:text-blue-400');
+        link.classList.remove( 'text-black', 'hover:text-blue-600');
+      } else {
+        link.classList.add( 'text-black', 'hover:text-blue-600');
+        link.classList.remove( 'text-white', 'hover:text-blue-400');
+      }
+    });
+
+    };
+
+    applyHeaderTheme();
+
+    if (toggleButton) {
+      toggleButton.addEventListener('click', applyHeaderTheme);
+    }
+  }
+});
+
+
+// footer
+document.addEventListener('DOMContentLoaded', () => {
+  const footer = document.querySelector('.f');
+  const toggleButton = document.getElementById('darkModeToggle');
+
+  const divLinks = document.querySelectorAll('.a')
+  
+  if (footer) {
+    const applyHeaderTheme = () => {
+      const isDark = localStorage.theme === 'dark';
+      const isLight = localStorage.theme === 'light';
+      if (isDark) {
+        footer.classList.add('bg-gray-950');
+        footer.classList.remove('bg-white');
+      };
+      if(isLight) {
+        footer.classList.add('bg-white');
+        footer.classList.remove('bg-gray-950');
+      }
+
+      divLinks.forEach(link => {
+      if (isDark) {
+        link.classList.add( 'text-white', 'hover:text-blue-400');
+        link.classList.remove( 'text-black', 'hover:text-blue-600');
+      } else {
+        link.classList.add( 'text-black', 'hover:text-blue-600');
+        link.classList.remove( 'text-white', 'hover:text-blue-400');
+      }
+    });
+
+
+    };
+
+    applyHeaderTheme();
+
+    if (toggleButton) {
+      toggleButton.addEventListener('click', applyHeaderTheme);
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const main = document.querySelector('.m');
+  const toggleButton = document.getElementById('darkModeToggle');
+
+  const divLinks = document.querySelectorAll('.a')
+  
+  if (main) {
+    const applyHeaderTheme = () => {
+      const isDark = localStorage.theme === 'dark';
+      const isLight = localStorage.theme === 'light';
+      if (isDark) {
+        main.classList.add('bg-gray-800');
+        main.classList.remove('bg-gray-100');
+      };
+      if(isLight) {
+        main.classList.add('bg-gray-150');
+        main.classList.remove('bg-gray-800');
+      }
+
+      divLinks.forEach(link => {
+      if (isDark) {
+        link.classList.add( 'text-white', 'hover:text-blue-400');
+        link.classList.remove( 'text-black', 'hover:text-blue-600');
+      } else {
+        link.classList.add( 'text-black', 'hover:text-blue-600');
+        link.classList.remove( 'text-white', 'hover:text-blue-400');
+      }
+    });
+
+
+    };
+
+    applyHeaderTheme();
+
+    if (toggleButton) {
+      toggleButton.addEventListener('click', applyHeaderTheme);
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const div = document.querySelector('.div');
+  const toggleButton = document.getElementById('darkModeToggle');
+
+  const divLinks = document.querySelectorAll('.a')
+  
+  if (div) {
+    const applyHeaderTheme = () => {
+      const isDark = localStorage.theme === 'dark';
+      const isLight = localStorage.theme === 'light';
+      if (isDark) {
+        div.classList.add('bg-gray-800');
+        div.classList.remove('bg-gray-100');
+      };
+      if(isLight) {
+        div.classList.add('bg-gray-150');
+        div.classList.remove('bg-gray-800');
+      }
+
+      divLinks.forEach(link => {
+      if (isDark) {
+        link.classList.add( 'text-white', 'hover:text-blue-400');
+        link.classList.remove( 'text-black', 'hover:text-blue-600');
+      } else {
+        link.classList.add( 'text-black', 'hover:text-blue-600');
+        link.classList.remove( 'text-white', 'hover:text-blue-400');
+      }
+    });
+
+
+    };
+
+    applyHeaderTheme();
+
+    if (toggleButton) {
+      toggleButton.addEventListener('click', applyHeaderTheme);
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const aside = document.querySelector('.aside');
+  const toggleButton = document.getElementById('darkModeToggle');
+
+  const divLinks = document.querySelectorAll('.a')
+  
+  if (aside) {
+    const applyHeaderTheme = () => {
+      const isDark = localStorage.theme === 'dark';
+      const isLight = localStorage.theme === 'light';
+      if (isDark) {
+        aside.classList.add('bg-gray-950');
+        aside.classList.remove('bg-white');
+      };
+      if(isLight) {
+        aside.classList.add('bg-white');
+        aside.classList.remove('bg-gray-950');
+      }
+
+      divLinks.forEach(link => {
+      if (isDark) {
+        link.classList.add( 'text-white', 'hover:text-blue-400');
+        link.classList.remove( 'text-black', 'hover:text-blue-600');
+      } else {
+        link.classList.add( 'text-black', 'hover:text-blue-600');
+        link.classList.remove( 'text-white', 'hover:text-blue-400');
+      }
+    });
+
+
+    };
+
+    applyHeaderTheme();
+
+    if (toggleButton) {
+      toggleButton.addEventListener('click', applyHeaderTheme);
+    }
+  }
+});
+

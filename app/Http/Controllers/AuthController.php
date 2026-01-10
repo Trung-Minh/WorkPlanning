@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\NguoiDungCaNhan;
@@ -7,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\Session;
 
 
 
@@ -21,10 +23,32 @@ class AuthController extends Controller
     {
         $r->validate([
             'ho_ten' => 'required|string|max:100',
-            'mat_khau' => 'required|min:8|confirmed',
+            'mat_khau' => [
+                'required',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
+            ],
             'email' => 'required|email|unique:nguoi_dung_ca_nhan,email',
             'ngay_sinh' => 'required|date|before:today',
+        ], [
+            // Mật khẩu
+            'mat_khau.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'mat_khau.confirmed' => 'Mật khẩu nhập lại không khớp.',
+            'mat_khau.regex' => 'Mật khẩu phải có ít nhất một chữ hoa, một chữ thường và một số.',
+
+            // Email
+            'email.required' => 'Vui lòng nhập email.',
+            'email.email' => 'Định dạng email không hợp lệ.',
+            'email.unique' => 'Email này đã được sử dụng.',
+
+            // Ngày sinh
+            'ngay_sinh.required' => 'Vui lòng nhập ngày sinh.',
+            'ngay_sinh.date' => 'Ngày sinh không hợp lệ.',
+            'ngay_sinh.before' => 'Ngày sinh phải trước ngày hôm nay.',
         ]);
+
+
 
         $data = [
             'HO_TEN' => $r->ho_ten,
@@ -41,7 +65,8 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Đăng ký thành công!');
     }
 
-    public function showLogin(){
+    public function showLogin()
+    {
         return view('login');
     }
 
@@ -62,15 +87,17 @@ class AuthController extends Controller
 
         // Chuyển về trang ban đầu bị chặn (nếu có), hoặc trang kế hoạch
         return redirect()->route('welcome')
-                            ->with('success', 'Đăng nhập thành công!');
+            ->with('success', 'Đăng nhập thành công!');
     }
 
     public function logout(Request $request)
     {
+        // Xóa session tùy chỉnh
+        Session::forget('disable_reminder_notification');
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login')->with('success','Đã đăng xuất');
+        return redirect()->route('login')->with('success', 'Đã đăng xuất');
     }
 
     public function showRepassword()
@@ -80,18 +107,27 @@ class AuthController extends Controller
 
     public function doRepassword(Request $r)
     {
-        $r->validate([
+       $r->validate([
             'email' => 'required|email',
-            'mat_khau_moi' => 'required',
-            'cm_mat_khau_moi' => 'required',
+            'mat_khau_moi' => [
+                'required',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
+            ],
+        ], [
+            'mat_khau_moi.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'mat_khau_moi.confirmed' => 'Mật khẩu nhập lại không khớp.',
+            'mat_khau_moi.regex' => 'Mật khẩu phải có ít nhất một chữ hoa, một chữ thường và một số.',
         ]);
+
 
         $user = NguoiDungCaNhan::where('email', $r->email)->first();
         NguoiDungCaNhan::where('email', $r->email)
-        ->update(['MAT_KHAU' => Hash::make($r->mat_khau_moi)]);
+            ->update(['MAT_KHAU' => Hash::make($r->mat_khau_moi)]);
 
         session(['user' => $user]);
-        return redirect('/')->with('success', 'Đổi mật khẩu thành công');
+        return redirect('/login')->with('success', 'Đổi mật khẩu thành công');
     }
 
     public function uploadAvatar(Request $request)
@@ -189,6 +225,3 @@ class AuthController extends Controller
         return redirect()->back()->with('success', 'Cập nhật thông tin thành công!');
     }
 }
-
-
-
