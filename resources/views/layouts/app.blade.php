@@ -9,7 +9,7 @@
 
   <title>@yield('title', 'WorkPlan')</title>
 
-  @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/plans.js'])
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-100">
@@ -25,7 +25,7 @@
 
   {{-- Phần này bạn giữ lại để toast + âm thanh hoạt động xuyên trang --}}
   <audio id="reminder-sound" src="{{ asset('sounds/notificationx3_reminders.mp3') }}" preload="auto"></audio>
-  <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2"></div>
+  <div id="toast-container" class="fixed z-50 space-y-2 bottom-5 right-5"></div>
 
   {{-- Biến JavaScript từ PHP --}}
   <script>

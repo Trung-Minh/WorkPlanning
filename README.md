@@ -1,3 +1,19 @@
+<!--
+Nếu có làm reposive cho mobile
+- Chung mạng wifi
+- "dev": "vite --host=192.168.1.7"
+- php artisan serve --host=0.0.0.0
+- .env
+    # VITE_DEV_SERVER_URL=http://192.168.1.7:5173
+    # APP_URL=http://192.168.1.7:8000
+- vite.config
+    // server: {
+    //     host: "0.0.0.0",
+    //     port: 5173,
+    //     origin: process.env.VITE_DEV_SERVER_URL,
+    // },
+ -->
+
 # WorkPlan - Quản lý Kế Hoạch & Nhắc Nhở Deadline
 
 > Dự án web quản lý công việc cá nhân, lập kế hoạch và nhắc deadline thông minh.
@@ -125,9 +141,10 @@ ALTER TABLE sessions MODIFY COLUMN user_id CHAR(8) NULL;
 
 5. tải vite
 
-```bash   
+```bash
 npm install vite --save-dev
 ```
+
 > **Lưu ý:** Phải hoàn tất bước tạo database & chạy migrations trước khi khởi động frontend để tránh lỗi kết nối hoặc thiếu bảng.
 
 ---
