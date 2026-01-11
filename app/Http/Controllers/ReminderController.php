@@ -51,7 +51,7 @@ class ReminderController extends Controller
     public function set(Request $request)
     {
         $request->validate([
-            'id_muc' => 'required|exists:muc_cong_viec,ID_MUC',
+            'id_muc' => 'required|exists:MUC_CONG_VIEC,ID_MUC',
             'thoi_gian' => 'required|date',
         ]);
 

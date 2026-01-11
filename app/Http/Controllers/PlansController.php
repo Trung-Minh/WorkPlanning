@@ -26,19 +26,19 @@ class PlansController extends Controller
             ->get();
 
         foreach ($keHoachs as $keHoach) {
-            $keHoach->cong_viec = DB::table('CONG_VIEC')
+            $keHoach->CONG_VIEC = DB::table('CONG_VIEC')
                 ->where('ID_KH', $keHoach->ID_KH)
                 ->orderBy('DO_UU_TIEN', 'asc')
                 ->get();
 
-            foreach ($keHoach->cong_viec as $cv) {
-                $cv->muc_cong_viec = DB::table('MUC_CONG_VIEC')
+            foreach ($keHoach->CONG_VIEC as $cv) {
+                $cv->muc_CONG_VIEC = DB::table('MUC_CONG_VIEC')
                     ->where('ID_CV', $cv->ID_CV)
                     ->orderBy('DO_UU_TIEN_MUC', 'asc')
                     ->get();
 
-                $tong = $cv->muc_cong_viec->count();
-                $hoanThanh = $cv->muc_cong_viec->where('TRANG_THAI', 1)->count();
+                $tong = $cv->MUC_CONG_VIEC->count();
+                $hoanThanh = $cv->MUC_CONG_VIEC->where('TRANG_THAI', 1)->count();
                 $tienDo = $tong > 0 ? round($hoanThanh / $tong * 100) : 0;
 
                 $cv->TIEN_DO = $tienDo;

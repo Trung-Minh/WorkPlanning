@@ -78,10 +78,10 @@
 
                             @php
                                 $userId = Auth::user()->ID_USER;
-                                $dsNhomThamGia = \App\Models\Nhom::join('nhom_thanh_vien', 'nhom_lam_viec.ID_NHOM', '=', 'nhom_thanh_vien.ID_NHOM')
-                                    ->where('nhom_thanh_vien.ID_USER', $userId)
-                                    ->where('nhom_lam_viec.ID_NHOM_TRUONG', '!=', $userId)
-                                    ->select('nhom_lam_viec.ID_NHOM', 'nhom_lam_viec.TEN_NHOM', 'nhom_lam_viec.AVATAR_NHOM')
+                                $dsNhomThamGia = \App\Models\Nhom::join('NHOM_THANH_VIEN', 'NHOM_LAM_VIEC.ID_NHOM', '=', 'NHOM_THANH_VIEN.ID_NHOM')
+                                    ->where('NHOM_THANH_VIEN.ID_USER', $userId)
+                                    ->where('NHOM_LAM_VIEC.ID_NHOM_TRUONG', '!=', $userId)
+                                    ->select('NHOM_LAM_VIEC.ID_NHOM', 'NHOM_LAM_VIEC.TEN_NHOM', 'NHOM_LAM_VIEC.AVATAR_NHOM')
                                     ->get();
                             @endphp
 

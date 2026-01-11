@@ -81,11 +81,11 @@
             </div>
 
             <div>
-                @php $invited = session('invite'); 
-                
+                @php $invited = session('invite');
+
                 use Illuminate\Support\Facades\DB;
 
-                $daMoi = DB::table('loi_moi')
+                $daMoi = DB::table('LOI_MOI')
                             ->where('ID_NHOM', $nhom->ID_NHOM)
                             ->pluck('ID_USER')
                             ->toArray();
@@ -296,7 +296,7 @@
                 });
             }
         });
-    </script> 
+    </script>
 
 @endsection
 

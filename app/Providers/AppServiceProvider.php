@@ -31,13 +31,13 @@ class AppServiceProvider extends ServiceProvider
             $invitations = [];
 
             if (Auth::check()) {
-                $rawNotifications = DB::table('muc_cong_viec')
-                    ->join('cong_viec', 'muc_cong_viec.ID_CV', '=', 'cong_viec.ID_CV')
-                    ->join('ke_hoach', 'cong_viec.ID_KH', '=', 'ke_hoach.ID_KH')
-                    ->where('ke_hoach.NGUOI_TAO', Auth::user()->ID_USER)
-                    ->where('muc_cong_viec.TRANG_THAI', 0)
+                $rawNotifications = DB::table('MUC_CONG_VIEC')
+                    ->join('CONG_VIEC', 'MUC_CONG_VIEC.ID_CV', '=', 'CONG_VIEC.ID_CV')
+                    ->join('KE_HOACH', 'CONG_VIEC.ID_KH', '=', 'KE_HOACH.ID_KH')
+                    ->where('KE_HOACH.NGUOI_TAO', Auth::user()->ID_USER)
+                    ->where('MUC_CONG_VIEC.TRANG_THAI', 0)
                     ->whereBetween('THOI_HAN_HOAN_THANH', [now(), now()->addDays(3)])
-                    ->select('cong_viec.TEN_CV', 'muc_cong_viec.TEN_MUC', 'muc_cong_viec.THOI_HAN_HOAN_THANH')
+                    ->select('CONG_VIEC.TEN_CV', 'MUC_CONG_VIEC.TEN_MUC', 'MUC_CONG_VIEC.THOI_HAN_HOAN_THANH')
                     ->orderBy('THOI_HAN_HOAN_THANH')
                     ->get();
 
@@ -47,12 +47,12 @@ class AppServiceProvider extends ServiceProvider
                 // Thông báo lời mời nhóm
                 $userId = Auth::user()->ID_USER;
 
-                $invitations = DB::table('loi_moi')
-                    ->join('nhom_lam_viec', 'loi_moi.ID_NHOM', '=', 'nhom_lam_viec.ID_NHOM')
-                    ->join('nguoi_dung_ca_nhan', 'nhom_lam_viec.ID_NHOM_TRUONG', '=', 'nguoi_dung_ca_nhan.ID_USER')
-                    ->where('loi_moi.ID_USER', $userId)
-                    ->whereNull('loi_moi.TRANG_THAI_LOI_MOI')
-                    ->select('nhom_lam_viec.TEN_NHOM', 'loi_moi.ID_NHOM', 'nguoi_dung_ca_nhan.HO_TEN as NGUOI_MOI')
+                $invitations = DB::table('LOI_MOI')
+                    ->join('NHOM_LAM_VIEC', 'LOI_MOI.ID_NHOM', '=', 'NHOM_LAM_VIEC.ID_NHOM')
+                    ->join('NGUOI_DUNG_CA_NHAN', 'NHOM_LAM_VIEC.ID_NHOM_TRUONG', '=', 'NGUOI_DUNG_CA_NHAN.ID_USER')
+                    ->where('LOI_MOI.ID_USER', $userId)
+                    ->whereNull('LOI_MOI.TRANG_THAI_LOI_MOI')
+                    ->select('NHOM_LAM_VIEC.TEN_NHOM', 'LOI_MOI.ID_NHOM', 'NGUOI_DUNG_CA_NHAN.HO_TEN as NGUOI_MOI')
                     ->get();
 
                 $invitations = $invitations ?? collect();

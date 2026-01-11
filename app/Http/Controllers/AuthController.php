@@ -29,7 +29,7 @@ class AuthController extends Controller
                 'confirmed',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
             ],
-            'email' => 'required|email|unique:nguoi_dung_ca_nhan,email',
+            'email' => 'required|email|unique:NGUOI_DUNG_CA_NHAN,email',
             'ngay_sinh' => 'required|date|before:today',
         ], [
             // Mật khẩu

@@ -25,8 +25,8 @@ class LeaderController extends Controller
         $r->validate([
             'search_members' => 'required',
             'ten_nhom' => 'required',
-            'id_nhom' => 'required|exists:nhom_lam_viec,ID_NHOM',
-            'id_nhom_truong' => 'required|exists:nhom_lam_viec,ID_NHOM_TRUONG',
+            'id_nhom' => 'required|exists:NHOM_LAM_VIEC,ID_NHOM',
+            'id_nhom_truong' => 'required|exists:NHOM_LAM_VIEC,ID_NHOM_TRUONG',
 
         ]);
 
@@ -70,11 +70,11 @@ class LeaderController extends Controller
     public function invite (Request $request){
 
         $request->validate([
-            'id_user' => 'required|exists:nguoi_dung_ca_nhan,ID_USER',
-            'id_nhom' => 'required|exists:nhom_lam_viec,ID_NHOM'
+            'id_user' => 'required|exists:NGUOI_DUNG_CA_NHAN,ID_USER',
+            'id_nhom' => 'required|exists:NHOM_LAM_VIEC,ID_NHOM'
         ]);
 
-        DB::table('loi_moi')->insert([
+        DB::table('LOI_MOI')->insert([
             'ID_USER' => $request->input('id_user'),
             'ID_NHOM' =>  $request->input('id_nhom'),
         ]);
@@ -85,7 +85,7 @@ class LeaderController extends Controller
 
         $request->validate([
             'ten_nhom' => 'required',
-            'id_nhom' => 'required|exists:nhom_lam_viec,ID_NHOM'
+            'id_nhom' => 'required|exists:NHOM_LAM_VIEC,ID_NHOM'
         ]);
 
         Nhom::where('ID_NHOM', $request->input('id_nhom'))->update(['TEN_NHOM' => $request->ten_nhom]);
@@ -98,11 +98,11 @@ class LeaderController extends Controller
     public function delete_group(Request $request){
 
         $request->validate([
-            'id_nhom' => 'required|exists:nhom_lam_viec,ID_NHOM',
+            'id_nhom' => 'required|exists:NHOM_LAM_VIEC,ID_NHOM',
             'redirect_to' => 'required'
         ]);
 
-        DB::table('loi_moi')
+        DB::table('LOI_MOI')
             ->where('ID_NHOM', $request->input('id_nhom'))
             ->delete();
 
@@ -116,19 +116,19 @@ class LeaderController extends Controller
         $userId = Auth::id();
 
         // 1. Cập nhật lời mời
-        DB::table('loi_moi')
+        DB::table('LOI_MOI')
             ->where('ID_NHOM', $id)
             ->where('ID_USER', $userId)
             ->update(['TRANG_THAI_LOI_MOI' => true]);
 
         // 2. Thêm vào bảng thành viên nếu chưa tồn tại
-        $exists = DB::table('nhom_thanh_vien')
+        $exists = DB::table('NHOM_THANH_VIEN')
             ->where('ID_NHOM', $id)
             ->where('ID_USER', $userId)
             ->exists();
 
         if (!$exists) {
-            DB::table('nhom_thanh_vien')->insert([
+            DB::table('NHOM_THANH_VIEN')->insert([
                 'ID_NHOM' => $id,
                 'ID_USER' => $userId,
             ]);
@@ -138,7 +138,7 @@ class LeaderController extends Controller
 
     public function tuChoi($id)
     {
-        DB::table('loi_moi')
+        DB::table('LOI_MOI')
             ->where('ID_NHOM', $id)
             ->where('ID_USER', Auth::id())
             ->delete();
@@ -158,8 +158,8 @@ class LeaderController extends Controller
         }
 
         // Lấy danh sách thành viên
-        $thanhVien = DB::table('nhom_thanh_vien')
-            ->join('nguoi_dung_ca_nhan', 'nhom_thanh_vien.ID_USER', '=', 'nguoi_dung_ca_nhan.ID_USER')
+        $thanhVien = DB::table('NHOM_THANH_VIEN')
+            ->join('NGUOI_DUNG_CA_NHAN', 'NHOM_THANH_VIEN.ID_USER', '=', 'NGUOI_DUNG_CA_NHAN.ID_USER')
             ->where('ID_NHOM', $nhom->ID_NHOM)
             ->get();
 
@@ -169,20 +169,20 @@ class LeaderController extends Controller
             ->get();
 
         foreach ($keHoachs as $keHoach) {
-            $keHoach->cong_viec = DB::table('CONG_VIEC')
+            $keHoach->CONG_VIEC = DB::table('CONG_VIEC')
                 ->where('ID_KH', $keHoach->ID_KH)
                 ->orderBy('DO_UU_TIEN', 'asc')
                 ->get();
 
-            foreach ($keHoach->cong_viec as $cv) {
-                $cv->muc_cong_viec = DB::table('MUC_CONG_VIEC')
+            foreach ($keHoach->CONG_VIEC as $cv) {
+                $cv->muc_CONG_VIEC = DB::table('MUC_CONG_VIEC')
                     ->where('ID_CV', $cv->ID_CV)
                     ->orderBy('DO_UU_TIEN_MUC', 'asc')
                     ->get();
 
                 // Tính tiến độ
-                $tong = $cv->muc_cong_viec->count();
-                $hoanThanh = $cv->muc_cong_viec->where('TRANG_THAI', 1)->count();
+                $tong = $cv->MUC_CONG_VIEC->count();
+                $hoanThanh = $cv->MUC_CONG_VIEC->where('TRANG_THAI', 1)->count();
                 $tienDo = $tong > 0 ? round($hoanThanh / $tong * 100) : 0;
 
                 $cv->TIEN_DO = $tienDo;
@@ -202,10 +202,10 @@ class LeaderController extends Controller
     public function doGroup(Request $request)
     {
         $request->validate([
-            'id_nhom' => 'required|exists:nhom_lam_viec,ID_NHOM'
+            'id_nhom' => 'required|exists:NHOM_LAM_VIEC,ID_NHOM'
         ]);
 
-        $nhom = DB::table('nhom_lam_viec')->where('ID_NHOM', $request->id_nhom)->first();
+        $nhom = DB::table('NHOM_LAM_VIEC')->where('ID_NHOM', $request->id_nhom)->first();
 
         session(['group' => $nhom]);
 
@@ -271,32 +271,32 @@ class LeaderController extends Controller
 
         DB::transaction(function () use ($id) {
             // 1. Lấy tất cả ID_KH thuộc nhóm
-            $keHoachIds = DB::table('ke_hoach')->where('ID_NHOM', $id)->pluck('ID_KH');
+            $keHoachIds = DB::table('KE_HOACH')->where('ID_NHOM', $id)->pluck('ID_KH');
 
             // 2. Lấy tất cả ID_CV theo các kế hoạch
-            $congViecIds = DB::table('cong_viec')->whereIn('ID_KH', $keHoachIds)->pluck('ID_CV');
+            $congViecIds = DB::table('CONG_VIEC')->whereIn('ID_KH', $keHoachIds)->pluck('ID_CV');
 
              // 3. Lấy tất cả ID_MUC theo ID_CV
-            $mucIds = DB::table('muc_cong_viec')->whereIn('ID_CV', $congViecIds)->pluck('ID_MUC');
+            $mucIds = DB::table('MUC_CONG_VIEC')->whereIn('ID_CV', $congViecIds)->pluck('ID_MUC');
 
             // 4. Xoá CAU_HINH_THONG_BAO theo ID_MUC
-            DB::table('cau_hinh_thong_bao')->whereIn('ID_MUC', $mucIds)->delete();
+            DB::table('CAU_HINH_THONG_BAO')->whereIn('ID_MUC', $mucIds)->delete();
 
             // 5. Xoá MUC_CONG_VIEC theo ID_CV
-            DB::table('muc_cong_viec')->whereIn('ID_CV', $congViecIds)->delete();
+            DB::table('MUC_CONG_VIEC')->whereIn('ID_CV', $congViecIds)->delete();
 
             // 6. Xoá CONG_VIEC theo ID_KH
-            DB::table('cong_viec')->whereIn('ID_KH', $keHoachIds)->delete();
+            DB::table('CONG_VIEC')->whereIn('ID_KH', $keHoachIds)->delete();
 
             // 7. Xoá KE_HOACH theo ID_NHOM
-            DB::table('ke_hoach')->where('ID_NHOM', $id)->delete();
+            DB::table('KE_HOACH')->where('ID_NHOM', $id)->delete();
 
             // 8. Xoá các bảng liên quan đến nhóm
-            DB::table('loi_moi')->where('ID_NHOM', $id)->delete();
-            DB::table('nhom_thanh_vien')->where('ID_NHOM', $id)->delete();
+            DB::table('LOI_MOI')->where('ID_NHOM', $id)->delete();
+            DB::table('NHOM_THANH_VIEN')->where('ID_NHOM', $id)->delete();
 
             // 9. Xoá nhóm
-            DB::table('nhom_lam_viec')->where('ID_NHOM', $id)->delete();
+            DB::table('NHOM_LAM_VIEC')->where('ID_NHOM', $id)->delete();
         });
 
         session()->forget('group');
@@ -734,9 +734,9 @@ class LeaderController extends Controller
         $truongNhom = $nhom->truongNhom;
 
         // Lấy thành viên nhóm (trừ khóa ngoại nhóm trưởng đã ở trên)
-        $thanhVien = DB::table('nhom_thanh_vien')
-            ->join('nguoi_dung_ca_nhan', 'nhom_thanh_vien.ID_USER', '=', 'nguoi_dung_ca_nhan.ID_USER')
-            ->where('nhom_thanh_vien.ID_NHOM', $nhom->ID_NHOM)
+        $thanhVien = DB::table('NHOM_THANH_VIEN')
+            ->join('NGUOI_DUNG_CA_NHAN', 'NHOM_THANH_VIEN.ID_USER', '=', 'NGUOI_DUNG_CA_NHAN.ID_USER')
+            ->where('NHOM_THANH_VIEN.ID_NHOM', $nhom->ID_NHOM)
             ->get();
 
         return view('members', compact('nhom', 'truongNhom', 'thanhVien'));
@@ -749,12 +749,12 @@ class LeaderController extends Controller
         $id_truong_nhom = $r->input('id_nhom_truong');
 
         // Danh sách người chưa được mời (ngoại trừ trưởng nhóm và thành viên hiện tại)
-        $invited = DB::table('nguoi_dung_ca_nhan')
+        $invited = DB::table('NGUOI_DUNG_CA_NHAN')
             ->when($search, fn($q) => $q->where('HO_TEN', 'like', "%{$search}%"))
             ->where('ID_USER', '!=', $id_truong_nhom)
             ->whereNotIn('ID_USER', function ($sub) use ($id_nhom) {
                 $sub->select('ID_USER')
-                    ->from('nhom_thanh_vien')
+                    ->from('NHOM_THANH_VIEN')
                     ->where('ID_NHOM', $id_nhom);
             })
             ->get();
@@ -765,9 +765,9 @@ class LeaderController extends Controller
         $truongNhom = $nhom->truongNhom;
 
         // Lấy thành viên nhóm
-        $thanhVien = DB::table('nhom_thanh_vien')
-            ->join('nguoi_dung_ca_nhan', 'nhom_thanh_vien.ID_USER', '=', 'nguoi_dung_ca_nhan.ID_USER')
-            ->where('nhom_thanh_vien.ID_NHOM', $id_nhom)
+        $thanhVien = DB::table('NHOM_THANH_VIEN')
+            ->join('NGUOI_DUNG_CA_NHAN', 'NHOM_THANH_VIEN.ID_USER', '=', 'NGUOI_DUNG_CA_NHAN.ID_USER')
+            ->where('NHOM_THANH_VIEN.ID_NHOM', $id_nhom)
             ->get();
 
         return view('members', compact('invited', 'nhom', 'truongNhom', 'thanhVien'));
@@ -776,12 +776,12 @@ class LeaderController extends Controller
     public function inviteGroup(Request $request)
     {
         $request->validate([
-            'id_user' => 'required|exists:nguoi_dung_ca_nhan,ID_USER',
-            'id_nhom'  => 'required|exists:nhom_lam_viec,ID_NHOM',
+            'id_user' => 'required|exists:NGUOI_DUNG_CA_NHAN,ID_USER',
+            'id_nhom'  => 'required|exists:NHOM_LAM_VIEC,ID_NHOM',
         ]);
 
         // Kiểm tra đã gửi lời mời chưa
-        $exists = DB::table('loi_moi')
+        $exists = DB::table('LOI_MOI')
             ->where('ID_USER', $request->id_user)
             ->where('ID_NHOM', $request->id_nhom)
             ->exists();
@@ -792,7 +792,7 @@ class LeaderController extends Controller
         }
 
         // Thêm lời mời
-        DB::table('loi_moi')->insert([
+        DB::table('LOI_MOI')->insert([
             'ID_USER' => $request->id_user,
             'ID_NHOM' => $request->id_nhom,
         ]);
@@ -806,13 +806,13 @@ class LeaderController extends Controller
         $userId = Auth::id();
 
         // Xoá thành viên khỏi nhóm
-        DB::table('nhom_thanh_vien')
+        DB::table('NHOM_THANH_VIEN')
             ->where('ID_NHOM', $id)
             ->where('ID_USER', $userId)
             ->delete();
 
         // Xoá luôn lời mời (nếu có)
-        DB::table('loi_moi')
+        DB::table('LOI_MOI')
             ->where('ID_NHOM', $id)
             ->where('ID_USER', $userId)
             ->where('TRANG_THAI_LOI_MOI', 1)

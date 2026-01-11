@@ -145,7 +145,7 @@
                             </button>
                         @endif
 
-                        @if($keHoach->cong_viec->isEmpty())
+                        @if($keHoach->CONG_VIEC->isEmpty())
                             <p class="italic text-gray-500">Chưa có công việc nào cho kế hoạch này.</p>
                         @else
                             <div class="overflow-x-auto">
@@ -170,7 +170,7 @@
                                         ];
                                     @endphp
 
-                                    @foreach($keHoach->cong_viec as $i => $cv)
+                                    @foreach($keHoach->CONG_VIEC as $i => $cv)
                                         @php $gradient = $colors[$i % count($colors)]; @endphp
 
                                         <div class="relative min-w-[320px] w-[400px] border-l-4 border-indigo-500
@@ -215,7 +215,7 @@
 
                                             {{-- Thư mục --}}
                                             <ul class="mt-2 ml-5 space-y-2 text-sm list-none">
-                                                @foreach($cv->muc_cong_viec as $muc)
+                                                @foreach($cv->MUC_CONG_VIEC as $muc)
                                                     @php
                                                         $deadline = \Carbon\Carbon::parse($muc->THOI_HAN_HOAN_THANH);
                                                         $now = \Carbon\Carbon::now();
@@ -406,7 +406,7 @@
         }
 
         window.subtaskData = @json(
-            $keHoachs->flatMap->cong_viec->flatMap->muc_cong_viec->keyBy('ID_MUC')
+            $keHoachs->flatMap->CONG_VIEC->flatMap->MUC_CONG_VIEC->keyBy('ID_MUC')
         );
 
         document.addEventListener('DOMContentLoaded', function () {
