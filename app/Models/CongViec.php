@@ -10,7 +10,7 @@ class CongViec extends Model
 {
     use HasFactory;
 
-    protected $table = 'cong_viec';
+    protected $table = 'CONG_VIEC';
 
     protected $keyType = 'string';
 

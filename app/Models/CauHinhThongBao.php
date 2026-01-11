@@ -10,7 +10,7 @@ class CauHinhThongBao extends Model
 {
     use HasFactory;
 
-    protected $table = 'cau_hinh_thong_bao';
+    protected $table = 'CAU_HINH_THONG_BAO';
 
     protected $keyType = 'string'; //đinh dạng chuỗi cho laravel hiểu ID_cauhinh
 

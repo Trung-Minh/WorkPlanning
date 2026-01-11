@@ -10,7 +10,7 @@ class NguoiDungCaNhan extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'nguoi_dung_ca_nhan';
+    protected $table = 'NGUOI_DUNG_CA_NHAN';
 
     protected $primaryKey = 'ID_USER';
 

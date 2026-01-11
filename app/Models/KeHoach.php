@@ -10,7 +10,7 @@ class KeHoach extends Model
 {
     use HasFactory;
 
-    protected $table = 'ke_hoach';
+    protected $table = 'KE_HOACH';
 
     protected $keyType = 'string'; //đinh dạng chuỗi cho laravel hiểu ID_KH
 

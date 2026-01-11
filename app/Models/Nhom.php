@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Nhom extends Model
 {
-    protected $table = 'nhom_lam_viec'; // tên bảng chính xác trong DB
+    protected $table = 'NHOM_LAM_VIEC'; // tên bảng chính xác trong DB
 
     public   $primaryKey = 'ID_NHOM';
     protected $keyType = 'string';
