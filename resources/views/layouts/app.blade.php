@@ -10,22 +10,18 @@
 
   <title>@yield('title', 'WorkPlanning')</title>
 
-<<<<<<< HEAD
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
-=======
   @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/plans.js', 'resources/js/header.js'])
   @vite(['resources/js/group.js'])
-  
+
   <style>
     [x-cloak] { display: none !important; }
   </style>
->>>>>>> 39b7064ce6b92e118a58ac00863d9c459caa0b4b
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-100">
   @include('partials.header')
 
-  <main class="m flex-1 w-full px-4 py-4 mx-auto">
+  <main class="flex-1 w-full px-4 py-4 mx-auto m">
     @yield('content')
   </main>
 
