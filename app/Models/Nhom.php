@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Nhom extends Model
 {
@@ -31,6 +32,13 @@ class Nhom extends Model
         return $this->belongsToMany(NguoiDungCaNhan::class, 'NHOM_THANH_VIEN', 'ID_NHOM', 'ID_USER');
     }
 
-
+    protected static function booted() {
+        static::creating(function ($model) {
+            $maxId = DB::table('NHOM_LAM_VIEC')
+                ->select(DB::raw('MAX(CAST(SUBSTRING(ID_NHOM, 4) AS UNSIGNED)) as max_val'))
+                ->value('max_val') ?? 0;
+            $model->ID_NHOM = 'NLV' . str_pad($maxId + 1, 5, '0', STR_PAD_LEFT);
+        });
+    }
 
 }

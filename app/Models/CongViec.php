@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class CongViec extends Model
 {
@@ -52,5 +53,14 @@ class CongViec extends Model
 
         $this->TIEN_DO = $tong > 0 ? round($hoanThanh / $tong * 100) : 0;
         $this->save();
+    }
+
+    protected static function booted() {
+        static::creating(function ($model) {
+            $maxId = DB::table('CONG_VIEC')
+                ->select(DB::raw('MAX(CAST(SUBSTRING(ID_CV, 3) AS UNSIGNED)) as max_val'))
+                ->value('max_val') ?? 0;
+            $model->ID_CV = 'CV' . str_pad($maxId + 1, 6, '0', STR_PAD_LEFT);
+        });
     }
 }

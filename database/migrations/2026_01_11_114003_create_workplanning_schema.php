@@ -29,6 +29,8 @@ return new class extends Migration
                 MO_TA_NHOM VARCHAR(255),
                 AVATAR_NHOM VARCHAR(200),
                 TEN_NHOM VARCHAR(100),
+                created_at TIMESTAMP NULL,
+                updated_at TIMESTAMP NULL,
                 FOREIGN KEY(ID_NHOM_TRUONG) REFERENCES NGUOI_DUNG_CA_NHAN(ID_USER)
             ) ENGINE=InnoDB;
 
@@ -103,58 +105,6 @@ return new class extends Migration
                 FOREIGN KEY (ID_USER) REFERENCES NGUOI_DUNG_CA_NHAN(ID_USER),
                 FOREIGN KEY (ID_NHOM) REFERENCES NHOM_LAM_VIEC(ID_NHOM)
             ) ENGINE=InnoDB;
-        ");
-
-        // 2. TẠO CÁC TRIGGER SINH ID TỰ ĐỘNG
-        DB::unprepared("
-            CREATE TRIGGER trg_generate_id_user BEFORE INSERT ON NGUOI_DUNG_CA_NHAN FOR EACH ROW
-            BEGIN
-                DECLARE max_id INT;
-                SELECT IFNULL(MAX(CAST(SUBSTRING(ID_USER, 5) AS UNSIGNED)), 0) INTO max_id FROM NGUOI_DUNG_CA_NHAN;
-                SET NEW.ID_USER = CONCAT('NDCN', LPAD(max_id + 1, 4, '0'));
-            END;
-
-            CREATE TRIGGER trg_nlv_insert BEFORE INSERT ON NHOM_LAM_VIEC FOR EACH ROW
-            BEGIN
-                DECLARE max_id INT;
-                SELECT IFNULL(MAX(CAST(SUBSTRING(ID_NHOM, 4) AS UNSIGNED)), 0) INTO max_id FROM NHOM_LAM_VIEC;
-                SET NEW.ID_NHOM = CONCAT('NLV', LPAD(max_id + 1, 5, '0'));
-            END;
-
-            CREATE TRIGGER trg_kh_insert BEFORE INSERT ON KE_HOACH FOR EACH ROW
-            BEGIN
-                DECLARE max_id INT;
-                SELECT IFNULL(MAX(CAST(SUBSTRING(ID_KH, 3) AS UNSIGNED)), 0) INTO max_id FROM KE_HOACH;
-                SET NEW.ID_KH = CONCAT('KH', LPAD(max_id + 1, 6, '0'));
-            END;
-
-            CREATE TRIGGER trg_cv_insert BEFORE INSERT ON CONG_VIEC FOR EACH ROW
-            BEGIN
-                DECLARE max_id INT;
-                SELECT IFNULL(MAX(CAST(SUBSTRING(ID_CV, 3) AS UNSIGNED)), 0) INTO max_id FROM CONG_VIEC;
-                SET NEW.ID_CV = CONCAT('CV', LPAD(max_id + 1, 6, '0'));
-            END;
-
-            CREATE TRIGGER trg_mcv_insert BEFORE INSERT ON MUC_CONG_VIEC FOR EACH ROW
-            BEGIN
-                DECLARE max_id INT;
-                SELECT IFNULL(MAX(CAST(SUBSTRING(ID_MUC, 4) AS UNSIGNED)), 0) INTO max_id FROM MUC_CONG_VIEC;
-                SET NEW.ID_MUC = CONCAT('MUC', LPAD(max_id + 1, 5, '0'));
-            END;
-
-            CREATE TRIGGER trg_ch_insert BEFORE INSERT ON CAU_HINH_THONG_BAO FOR EACH ROW
-            BEGIN
-                DECLARE max_id INT;
-                SELECT IFNULL(MAX(CAST(SUBSTRING(ID_CAUHINH, 5) AS UNSIGNED)), 0) INTO max_id FROM CAU_HINH_THONG_BAO;
-                SET NEW.ID_CAUHINH = CONCAT('CHTB', LPAD(max_id + 1, 4, '0'));
-            END;
-
-            CREATE TRIGGER trg_tb_insert BEFORE INSERT ON THONG_BAO FOR EACH ROW
-            BEGIN
-                DECLARE max_id INT;
-                SELECT IFNULL(MAX(CAST(SUBSTRING(ID_TB, 3) AS UNSIGNED)), 0) INTO max_id FROM THONG_BAO;
-                SET NEW.ID_TB = CONCAT('TB', LPAD(max_id + 1, 6, '0'));
-            END;
         ");
 
         // 3. CẬP NHẬT BẢNG SESSIONS (Dành cho Authentication)

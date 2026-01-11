@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class CauHinhThongBao extends Model
 {
@@ -30,5 +31,14 @@ class CauHinhThongBao extends Model
     public function mucCongViec()
     {
         return $this->belongsTo(MucCongViec::class, 'ID_MUC', 'ID_MUC');
+    }
+
+    protected static function booted() {
+        static::creating(function ($model) {
+            $maxId = DB::table('CAU_HINH_THONG_BAO')
+                ->select(DB::raw('MAX(CAST(SUBSTRING(ID_CAUHINH, 5) AS UNSIGNED)) as max_val'))
+                ->value('max_val') ?? 0;
+            $model->ID_CAUHINH = 'CHTB' . str_pad($maxId + 1, 4, '0', STR_PAD_LEFT);
+        });
     }
 }
