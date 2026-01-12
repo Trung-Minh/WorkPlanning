@@ -45,4 +45,4 @@ EXPOSE 80
 
 # 3. Lệnh khởi động: Tự động chạy Migration trước khi bật Web Server
 # sh -c cho phép chạy chuỗi lệnh cùng lúc
-CMD sh -c "php artisan config:clear && apache2-foreground"
+CMD sh -c "php artisan config:clear && php artisan migrate --force && apache2-foreground"
