@@ -5,15 +5,26 @@ use App\Http\Controllers\PlansController;
 use App\Http\Controllers\LeaderController;
 use App\Http\Controllers\ReminderController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
-
+Route::get('/test-db', function () {
+    try {
+        // Kiểm tra kết nối
+        DB::connection()->getPdo();
+        return "<h1>✅ KẾT NỐI THÀNH CÔNG!</h1> Database: " . DB::connection()->getDatabaseName();
+    } catch (\Exception $e) {
+        return "<h1>❌ KẾT NỐI THẤT BẠI</h1>" .
+            "<strong>Lỗi:</strong> " . $e->getMessage() . "<br>" .
+            "<strong>Host cấu hình:</strong> " . config('database.connections.mysql.host');
+    }
+});
 
 // Trang welcome
 Route::get('/', fn () => view('welcome'))->name('welcome');
 Route::middleware(['auth', 'prevent-back'])->group(function () {
-   Route::get('/account', function () {
-    return view('account');
-});
+    Route::get('/account', function () {
+        return view('account');
+    });
 });
 // Auth
 Route::middleware('guest')->group(function () {
