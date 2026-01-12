@@ -39,7 +39,7 @@ RUN mkdir -p storage/framework/sessions \
 
 # 2. Cấp quyền sở hữu và quyền ghi cho thư mục storage & cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+    && chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
 
